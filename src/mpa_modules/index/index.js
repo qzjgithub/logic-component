@@ -2,10 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, hashHistory} from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
 import 'antd/dist/antd.css';
 
-import createBrowserHistory from 'history/createBrowserHistory';
 import createHashHistory from 'history/createHashHistory';
 
 import configureStore from '../../redux/store/configureStore';
@@ -19,7 +17,7 @@ render(
     <Provider store={ store }>
         <Router history={ history }>
             <section>
-                <Route path="/" component={ App }/>
+                <Route path="/" component={ App } />
             </section>
         </Router>
     </Provider>,

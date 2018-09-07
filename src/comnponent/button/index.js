@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import basic from '../basic';
 
-class App extends Component{
+class Button extends Component{
     constructor(props, context) {
         super(props, context);
     }
 
     render(){
-        return <div>登录页面</div>
+        return <button>这是按钮</button>
     }
 }
 
-export default App;
+export default basic(Button);
