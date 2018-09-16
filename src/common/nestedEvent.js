@@ -19,9 +19,12 @@ class NestedEvent {
         if(method instanceof NestedEvent){
             result = method.execute(...param);
         }else if(method instanceof Promise){
-            result = await method(...param);
+            result = await method();
         }else if(method instanceof Function) {
             result = method(...param);
+        }
+        if(!(result instanceof Array) && !(result instanceof Promise)){
+            result = [ result ];
         }
         return result || param;
     }

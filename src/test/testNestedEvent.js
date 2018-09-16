@@ -37,23 +37,10 @@ let testEvent2 = new NestedEvent(
 let testEvent3 = new NestedEvent(
     new NestedEvent(
         new NestedEvent(
-            new Promise((resolve, reject)=>{
-                setTimeout(() => {
-                    console.log();
-                    console.log('wait 2s.');
-                    resolve("wait 2s success!");
-                },2*1000)
-            }),
             ()=>{
                 console.log('I get ');
             }
         ),
-        new Promise((resolve,reject)=>{
-            setTimeout(() => {
-                console.log('wait 1s.');
-                resolve("wait 1s success!");
-            },1*1000);
-        }),
         () => {
             console.log('I get ');
         }
@@ -66,21 +53,30 @@ let testEvent3 = new NestedEvent(
     }
 );
 
-testEvent3.execute("haha");
+// testEvent3.execute("haha");
 
 let testEvent4 = new NestedEvent(
-    new Promise((resolve,reject) => {
-        console.log("wait 1s.");
-        setTimeout(()=>{
-            resolve("wait 1s ok.");
-        },1000);
-    }),
-    new Promise((resolve,reject) => {
-        console.log("wait 1s.");
-        setTimeout(()=>{
-            resolve("wait 1s ok.");
-        },1000);
-    })
+    (p1,p2) => {
+        console.log(p1,p2);
+        return new Promise((resolve,reject) => {
+            console.log("wait 1s.");
+            setTimeout(()=>{
+                resolve(["wait 1s ok.","second param"]);
+            },1000);
+        })
+    },
+    (param, second) => {
+        console.log("action" , param, second);
+        return "only one param";
+    },
+    (p) => {
+        return new Promise((resolve,reject) => {
+            console.log("wait 2s.", p);
+            setTimeout(()=>{
+                resolve("wait 2s ok.");
+            },2*1000);
+        })
+    },
 );
 
-testEvent4.execute();
+testEvent4.execute("aaa", "bbb");
