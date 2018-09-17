@@ -18,12 +18,14 @@ class NestedEvent {
         let result = null;
         if(method instanceof NestedEvent){
             result = method.execute(...param);
-        }else if(method instanceof Promise){
-            result = await method();
         }else if(method instanceof Function) {
-            result = method(...param);
+            try{
+                result = await method(...param);
+            }catch (e){
+                result = e;
+            }
         }
-        if(!(result instanceof Array) && !(result instanceof Promise)){
+        if(result !==null && !(result instanceof Array) && !(result instanceof Promise)){
             result = [ result ];
         }
         return result || param;

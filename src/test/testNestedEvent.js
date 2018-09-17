@@ -61,7 +61,7 @@ let testEvent4 = new NestedEvent(
         return new Promise((resolve,reject) => {
             console.log("wait 1s.");
             setTimeout(()=>{
-                resolve(["wait 1s ok.","second param"]);
+                reject(["wait 1s ok.","second param"]);
             },1000);
         })
     },
