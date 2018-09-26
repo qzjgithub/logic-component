@@ -17,7 +17,7 @@ const featureEntries = fs.readdirSync(featuredir)
 
 let entry = {}, plugins = [];
 
-plugins.push(new Clean(['dist'], {
+plugins.push(new Clean(['dist'],{
     root: path.resolve(__dirname, '../'),
     verbose:  true,
     dry:      false

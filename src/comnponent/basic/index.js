@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import NestedEvent from '../../common/nestedEvent';
 
 const basic = WrappedComponent => class extends Component {
 
     //状态模板
-    stateTemp = {
+    statusTemp = {
         //是否将状态绑定样式作用到Dom上
         styleToDom: true,
         //状态激活样式class
@@ -28,12 +27,12 @@ const basic = WrappedComponent => class extends Component {
              */
             click: 0,//0,1,2
         },
-        onSet : [],
-        onChange: []
+        onSet : null,
+        onChange: null
     };
 
     //状态组
-    stateGroups = {
+    statusGroups = {
         focus: {
             styleToDom: true,
             classTrue: "",
@@ -53,9 +52,7 @@ const basic = WrappedComponent => class extends Component {
     }
 
     render() {
-        return (<WrappedComponent
-            {...this.props}
-        />);
+        return <WrappedComponent { ...this.props } />
     }
 };
 export default basic;
