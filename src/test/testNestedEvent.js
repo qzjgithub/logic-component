@@ -1,4 +1,4 @@
-const NestedEvent = require('../common/nestedEvent');
+const NestedEvent = require('../common/NestedEvent');
 
 let testEvent1 = new NestedEvent(
     new NestedEvent(

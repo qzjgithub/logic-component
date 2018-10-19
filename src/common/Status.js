@@ -1,6 +1,8 @@
-import Util from '../../common/util';
+import Util from './Util';
 
 class Status {
+
+    static EVENT_VALUE = [0,1,2];
     //是否将状态绑定样式作用到Dom上,Boolean
     _styleToDom;
     //状态激活样式class,Array
@@ -25,16 +27,16 @@ class Status {
     _event;
 
     constructor({
-        styleToDom, classTrue, classFalse, styleTrue, styleFalse,
-        defaultState, event
+        styleToDom = true, classTrue, classFalse, styleTrue, styleFalse,
+        defaultState = true, event
                 }){
-        this._styleToDom = Util.isUndefined(styleToDom) ? true : !!styleToDom;
+        this._styleToDom = !!styleToDom;
         this._classTrue = Util.getArrayWithString(classTrue);
         this._classFalse = Util.getArrayWithString(classFalse);
         this._styleTrue = Util.objectToMap(styleTrue);
         this._styleFalse = Util.objectToMap(styleFalse);
-        this._defaultState = Util.isUndefined(styleToDom) ? true : !!styleToDom;
-        this._event = event || {};
+        this._defaultState = !!styleToDom;
+        this._event = this.coverEvent(event);
     }
 
     get styleToDom() {
@@ -71,10 +73,6 @@ class Status {
 
     get event() {
         return this._event;
-    }
-
-    set event(value) {
-        this._event = value || {};
     }
 
     /**
@@ -227,14 +225,72 @@ class Status {
         this.clearStyleFalse();
     }
 
+    /**
+     * 是否存在EVNET_VALUE中
+     * @param value
+     * @returns {boolean}
+     */
+    #inev(value){
+        return Status.EVENT_VALUE.indexOf(event[key]) > -1;
+    }
+
+    /**
+     * 重置event
+     * @param event
+     * @returns {Map<any, any>|*}
+     */
+    coverEvent(event){
+        event = Util.objectToMap(event);
+        for(let key in event){
+            if(!this.#inev(event)){
+                console.log("has event value not in [0,1,2]");
+                event.delete(key);
+            }
+        }
+        return event;
+    }
+
+    /**
+     * 增加一个event
+     * @param event
+     * @param type
+     */
     addEvent(event, type){
+        if(Util.isStringWithoutNull(event) && this.#inev(type)){
+            this._event.set(event,type);
+        }
     }
 
+    /**
+     * 移除一个event
+     * @param event
+     */
     removeEvent(event){
-
+        if(Util.isStringWithoutNull(event) && this._event.has(event)){
+            this._event.delete(event);
+        }
     }
 
-    clearEvent(){}
+    /**
+     * 清空event
+     */
+    clearEvent(){
+        this._event.clear();
+    }
+
+
+    /**
+     * 得到一个event
+     * @param event
+     * @returns {*}
+     */
+    getEventByKey(event){
+        if(!Util.isStringWithoutNull(event) || !this._event.has(event)){
+            return -1;
+        }else{
+            return this._event.get(event);
+        }
+    }
 }
 
 export default Status;

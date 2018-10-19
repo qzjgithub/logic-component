@@ -1,4 +1,4 @@
-const SequenceEvent = require('../common/sequenceEvent');
+const SequenceEvent = require('../common/SequenceEvent');
 
 let test1 = new SequenceEvent([
     (param) =>{

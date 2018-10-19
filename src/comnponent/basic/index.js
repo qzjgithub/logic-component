@@ -8,6 +8,7 @@ const basic = WrappedComponent => class extends Component {
         styleToDom: true,
         //状态激活样式class
         classTrue: "",
+
         //状态未激活样式class
         classFalse: "",
         //状态激活样式，覆盖class

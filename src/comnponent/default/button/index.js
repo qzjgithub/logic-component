@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import basic from '../basic';
+import basic from '../../basic/index';
 
 class Button extends Component{
     constructor(props, context) {

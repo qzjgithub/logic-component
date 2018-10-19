@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route , Redirect, Switch} from "react-router";
-import Button from '../../comnponent/button';
+import Button from '../../comnponent/default/button';
 import './App.styl';
 
 import Header from '../../space_modules/header';
