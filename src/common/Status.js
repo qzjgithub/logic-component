@@ -3,6 +3,11 @@ import Util from './Util';
 class Status {
 
     static EVENT_VALUE = [0,1,2];
+
+    static BASIC = 'basic';
+
+    //作用对象
+    _target;
     //是否将状态绑定样式作用到Dom上,Boolean
     _styleToDom;
     //状态激活样式class,Array
@@ -26,17 +31,24 @@ class Status {
         // click: 0,//0,1,2
     _event;
 
+    //自定义激励集
+    _motivation;
+
     constructor({
+        target,
         styleToDom = true, classTrue, classFalse, styleTrue, styleFalse,
         defaultState = true, event
                 }){
+        this._target = Util.isStringWithoutNull(target) ? target : Status.BASIC;
         this._styleToDom = !!styleToDom;
         this._classTrue = Util.getArrayWithString(classTrue);
         this._classFalse = Util.getArrayWithString(classFalse);
         this._styleTrue = Util.objectToMap(styleTrue);
         this._styleFalse = Util.objectToMap(styleFalse);
+
         this._defaultState = !!styleToDom;
         this._event = this.coverEvent(event);
+        this._motivation = new Map();
     }
 
     get styleToDom() {

@@ -2,42 +2,45 @@ import Util from './Util';
 
 class Motivation{
     //状态集
-    status;
+    _status;
 
     //是否触发事件
-    trigger;
+    _trigger;
 
     constructor(object, trigger = false){
         this.coverStatus(object);
-        this.trigger = !!trigger;
+        this._trigger = !!trigger;
     }
 
     coverStatus(object){
-        this.status = new Map();
+        this._status = new Map();
         if(Util.isKVObjectWithStringKey(object)){
-            this.status = Util.objectToMap(object);
+            this._status = Util.objectToMap(object);
         }
-        for(let key in this.status){
-            this.status.set(key,!!this.status.get(key));
+        for(let key in this._status){
+            this._status.set(key,!!this._status.get(key));
         }
     }
 
     setStatus(name, value = false){
         if(Util.isStringWithoutNull(name)){
-            this.status.set(name, !!value);
+            this._status.set(name, !!value);
         }
     }
 
     deleteStatus(name){
-        if(Util.isStringWithoutNull(name) && this.status.has(name)){
-            this.status.delete(name);
+        if(Util.isStringWithoutNull(name) && this._status.has(name)){
+            this._status.delete(name);
         }
     }
 
     clearStatus(){
-        this.status.clear();
+        this._status.clear();
     }
 
+    get status(){
+        return this._status;
+    }
 
 }
 

@@ -20,7 +20,6 @@ class GenLogic{
             this.status = Util.objectToMap(object);
         }
         for(let key in this.status){
-            let s = this.status.get(key);
             this.status.set(key, new Status(Util.isKVObject(s) ? s : {}));
             this.values.set(key, this.status.get(key).defaultState);
         }
@@ -39,24 +38,41 @@ class GenLogic{
             console.error("status for motivation is not a kv object with string.");
             return;
         }
-        if(Object.keys(status).length < 2){
+        if(Object.keys(status).length < 1){
             console.error("a motivation must be use at least two status.");
             return;
         }
-        let s;
         for(let key in status){
             if(!this.status.has(key)){
                 console.error(`has no status name ${key}.`);
                 return;
             }
-            s = this.status.get(key);
-            if(s.getEventByKey(name) !== -1){
-                console.error(`the motivation can not use status '${key}'`);
-                return;
-            }
         }
 
         this.motivation.set(name, new Motivation(status, trigger))
+    }
+
+    deleteMotivation(name){}
+
+    addStatus(name,object){
+        if(Util.isStringWithoutNull(name) && !this.status.has(name) && Util.isKVObjectWithStringKey(object)){
+            this.status.set(name,new Status(object));
+        }
+    }
+
+    addStatusMotivation(motivation, status){
+        if(!Util.isStringWithoutNull(motivation) || !Util.isStringWithoutNull(status)) {
+            console.error('motivation or status name not right.');
+            return;
+        }
+        let m = this.motivation.get(motivation);
+        for(let sk of Object.keys(m.status)){
+            if(sk===status){
+                console.error(`the motivation ${motivation} contains the status ${status}`);
+                return;
+            }
+        }
+        let s = this.status.get(status);
     }
 }
 
