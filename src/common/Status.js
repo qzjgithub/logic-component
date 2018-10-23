@@ -267,7 +267,7 @@ class Status {
      * @param event
      * @param type
      */
-    addEvent(event, type){
+    setEvent(event, type){
         if(Util.isStringWithoutNull(event) && this.#inev(type)){
             this._event.set(event,type);
         }
@@ -277,7 +277,7 @@ class Status {
      * 移除一个event
      * @param event
      */
-    removeEvent(event){
+    deleteEvent(event){
         if(Util.isStringWithoutNull(event) && this._event.has(event)){
             this._event.delete(event);
         }
@@ -301,6 +301,47 @@ class Status {
             return -1;
         }else{
             return this._event.get(event);
+        }
+    }
+
+    /**
+     * 设置一个motivation
+     * @param motivation
+     * @param type
+     */
+    setMotivation(motivation, type){
+        if(Util.isStringWithoutNull(motivation) && this.#inev(type)){
+            this.setMotivation(motivation,type);
+        }
+    }
+
+    /**
+     * 删除一个motivation
+     * @param motivation
+     */
+    deleteMotivation(motivation){
+        if(Util.isStringWithoutNull(motivation) && this._motivation.has(motivation)){
+            this._motivation.delete(motivation);
+        }
+    }
+
+    /**
+     * 清空motivation
+     */
+    clearMotivation(){
+        this._motivation.clear();
+    }
+
+    /**
+     * 得到一个motivation的值
+     * @param motivation
+     * @returns {*}
+     */
+    getMotivationBykey(motivation){
+        if(Util.isStringWithoutNull(motivation) && this._motivation.has(motivation)){
+            return this._motivation.get(motivation);
+        }else{
+            return -1;
         }
     }
 }

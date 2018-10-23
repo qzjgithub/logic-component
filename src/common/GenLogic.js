@@ -25,6 +25,12 @@ class GenLogic{
         }
     }
 
+    /**
+     * 添加激励
+     * @param name
+     * @param status
+     * @param trigger
+     */
     addMotivation(name, { status, trigger = false }){
         if(!Util.isStringWithoutNull(name)) {
             console.error("the name is not a string.");
@@ -52,17 +58,36 @@ class GenLogic{
         this.motivation.set(name, new Motivation(status, trigger))
     }
 
+    /**
+     * 删除某个激励
+     * @param name
+     */
     deleteMotivation(name){}
 
+    /**
+     * 添加Status
+     * @param name
+     * @param object
+     */
     addStatus(name,object){
         if(Util.isStringWithoutNull(name) && !this.status.has(name) && Util.isKVObjectWithStringKey(object)){
             this.status.set(name,new Status(object));
         }
     }
 
-    addStatusMotivation(motivation, status){
+    /**
+     * 为某个status添加某个激励
+     * @param motivation
+     * @param status
+     * @param type
+     */
+    setStatusMotivation(motivation, status, type){
         if(!Util.isStringWithoutNull(motivation) || !Util.isStringWithoutNull(status)) {
             console.error('motivation or status name not right.');
+            return;
+        }
+        if(!this.motivation.has(motivation) || !this.status.has(status)){
+            console.error(`have no motivation name ${motivation} or have no status name ${status}`);
             return;
         }
         let m = this.motivation.get(motivation);
@@ -73,6 +98,24 @@ class GenLogic{
             }
         }
         let s = this.status.get(status);
+        s.setMotivation(motivation,type);
+    }
+
+    /**
+     * 删掉某个status的motivation
+     * @param motivation
+     * @param status
+     */
+    deleteStatusMotivation(motivation, status){
+        if(!Util.isStringWithoutNull(motivation) || !Util.isStringWithoutNull(status)) {
+            console.error('motivation or status name not right.');
+            return;
+        }
+        if(!this.motivation.has(motivation) || !this.status.has(status)){
+            console.error(`have no motivation name ${motivation} or have no status name ${status}`);
+            return;
+        }
+        this.status.get(status).deleteMotivation(motivation);
     }
 }
 
