@@ -83,7 +83,7 @@ class Util {
      * @returns {boolean}
      */
     static isKVObjectWithStringKey(object){
-        if(this.isKVObject(object)) return false;
+        if(!this.isKVObject(object)) return false;
         for(let key of Object.keys(object)){
             if(!this.isStringWithoutNull(key)){
                 console.error('the object key is not a string or is ""');

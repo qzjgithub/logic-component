@@ -18,10 +18,10 @@ class GenLogic{
         this.motivation = new Map();
         if(Util.isKVObjectWithStringKey(object)){
             this.status = Util.objectToMap(object);
-        }
-        for(let key in this.status){
-            this.status.set(key, new Status(Util.isKVObject(s) ? s : {}));
-            this.values.set(key, this.status.get(key).defaultState);
+            for(let key in this.status){
+                this.status.set(key, new Status(Util.isKVObject(s) ? s : {}));
+                this.values.set(key, this.status.get(key).defaultState);
+            }
         }
     }
 
@@ -30,7 +30,7 @@ class GenLogic{
      * @param name
      * @param status
      * @param trigger
-     */
+     */woqu
     addMotivation(name, { status, trigger = false }){
         if(!Util.isStringWithoutNull(name)) {
             console.error("the name is not a string.");
@@ -62,7 +62,21 @@ class GenLogic{
      * 删除某个激励
      * @param name
      */
-    deleteMotivation(name){}
+    deleteMotivation(name){
+        if(!Util.isStringWithoutNull(name) || !this.motivation.has(name)){
+            console.log(`motivation name ${name} is not right`);
+            return;
+        }
+        let sm;
+        for(let key of Object.keys(this.status)){
+            sm = this.status.get(key).motivation;
+            if(sm.has(name)){
+                console.error(`has status contain motivation name ${name}`);
+                return;
+            }
+        }
+        this.motivation.delete(name);
+    }
 
     /**
      * 添加Status
@@ -71,7 +85,20 @@ class GenLogic{
      */
     addStatus(name,object){
         if(Util.isStringWithoutNull(name) && !this.status.has(name) && Util.isKVObjectWithStringKey(object)){
-            this.status.set(name,new Status(object));
+            let s = new Status(object);
+            this.status.set(name,s);
+            this.values.set(name,s.defaultState);
+        }
+    }
+
+    /**
+     * 删掉某个status
+     * @param name
+     */
+    deleteStatus(name){
+        if(!Util.isStringWithoutNull(name) || !this.status.has(name)){
+            console.error(`status name ${name} is not right`);
+            return;
         }
     }
 
@@ -120,3 +147,4 @@ class GenLogic{
 }
 
 module.exports = GenLogic;
+export default GenLogic;

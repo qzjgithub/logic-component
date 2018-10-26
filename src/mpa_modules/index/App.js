@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route , Redirect, Switch} from "react-router";
 import Button from '../../comnponent/default/button';
+import test from '../../test/testComponent';
 import './App.styl';
 
 import Header from '../../space_modules/header';
@@ -17,12 +18,13 @@ class App extends Component{
     render(){
         return <div>
             <Header/>
-            <Content>
+            {/*<Content>*/}
                 <Switch>
                     <Route path={'/button'} component={ Button } />
-                    <Redirect from={'/'} to={'/button'}/>
+                    <Route path={'/test'} component={ test } />
+                    <Redirect from={'/'} to={'/test'}/>
                 </Switch>
-            </Content>
+            {/*</Content>*/}
         </div>
     }
 }

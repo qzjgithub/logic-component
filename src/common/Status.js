@@ -87,6 +87,10 @@ class Status {
         return this._event;
     }
 
+    get motivation(){
+        return this._motivation;
+    }
+
     /**
      * 添加classTrue
      * @param clazzs
@@ -242,7 +246,7 @@ class Status {
      * @param value
      * @returns {boolean}
      */
-    #inev(value){
+    inev(value){
         return Status.EVENT_VALUE.indexOf(event[key]) > -1;
     }
 
@@ -254,7 +258,7 @@ class Status {
     coverEvent(event){
         event = Util.objectToMap(event);
         for(let key in event){
-            if(!this.#inev(event)){
+            if(!this.inev(event)){
                 console.log("has event value not in [0,1,2]");
                 event.delete(key);
             }
@@ -268,7 +272,7 @@ class Status {
      * @param type
      */
     setEvent(event, type){
-        if(Util.isStringWithoutNull(event) && this.#inev(type)){
+        if(Util.isStringWithoutNull(event) && this.inev(type)){
             this._event.set(event,type);
         }
     }
@@ -310,7 +314,7 @@ class Status {
      * @param type
      */
     setMotivation(motivation, type){
-        if(Util.isStringWithoutNull(motivation) && this.#inev(type)){
+        if(Util.isStringWithoutNull(motivation) && this.inev(type)){
             this.setMotivation(motivation,type);
         }
     }

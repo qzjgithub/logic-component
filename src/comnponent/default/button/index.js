@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import basic from '../../basic/index';
+// import basic from '../../basic/index';
 
 class Button extends Component{
     constructor(props, context) {
@@ -11,4 +11,4 @@ class Button extends Component{
     }
 }
 
-export default basic(Button);
+export default Button;
