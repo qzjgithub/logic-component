@@ -31,12 +31,14 @@ featureEntries.forEach((item) => {
     });
 });
 plugins.push(new Copy(copys));
+
+entry['common'] = 'babel-polyfill';
 entries.forEach((item) => {
     entry[item] = `${mpadir}/${item}/index.js`;
     plugins.push(new HtmlWebpackPlugin({
         template : `${mpadir}/${item}/index.html`,
         filename: `${item}/index.html`,
-        chunks: [item],
+        chunks: ['common',item],
         inject: true
     }));
 });

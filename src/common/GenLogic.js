@@ -12,16 +12,20 @@ class GenLogic{
     //自定义激励集
     motivation;
 
+    //motivation激活status的Map
+    activeStatus;
+
     constructor(object){
-        this.status = new Map();
-        this.values = new Map();
-        this.motivation = new Map();
+        this._status = new Map();
+        this._values = new Map();
+        this._motivation = new Map();
+        this._activeStatus = new Map();
         if(Util.isKVObjectWithStringKey(object)){
-            this.status = Util.objectToMap(object);
-            for(let key in this.status){
+            this._status = Util.objectToMap(object);
+            this.status.forEach((s,key) => {
                 this.status.set(key, new Status(Util.isKVObject(s) ? s : {}));
                 this.values.set(key, this.status.get(key).defaultState);
-            }
+            })
         }
     }
 
@@ -30,7 +34,7 @@ class GenLogic{
      * @param name
      * @param status
      * @param trigger
-     */woqu
+     */
     addMotivation(name, { status, trigger = false }){
         if(!Util.isStringWithoutNull(name)) {
             console.error("the name is not a string.");
@@ -44,10 +48,10 @@ class GenLogic{
             console.error("status for motivation is not a kv object with string.");
             return;
         }
-        if(Object.keys(status).length < 1){
+        /*if(Object.keys(status).length < 1){
             console.error("a motivation must be use at least two status.");
             return;
-        }
+        }*/
         for(let key in status){
             if(!this.status.has(key)){
                 console.error(`has no status name ${key}.`);
@@ -55,7 +59,7 @@ class GenLogic{
             }
         }
 
-        this.motivation.set(name, new Motivation(status, trigger))
+        this.motivation.set(name, new Motivation(status, trigger));
     }
 
     /**
@@ -69,7 +73,7 @@ class GenLogic{
         }
         let sm;
         for(let key of Object.keys(this.status)){
-            sm = this.status.get(key).motivation;
+            sm = this.status.get(key)._motivation;
             if(sm.has(name)){
                 console.error(`has status contain motivation name ${name}`);
                 return;
@@ -126,6 +130,10 @@ class GenLogic{
         }
         let s = this.status.get(status);
         s.setMotivation(motivation,type);
+        if(!this.activeStatus.has(motivation)){
+            this.activeStatus.set(motivation,new Set());
+        }
+        this.activeStatus.get(motivation).add(status);
     }
 
     /**
@@ -143,6 +151,40 @@ class GenLogic{
             return;
         }
         this.status.get(status).deleteMotivation(motivation);
+        this.activeStatus.get(motivation).delete(status);
+    }
+
+
+    get values() {
+        return this._values;
+    }
+
+    set values(value) {
+        this._values = value;
+    }
+
+    get motivation() {
+        return this._motivation;
+    }
+
+    set motivation(value) {
+        this._motivation = value;
+    }
+
+    get activeStatus() {
+        return this._activeStatus;
+    }
+
+    set activeStatus(value) {
+        this._activeStatus = value;
+    }
+
+    get status() {
+        return this._status;
+    }
+
+    set status(value) {
+        this._status = value;
     }
 }
 

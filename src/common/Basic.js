@@ -1,27 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import GenLogic from './GenLogic';
+import GenBone from './GenBone';
 
 class Basic extends Component {
 
     constructor(props, context) {
         super(props, context);
-        this.logic = new GenLogic();
+        this.logic = new GenLogic({
+            "touched" : {
+                target: 'div1',
+                classTrue: "test-touched",
+                styleTrue: { color: '#490344' },
+                event : {
+                    click: 0
+                }
+            }
+        });
+
+        this.state = {
+            status : this.logic.values
+        }
+    }
+
+    getBone = () => {
+        return new GenBone(this.props.children,this.logic,this.state).get();
     }
 
     render(){
-        console.log(this.props.children);
-        let c = this.props.children;
-        /*c[0].props['onClick'] = () => {
-            console.log("div1 is clicked.");
-        }*/
-        let newC = React.cloneElement(c[0],{
-            'onClick' : () => {
-                console.log("div1 is cliced.")
-            }
-        });
-        // c.push(newC);
-        return newC;
+        return this.getBone();
     }
 }
 

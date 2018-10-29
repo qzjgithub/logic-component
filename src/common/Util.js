@@ -1,4 +1,6 @@
 class Util {
+    
+    static LOGABLE = false;
     /**
      * 检查是否是undefined
      * @param obj
@@ -43,7 +45,7 @@ class Util {
         if(object instanceof Array){
             return true;
         }else{
-            console.error('object is not an Array');
+            Util.Console('error','object is not an Array');
             return false;
         }
     }
@@ -56,7 +58,7 @@ class Util {
         if(!this.isArray(object)) return false;
         for(let obj of new Set(object)){
             if(!this.isString(obj) || !obj){
-                console.error('object inner has a element is not String');
+                Util.Console('error','object inner has a element is not String');
                 return false;
             }
         }
@@ -72,7 +74,7 @@ class Util {
         if(!this.isUndefined(object) && !this.isNull(object) && (object instanceof Object) && !(object instanceof Array)){
             return true;
         }else{
-            console.error('object in not an object or is an Array');
+            Util.Console('error','object in not an object or is an Array');
             return false;
         }
     }
@@ -86,7 +88,7 @@ class Util {
         if(!this.isKVObject(object)) return false;
         for(let key of Object.keys(object)){
             if(!this.isStringWithoutNull(key)){
-                console.error('the object key is not a string or is ""');
+                Util.Console('error','the object key is not a string or is ""');
                 return false;
             }
         }
@@ -114,14 +116,40 @@ class Util {
      */
     static getArrayWithString(object,reg){
         let clzArr = [];
-        if(Util.isStringWithoutNull(clazzs)){
-            clzArr = clazzs.split(' ');
-        }else if(Util.isArrayWithString(clazzs)){
-            clzArr = clazzs;
+        if(Util.isStringWithoutNull(object)){
+            clzArr = object.split(' ');
+        }else if(Util.isArrayWithString(object)){
+            clzArr = object;
         }else{
-            console.error('object is not an array or a string');
+            Util.Console('error','object is not an array or a string');
         }
         return clzArr;
+    }
+
+    /**
+     * 将首字母大写
+     * @param text
+     * @constructor
+     */
+    static upFirstWord(text){
+        if(Util.isStringWithoutNull(text) && new RegExp(/^[a-zA-Z].*$/).test(text)){
+            return text[0].toUpperCase() + text.substring(1);
+        }else{
+            return text;
+        }
+    }
+
+    /**
+     * 打印开关
+     * @param fun
+     * @param param
+     * @constructor
+     */
+    static Console(fun, ...param){
+        if(!Util.LOGABLE){
+            return;
+        }
+        console[fun](param);
     }
 }
 

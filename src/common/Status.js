@@ -4,7 +4,7 @@ class Status {
 
     static EVENT_VALUE = [0,1,2];
 
-    static BASIC = 'basic';
+    static BASIC = Symbol('basic');
 
     //作用对象
     _target;
@@ -37,7 +37,7 @@ class Status {
     constructor({
         target,
         styleToDom = true, classTrue, classFalse, styleTrue, styleFalse,
-        defaultState = true, event
+        defaultState = false, event
                 }){
         this._target = Util.isStringWithoutNull(target) ? target : Status.BASIC;
         this._styleToDom = !!styleToDom;
@@ -49,6 +49,7 @@ class Status {
         this._defaultState = !!styleToDom;
         this._event = this.coverEvent(event);
         this._motivation = new Map();
+        this._target = target;
     }
 
     get styleToDom() {
@@ -89,6 +90,15 @@ class Status {
 
     get motivation(){
         return this._motivation;
+    }
+
+
+    get target() {
+        return this._target;
+    }
+
+    set target(value) {
+        this._target = value;
     }
 
     /**
