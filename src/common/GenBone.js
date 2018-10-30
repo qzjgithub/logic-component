@@ -76,8 +76,8 @@ class GenBone {
     //生成对象关联status
     genStatusRelate(sign,props){
         let newProps = {};
-        let statusSet = this.signKV.get(sign);
-        statusSet.forEach((state) => {
+        let statusSet = this.signKV.has(sign) && this.signKV.get(sign);
+        statusSet && statusSet.forEach((state) => {
             let status = this.logic.status.get(state);
             status.event.forEach((value,event)=>{
                 let name = 'on' + Util.upFirstWord(event);
@@ -96,6 +96,7 @@ class GenBone {
                         newValue = !oldValue;
                 }
                 seq.events.push((...param) => {
+                    console.log("change state");
                     this.setState({
                         status: {
                             [state] : newValue
@@ -104,6 +105,7 @@ class GenBone {
                     return [...param, this.logic.value, this.state.status];
                 });
                 seq.events.push((...param)=>{
+                    console.log("execute old function");
                     let result = oldEvent.call(this,...param);
                     let len = param.length;
                     this.logic.value = this.state.status;

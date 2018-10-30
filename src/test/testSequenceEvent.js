@@ -17,10 +17,10 @@ let test1 = new SequenceEvent([
             },1000);
         });
     },
-    (name, text) => {
+    (...param) => {
         return new Promise((resolve, reject) => {
             setTimeout(()=>{
-                console.log("print param in function4",name,text);
+                console.log("print param in function4",param[0],param[1]);
                 resolve(["ok"])
             },1000);
         });

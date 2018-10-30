@@ -39,17 +39,17 @@ class Status {
         styleToDom = true, classTrue, classFalse, styleTrue, styleFalse,
         defaultState = false, event
                 }){
+        console.log("create status");
         this._target = Util.isStringWithoutNull(target) ? target : Status.BASIC;
         this._styleToDom = !!styleToDom;
         this._classTrue = Util.getArrayWithString(classTrue);
         this._classFalse = Util.getArrayWithString(classFalse);
-        this._styleTrue = Util.objectToMap(styleTrue);
-        this._styleFalse = Util.objectToMap(styleFalse);
+        this._styleTrue = Util.isKVObjectWithStringKey(styleTrue) ? styleTrue : {};
+        this._styleFalse = Util.isKVObjectWithStringKey(styleFalse) ? styleFalse : {};
 
-        this._defaultState = !!styleToDom;
+        this._defaultState = !!defaultState;
         this._event = this.coverEvent(event);
         this._motivation = new Map();
-        this._target = target;
     }
 
     get styleToDom() {

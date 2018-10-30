@@ -110,6 +110,21 @@ class Util {
     }
 
     /**
+     * 将map转换未对象
+     * @param object
+     */
+    static mapToObject(object){
+        if(object instanceof Map){
+            let o = {};
+            object.forEach((v,k) => {
+                o[k] = v;
+            });
+        }else{
+            return object;
+        }
+    }
+
+    /**
      * 得到纯字符串的数组
      * @param object 可以是非空字符串和数组
      * @param reg 分割字符串的正则表达式

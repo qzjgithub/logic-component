@@ -1,0 +1,25 @@
+{
+  "touched": {
+    "target": "div1",
+    "classTrue": "test-touched",
+    "styleTrue": {
+      "color": "#490344"
+    },
+    "event": {
+      "click": 2
+    }
+  },
+  "on": {
+    "target": "div1",
+    "styleTrue": {
+      "backgroundColor": "#ff00ff"
+    },
+    "styleFalse": {
+      "backgroundColor": "#ffffff"
+    },
+    "event": {
+      "mouseEnter": 1,
+      "mouseOut": 0
+    }
+  }
+}

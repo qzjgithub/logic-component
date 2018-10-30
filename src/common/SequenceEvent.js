@@ -31,4 +31,4 @@ class SequenceEvent {
 }
 
 module.exports = SequenceEvent;
-export default SequenceEvent;
+// export default SequenceEvent;
