@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import GenLogic from './GenLogic';
-import Status from './Status';
-import SequenceEvent from "./SequenceEvent";
+import React from 'react';
+import GenLogic from "./GenLogic";
+import Status from "./Status";
 import Util from "./Util";
+import SequenceEvent from "./SequenceEvent";
 
-class Basic extends Component {
+const logical = (WrappedComponent, logic) => class extends WrappedComponent {
 
     constructor(props, context) {
         super(props, context);
         this.initLogic();
+        this.bone = super.render();
         this.signKV = new Map();
-
-        this.state = {
+        this.state = Object.assign(this.state || {},{
             status : this.initStatus()
-        }
+        });
 
+        if(this.onLogicalInit){
+            this.onLogicalInit.call(this,this.logic,this.state);
+        }
     }
 
     //初始化logic对象
     initLogic() {
         this.logic = new GenLogic({});
-        let logic = this.props.logic;
         if (!logic) {
             return;
         }
@@ -50,7 +51,7 @@ class Basic extends Component {
         Object.keys(hasMotStatus).forEach((sn)=>{
             let sm = hasMotStatus[sn];
             Object.keys(sm).forEach((mn)=>{
-               this.logic.setStatusMotivation(mn,sn,sm[mn]);
+                this.logic.setStatusMotivation(mn,sn,sm[mn]);
             });
         });
     }
@@ -64,33 +65,6 @@ class Basic extends Component {
         return status;
     }
 
-    //得到dom
-    getBone = () => {
-        let children = this.props.children;
-        if (!this.logic.status.size) {
-            return children;
-        } else {
-            this.genSignKv(this.logic.status);
-            let props;
-            if(children instanceof Array){
-                props = this.genStatusRelate(Status.BASIC,this.props);
-                return React.createElement('div',props,this.genChildren(children));
-            }else{
-                props = this.genStatusRelate(Status.BASIC,children.props);
-                props['children'] = this.genChildren(children.props.children);
-                return React.cloneElement(children,props);
-            }
-        }
-    }
-
-    showState = () => {
-        let status = [];
-        Object.keys(this.state.status).forEach((k)=>{
-            status.push(<div>{k} : {this.state.status[k].toString()}</div>)
-        });
-        return status;
-    }
-
     //生成targetKV键值对
     genSignKv(status){
         status.forEach((state,key) => {
@@ -100,6 +74,20 @@ class Basic extends Component {
             }
             this.signKV.get(sign).add(key);
         });
+    }
+
+    //得到dom
+    getBone = () => {
+        let children = this.bone;
+        if (!this.logic.status.size) {
+            return children;
+        } else {
+            this.genSignKv(this.logic.status);
+            let props = this.genStatusRelate(Status.BASIC,children.props);
+            props['children'] = this.genChildren(children.props.children);
+            props = this.checkProps(props);
+            return React.cloneElement(children,props);
+        }
     }
 
     //嵌套生成dom
@@ -147,29 +135,30 @@ class Basic extends Component {
                 let { info , oldValue } = data;
                 newValue = data['newValue'];
 
-                let result = info['oldEvent'] && info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status']]);//执行原组件传入的方法
-                return result != undefined ? [info,oldValue,newValue,result] : [info,oldValue,newValue];
+                info['oldEvent'] && info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status']]);//执行原组件传入的方法
+                return [info,oldValue,newValue];
             });
 
-            seq.events.push((info,oldValue,newValue,result)=>{ //第二个方法，根据新值的改变调用方法产生激励
+            seq.events.push((info,oldValue,newValue)=>{ //第二个方法，根据新值的改变调用方法产生激励
                 let mev,nParam = [oldValue, newValue, info['status']];
                 Object.keys(info['movt']).forEach((mn)=>{ //循环调用引起的激励产生的事件
                     if(info['movt'][mn]){
-                       mev = this.props['on'+Util.upFirstWord(mn)];
-                       mev && mev.call(this,...nParam);
+                        mev = this.props['on'+Util.upFirstWord(mn)];
+                        mev && mev.call(this,...nParam);
                     }
                 });
 
-                let p = result != undefined ? [...nParam,result] : nParam;
                 this.setState({
                     status: newValue
                 },() => {
-                    let onChange = this.props['onChanged']; //检测并调用onchange方法
-                    if(onChange && JSON.stringify(newValue) != JSON.stringify(oldValue)){
-                        onChange.call(this,...p);
+                    let onChanged = this.props['onChanged']; //检测并调用onchange方法
+                    if(onChanged && JSON.stringify(newValue) != JSON.stringify(oldValue)){
+                        onChanged.call(this,...nParam);
                     }
+                    let parentK = this.props[k];
+                    parentK && parentK.call(this,...nParam);
                 });
-                return p;
+                return nParam;
             });
             newProps[k] = (ev) => {
                 ev.stopPropagation();
@@ -219,6 +208,7 @@ class Basic extends Component {
 
     //循环检测完整激励
     triggerMotivation(info,oldValue,newValue){
+        info['movt'] = info['movt'] || {};
         let movt = {};
         this.logic.motivation.forEach((motivation,name)=>{//检测此状态是否会引起激励变化
             if(info['movt'][name]==undefined){
@@ -228,11 +218,13 @@ class Basic extends Component {
                     isActive = isActive && newValue[state] == value;
                 });
                 isActive = isTouch && isActive;
-                movt[name] = motivation.trigger;
+                if(isActive) {
+                    movt[name] = motivation.trigger;
+                }
             }
         });
         let keys = Object.keys(movt);
-        info['movt'] = Object.assign(info['movt']||{},movt);
+        info['movt'] = Object.assign(info['movt'],movt);
         if(keys.length){ //如果有激励变化，检测引起的状态变化，再此检测是否有引起激励
             keys.forEach((mn)=>{
                 let mtos = this.logic.activeStatus.get(mn);
@@ -249,7 +241,7 @@ class Basic extends Component {
                         case 2:
                             v = 2;
                     }
-                    newValue[v] = v==2 ? !oldValue[sn] : v;
+                    newValue[sn] = v==2 ? !oldValue[sn] : v;
                     info['status'][sn] = v;
                 });
             });
@@ -259,16 +251,18 @@ class Basic extends Component {
         }
     }
 
-    render(){
-        return <div>
-            { this.getBone() }
-            { this.showState() }
-        </div>
+    //检查父prop上是否还有未实现的方法
+    checkProps(props){
+        Object.keys(this.props).forEach((key)=>{
+            if(new RegExp(/^on.+$/).test(key) && !props[key]){
+                props[key] = this.props[key];
+            }
+        });
+        return props;
     }
-}
 
-Basic.propTypes = {
-    logic : PropTypes.object
-}
-
-module.exports = Basic;
+    render() {
+        return this.getBone();
+    }
+};
+export default logical;

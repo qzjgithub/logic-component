@@ -39,7 +39,6 @@ class Status {
         styleToDom = true, classTrue, classFalse, styleTrue, styleFalse,
         defaultState = false, event
                 }){
-        console.log("create status");
         this._target = Util.isStringWithoutNull(target) ? target : Status.BASIC;
         this._styleToDom = !!styleToDom;
         this._classTrue = Util.getArrayWithString(classTrue);
@@ -257,7 +256,7 @@ class Status {
      * @returns {boolean}
      */
     inev(value){
-        return Status.EVENT_VALUE.indexOf(event[key]) > -1;
+        return Status.EVENT_VALUE.indexOf(value) > -1;
     }
 
     /**
@@ -325,7 +324,7 @@ class Status {
      */
     setMotivation(motivation, type){
         if(Util.isStringWithoutNull(motivation) && this.inev(type)){
-            this.setMotivation(motivation,type);
+            this.motivation.set(motivation,type);
         }
     }
 

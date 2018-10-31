@@ -10,6 +10,16 @@ class Motivation{
     constructor(object, trigger = false){
         this.coverStatus(object);
         this._trigger = !!trigger;
+        this._object = object;
+        this._trigger = trigger;
+    }
+
+    get trigger() {
+        return this._trigger;
+    }
+
+    set trigger(value) {
+        this._trigger = value;
     }
 
     coverStatus(object){

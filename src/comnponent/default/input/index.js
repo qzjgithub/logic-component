@@ -4,14 +4,14 @@ import config from './config.json';
 import logic from './logic.json';
 import './index.styl';
 
-class Button extends Component{
+class Input extends Component{
     constructor(props, context) {
         super(props, context);
     }
 
     render(){
-        return <button className={config.name}>{this.props.children || '按钮'}</button>;
+        return <input className={config.name}/>
     }
 }
 
-export default logical(Button,logic);
+export default logical(Input,logic);

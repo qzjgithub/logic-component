@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import Basic from '../common/Basic';
+import logical from '../common/logical';
 import './test.styl';
 
 import logic from './test.json';
 
-class test extends Component{
+class test2 extends Component{
 
     constructor(props, context){
         super(props,context);
@@ -14,32 +14,24 @@ class test extends Component{
     }
 
     divClick = (e,param,oldV,newV) => {
-        console.log(this.state.param);
+        // console.log(this.state.param);
         console.log(e);
-        console.log(param);
-        console.log(oldV);
-        console.log(newV);
+        // console.log(param);
+        // console.log(oldV);
+        // console.log(newV);
         console.log("div2 is clicked.");
-        return e;
-    }
-
-    onChanged = (o,n,s)=>{
-        console.log(o,n,s);
-        console.log(this.state.param);
     }
 
     render(){
-        return <Basic logic={logic} onChanged={this.onChanged}>
-            <section>
+        return <section>
             <div sign={"div1"} style={{backgroundColor: '#977876',color: 'white'}}>this is test</div>
-            <div sign={"div2"} onClick={(e,oldv,newv) => {this.divClick(e.target,"param1",oldv,newv)}}>第二个div</div>
+            <div sign={"div2"} onClick={(e,o,n) => {this.divClick(e.target,"param1",o,n)}}>第二个div</div>
             <p><a>内容:</a>一段文字</p>
             { ["sdf",21143,"w4r0"].map((v) => {
                 return <b key={v}>{v}</b>
             }) }
-            </section>
-        </Basic>
+        </section>
     }
 }
 
-export default test;
+export default logical(test2, logic);
