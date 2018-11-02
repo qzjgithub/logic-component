@@ -1,33 +1,22 @@
 const path = require('path');
 const fs = require('fs');
-const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const Clean = require('clean-webpack-plugin');
 const Copy = require('copy-webpack-plugin');
 
-const port = 9090;
+const comp = path.resolve(__dirname,'../src/logic/component/default');
 
-const mpadir = path.resolve(__dirname, '../src/mpa_modules');
-
-const entries = fs.readdirSync(mpadir)
-    .filter( entry => fs.statSync(path.join(mpadir, entry)).isDirectory());
-
-const featuredir = path.resolve(__dirname,'../src/feature_modules');
-
-const featureEntries = fs.existsSync(featuredir) && fs.readdirSync(featuredir)
-    .filter( entry => fs.statSync(path.join(featuredir, entry)).isDirectory());
+const entries = fs.readdirSync(comp)
+    .filter(entry => entry!=='ASSETS' && fs.statSync(path.join(comp, entry)).isDirectory());
 
 let entry = {}, plugins = [];
-let copys = [];
-featureEntries && featureEntries.forEach((item) => {
-    copys.push({
-        from: `${featuredir}/${item}/dist/*`,
-        to: `${item}/[name].[ext]`,
-        toType: 'template'
-    });
-});
-plugins.push(new Copy(copys));
+
+plugins.push(new Clean(['build'],{
+    root: path.resolve(__dirname, '../'),
+    verbose:  true,
+    dry:      false
+}));
 
 plugins.push(new Copy([{
     from: path.resolve(__dirname, '../src/logic/component/default/ASSETS') +'/**/*',
@@ -35,23 +24,16 @@ plugins.push(new Copy([{
     test: /^.*(ASSETS)(.*)$/
 }]));
 
-entry['common'] = 'babel-polyfill';
 entries.forEach((item) => {
-    entry[item] = `${mpadir}/${item}/index.js`;
-    plugins.push(new HtmlWebpackPlugin({
-        template : `${mpadir}/${item}/index.html`,
-        filename: `${item}/index.html`,
-        chunks: ['common',item],
-        inject: true
-    }));
+    entry[item] = `${comp}/${item}/index.js`;
 });
 
-module.exports = {
-    mode: "development",
+let config = {
+    mode: "production",
     entry: entry,
     output: {
-        path: path.resolve(__dirname, '../dist'), // 输出的路径
-        filename: '[name]/[name]_[hash:8].js'  // 打包后文件
+        path: path.resolve(__dirname, '../build'),
+        filename: '[name]/index.js'
     },
     resolve: {
         extensions: ['.js','.styl']
@@ -67,7 +49,8 @@ module.exports = {
                     }
                 },
                 exclude: /node_modules/
-            },{
+            },
+            {
                 oneOf: [
                     {
                         test: /\.css$/,
@@ -93,7 +76,7 @@ module.exports = {
                                         }),
                                     ],
                                 },
-                            },
+                            }
                         ]
                     },
                     {
@@ -108,27 +91,22 @@ module.exports = {
                         },
                     },
                 ]
-            }
+            },
         ]
     },
-    plugins: [
-        ...plugins,
-        new webpack.HotModuleReplacementPlugin(),
-        new OpenBrowserPlugin({ url: 'http://localhost:' + port})
-    ],
-    devServer: {
-        // contentBase: path.resolve(__dirname, '../dist'), //默认会以根文件夹提供本地服务器，这里指定文件夹
-        historyApiFallback: {
-            index: '/index/index.html'
-        }, //在开发单页应用时非常有用，它依赖于HTML5 history API，如果设置为true，所有的跳转将指向index.html
-        port: port, //如果省略，默认8080
-        // index: 'index/index.html',
-        publicPath: "/",
-        inline: true,
-        hot: true,
-        /*proxy: [{
-            context: ['/auth', '/api'],
-            target: 'http://localhost:3000',
-        }]*/
-    }
+    /*optimization: {
+        splitChunks: {
+            name: true,
+            cacheGroups: {
+                common: {
+                    name: "common",
+                    chunks: "initial",
+                    minChunks: 4,
+                }
+            }
+        }
+    },*/
+    plugins: plugins
 }
+
+module.exports = config;

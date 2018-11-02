@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import logical from '../common/logical';
+import logical from '../logic/common/logical';
 import './test.styl';
 
-import logic from './test.json';
+import logic from './test.js';
 
 class test2 extends Component{
 

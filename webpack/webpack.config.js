@@ -32,6 +32,12 @@ featureEntries.forEach((item) => {
 });
 plugins.push(new Copy(copys));
 
+plugins.push(new Copy([{
+    from: path.resolve(__dirname, '../src/logic/component/default/ASSETS') +'/**/*',
+    to: '[1][2]',
+    test: /^.*(ASSETS)(.*)$/
+}]));
+
 entry['common'] = 'babel-polyfill';
 entries.forEach((item) => {
     entry[item] = `${mpadir}/${item}/index.js`;

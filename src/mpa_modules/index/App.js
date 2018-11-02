@@ -2,10 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route , Redirect, Switch} from "react-router";
-import Button from '../../comnponent/default/button';
-import Grid from '../../comnponent/default/grid';
+import 'mpa-bridge-dom';
+
+
 import test from '../../test/testComponent';
 import test2 from '../../test/testComponent2';
+
+import { Button , Grid } from 'logic';
 import './App.styl';
 
 import Header from '../../space_modules/header';
@@ -20,13 +23,13 @@ class App extends Component{
     render(){
         return <div>
             <Header/>
+            <Button>build出来的按钮</Button>
             {/*<Content>*/}
                 <Switch>
                     <Route path={'/button'} component={ Button } />
-                    <Route path={'/test'} component={ test } />
                     <Route path={'/grid'} component={ Grid }/>
                     <Route path={'/test2'} component={ test2 }/>
-                    <Redirect from={'/'} to={'/test'}/>
+                    <Redirect from={'/'} to={'/test2'}/>
                 </Switch>
             {/*</Content>*/}
         </div>
