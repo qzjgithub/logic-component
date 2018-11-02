@@ -3,7 +3,7 @@ import logical from '../../../common/logical';
 import comcfg from '../ASSETS/config.json';
 
 export default (WrappedComponent, logic, config) => {
-    config = Object.assign(comcfg,config);
+    config = Object.assign({},comcfg,config);
 
     let logicBone = logical(WrappedComponent, logic, config);
 

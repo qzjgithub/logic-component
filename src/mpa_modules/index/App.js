@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route , Redirect, Switch} from "react-router";
+import { Link } from 'react-router-dom';
 import 'mpa-bridge-dom';
 
-
-import test from '../../test/testComponent';
 import test2 from '../../test/testComponent2';
 
-import { Button , Grid } from 'logic';
+import { Button , Grid } from '../../logic';
+import ButtonShow from '../../space_modules/button';
 import './App.styl';
 
 import Header from '../../space_modules/header';
-
-import Content from "../../space_modules/content";
 
 class App extends Component{
     constructor(props, context) {
@@ -23,14 +21,18 @@ class App extends Component{
     render(){
         return <div>
             <Header/>
-            <Button>build出来的按钮</Button>
             {/*<Content>*/}
-                <Switch>
-                    <Route path={'/button'} component={ Button } />
-                    <Route path={'/grid'} component={ Grid }/>
-                    <Route path={'/test2'} component={ test2 }/>
-                    <Redirect from={'/'} to={'/test2'}/>
-                </Switch>
+            <ul>
+                <li><Link to={'/test2'}>测试</Link></li>
+                <li><Link to={'/button'}>按钮</Link></li>
+                <li><Link to={'/grid'}>列表</Link></li>
+            </ul>
+            <Switch>
+                <Route path={'/button'} component={ ButtonShow } />
+                <Route path={'/grid'} component={ Grid }/>
+                <Route path={'/test2'} component={ test2 }/>
+                <Redirect from={'/'} to={'/button'}/>
+            </Switch>
             {/*</Content>*/}
         </div>
     }

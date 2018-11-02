@@ -28,12 +28,11 @@ class Grid extends Component{
     }
 
     render(){
-        return <div className={config.name}>
+        return <div>
             <ul>
                 <li><Button sign={'btn'} onChanged={this.onButtonChanged} onClick={this.onButtonClick}>
                     <a>+</a>
                     添加
-                    <Button>……</Button>
                 </Button></li>
             </ul>
             <ul>列表</ul>

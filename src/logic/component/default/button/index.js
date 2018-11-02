@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import basic from '../basic/index';
 import config from './config.json';
 import logic from './logic.js';
@@ -14,8 +15,16 @@ class Button extends Component{
 
     render(){
         let lang = this.state['i18n'][config.name] || {};
-        return <button className={config.name}>{this.props.children || lang['text']}</button>;
+        let styleType = this.props.styleType || '';
+        return <button className={ styleType }>
+            {this.props.children || lang['text']}
+            </button>;
     }
 }
+
+Button.propTypes = {
+    styleType : PropTypes.string
+}
+
 
 export default basic(Button,logic,config);

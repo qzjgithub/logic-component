@@ -10,7 +10,7 @@ class Input extends Component{
     }
 
     render(){
-        return <input className={config.name}/>
+        return <input/>
     }
 }
 
