@@ -16,6 +16,10 @@ class ButtonShow extends Component{
         });
     }
 
+    onChanged = (s,o,n,state) => {
+        console.log(s,o,n,state);
+    }
+
     render(){
         return <div className={"buttonShow"}>
             {/*<Button>默认按钮</Button>
@@ -28,7 +32,7 @@ class ButtonShow extends Component{
             <Button styleType={"fixed-big"} onClick={this.onClick}>大宽按钮</Button>
             <br/>
             <br/>
-            <Button styleType={"fixed-big left"} disabled={this.state.disabled}></Button>
+            <Button styleType={"fixed-big left"} disabled={this.state.disabled} onChanged={this.onChanged}></Button>
             {/*<Button styleType={"fixed-big right"}>大宽右按钮</Button>
             <Button styleType={"fixed-big left"}>大宽下拉按钮<i className={"icondown iconfont icon-triangledownfill"}></i></Button>*/}
         </div>

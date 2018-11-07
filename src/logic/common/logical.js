@@ -99,23 +99,41 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         if(super.componentWillReceiveProps){
             super.componentWillReceiveProps(nextProp);
         }
-        let status = this.state.status;
-        if(status){
-            for(let k in status){
+        this.logic.values = Object.assign({},this.state.status);
+        let newStatus = this.state.status,status = {};
+        if(newStatus){
+            for(let k in newStatus){
                 if(nextProp[k]!=undefined){
-                    status[k] = nextProp[k];
+                    if(nextProp[k]!=status[k]){
+                        status[k] = nextProp[k];
+                    }
+                    newStatus[k] = nextProp[k];
                 }
             }
         }
+        let { info , oldValue, newValue } =
+            this.triggerMotivation({ status: status },this.logic.values, newStatus);
+        let param = [oldValue, newValue, info['status']], mev;
+        Object.keys(info['movt']).forEach((mn)=>{
+            if(info['movt'][mn]){
+                mev = this.props['on'+Util.upFirstWord(mn)];
+                mev && mev.call(this,...param);
+            }
+        });
         let keys = nextProp && nextProp['param'] || {};
         this.setState(Object.assign({
-            status : status
-        },keys));
+            status : newValue
+        },keys),()=>{
+            param.push(this.state)
+            let onChanged = this.props['onChanged']; //检测并调用onchange方法
+            if(onChanged && JSON.stringify(newValue) != JSON.stringify(oldValue)){
+                onChanged.call(this,...param);
+            }
+        });
     }
 
     //得到dom
     getBone = (bone) => {
-        console.log(this.props,this.state);
         let children = this.bone = bone;
         if (!this.logic.status.size) {
             return children;
@@ -193,6 +211,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 this.setState({
                     status: newValue
                 },() => {
+                    nParam.push(this.state)
                     let onChanged = this.props['onChanged']; //检测并调用onchange方法
                     if(onChanged && JSON.stringify(newValue) != JSON.stringify(oldValue)){
                         onChanged.call(this,...nParam);
@@ -287,7 +306,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                             v = 2;
                             break;
                         default:
-                            v = !!v.call(this,this.status);
+                            v = !!v.call(this,this.state);
                     }
                     newValue[sn] = v==2 ? !oldValue[sn] : v;
                     info['status'][sn] = v;
