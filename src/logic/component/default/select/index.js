@@ -5,7 +5,7 @@ import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
 
-class Button extends Component{
+class Select extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -15,15 +15,17 @@ class Button extends Component{
     }
 
     render(){
-        return <button>
-            {this.props.children || lang['text']}
-            </button>;
+        return <div>
+            <button>
+                {this.props.children || lang['text']}
+            </button>
+        </div>;
     }
 }
 
-Button.propTypes = {
+Select.propTypes = {
     styleType : PropTypes.string
 }
 
 
-export default basic(Button,logic,config);
+export default basic(Select,logic,config);
