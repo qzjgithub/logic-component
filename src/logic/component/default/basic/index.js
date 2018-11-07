@@ -13,6 +13,9 @@ export default (WrappedComponent, logic, config) => {
         }
 
         componentDidMount(){
+            if(super.componentDidMount){
+                super.componentDidMount();
+            }
             if(this.config['i18n']=='public'){
                 let that = this;
                 try{
@@ -31,7 +34,6 @@ export default (WrappedComponent, logic, config) => {
                 }catch(e){
                     console.log(e);
                 }
-
             }
         }
     };

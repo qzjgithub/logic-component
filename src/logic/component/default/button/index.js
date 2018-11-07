@@ -11,6 +11,7 @@ class Button extends Component{
         this.state = {
             i18n : {}
         }
+
     }
 
     render(){

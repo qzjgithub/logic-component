@@ -13,7 +13,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         this.signKV = new Map();
         this.state = Object.assign(this.state || {},{
             status : this.initStatus()
-        }, logic ? (logic['keys'] || {}) : {});
+        }, this.initKeys());
 
         this.config = config;
 
@@ -62,9 +62,26 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     initStatus = () => {
         let status = {};
         this.logic.values.forEach((v,k)=>{
-            status[k] = v;
+            let pv = this.props[k];
+            status[k] = pv == undefined ? v : pv;
         });
         return status;
+    }
+
+    //初始化key值
+    initKeys = () => {
+        let keys;
+        let param = this.props['param'];
+        if(param && logic && logic['keys']){
+            keys = logic['keys'];
+            for(let key in keys){
+                let pk = param[key];
+                if(pk != undefined){
+                    keys[key] = pk;
+                }
+            }
+        }
+        return keys;
     }
 
     //生成targetKV键值对
@@ -78,8 +95,27 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         });
     }
 
+    componentWillReceiveProps(nextProp){
+        if(super.componentWillReceiveProps){
+            super.componentWillReceiveProps(nextProp);
+        }
+        let status = this.state.status;
+        if(status){
+            for(let k in status){
+                if(nextProp[k]!=undefined){
+                    status[k] = nextProp[k];
+                }
+            }
+        }
+        let keys = nextProp && nextProp['param'] || {};
+        this.setState(Object.assign({
+            status : status
+        },keys));
+    }
+
     //得到dom
     getBone = (bone) => {
+        console.log(this.props,this.state);
         let children = this.bone = bone;
         if (!this.logic.status.size) {
             return children;
@@ -103,9 +139,6 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 return this.genChildren(child);
             });
         } else if (Util.isKVObject(element)) { //如果是对象则先检测其状态，在检测其子元素
-            if(typeof element.type == 'function') {
-                // console.log("Button");
-            }
             let props, sign = element.props.sign;
             if(sign && this.signKV.has(sign)){ //检测是否需要与状态绑定
                 props = this.genStatusRelate(sign, element.props);

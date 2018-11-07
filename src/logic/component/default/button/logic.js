@@ -14,7 +14,6 @@ export default {
     },
     "keys": {
         "value": "",
-        "text": "",
         "name": ""
     }
 };
