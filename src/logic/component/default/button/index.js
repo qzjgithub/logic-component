@@ -15,7 +15,7 @@ class Button extends Component{
     }
 
     render(){
-        let lang = this.state['i18n'][config.name] || {};
+        let lang = this.state['i18n'] || {};
         let styleType = this.props.styleType || '';
         return <button className={ styleType }>
             {this.props.children || lang['text']}

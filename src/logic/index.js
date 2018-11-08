@@ -3,6 +3,7 @@ import './component/default/ASSETS/font/iconfont.css';
 module.exports.Button = require('./component/default/button').default;
 module.exports.Grid = require('./component/default/grid').default;
 module.exports.Input = require('./component/default/input').default;
+module.exports.Select = require('./component/default/select').default;
 
 var Status = require('./common/Status').default;
 var Motivation = require('./common/Motivation').default;

@@ -7,8 +7,9 @@ import 'mpa-bridge-dom';
 
 import test2 from '../../test/testComponent2';
 
-import { Button , Grid } from '../../logic';
+import { Button , Grid , Select } from '../../logic';
 import ButtonShow from '../../space_modules/button';
+import SelectShow from '../../space_modules/select';
 import './App.styl';
 
 import Header from '../../space_modules/header';
@@ -25,13 +26,15 @@ class App extends Component{
             <ul>
                 <li><Link to={'/test2'}>测试</Link></li>
                 <li><Link to={'/button'}>按钮</Link></li>
+                <li><Link to={'/select'}>下拉框</Link></li>
                 <li><Link to={'/grid'}>列表</Link></li>
             </ul>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
                 <Route path={'/grid'} component={ Grid }/>
                 <Route path={'/test2'} component={ test2 }/>
-                <Redirect from={'/'} to={'/button'}/>
+                <Route path={'/select'} component={ SelectShow }/>
+                <Redirect from={'/'} to={'/select'}/>
             </Switch>
             {/*</Content>*/}
         </div>

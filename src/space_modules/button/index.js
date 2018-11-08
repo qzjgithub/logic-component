@@ -21,7 +21,7 @@ class ButtonShow extends Component{
     }
 
     render(){
-        return <div className={"buttonShow"}>
+        return <div className={"Show"}>
             {/*<Button>默认按钮</Button>
             <Button styleType={"medium"}>中宽按钮</Button>
             <Button styleType={"big"}>大宽按钮</Button>

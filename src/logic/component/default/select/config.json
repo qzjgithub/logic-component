@@ -1,4 +1,5 @@
 {
   "name":"Select",
-  "theme":"default"
+  "theme":"default",
+  "i18n": "public"
 }

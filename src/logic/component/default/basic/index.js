@@ -28,7 +28,7 @@ export default (WrappedComponent, logic, config) => {
                             that['onI18n'].call(that,i18n);
                         }
                         that.setState({
-                            i18n: i18n
+                            i18n: i18n[config.name]
                         });
                     });
                 }catch(e){

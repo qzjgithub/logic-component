@@ -22,7 +22,7 @@ export default {
       },
       "event": {
         "mouseEnter": 1,
-        "mouseOut": 0
+        "mouseLeave": 0
       }
     }
   },

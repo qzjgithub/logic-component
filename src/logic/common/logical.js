@@ -71,8 +71,8 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     //初始化key值
     initKeys = () => {
         let keys;
-        let param = this.props['param'];
-        if(param && logic && logic['keys']){
+        let param = this.props['param'] || {};
+        if(logic && logic['keys']){
             keys = logic['keys'];
             for(let key in keys){
                 let pk = param[key];
@@ -222,7 +222,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 return nParam;
             });
             newProps[k] = (ev) => {
-                ev.stopPropagation();
+                ev && ev.stopPropagation && ev.stopPropagation();
                 seq.execute(ev);
             }
         });
@@ -320,11 +320,18 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
 
     //检查父prop上是否还有未实现的方法
     checkProps(props){
+        let reg = new RegExp(/^on.+$/);
         Object.keys(this.props).forEach((key)=>{
-            if(new RegExp(/^on.+$/).test(key) && !props[key]){
+            if(reg.test(key) && !props[key]){
                 props[key] = this.props[key];
             }
         });
+        if(this.props['className']){
+            props['className'] += ` ${this.props['className']}`;
+        }
+        if(this.props['style']){
+            Object.assign(props['style'],this.props['style']);
+        }
         return props;
     }
 
