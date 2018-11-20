@@ -14,6 +14,34 @@ class Select extends Component{
         this.state = {
             i18n: {}
         }
+        this.initParam();
+    }
+
+    initParam = (prop) => {
+        let param = prop['param']||{};
+        let { value, index, data } = param;
+        let selectedIndex = 0,item;
+        for(let i=0;i < data.length;i++){
+            item = data[i];
+            if(value){
+                if(item['value'] == value){
+                    selectedIndex = i;
+                    break;
+                }
+            }else{
+                if(item['checked']){
+                    selectedIndex = i;
+                }
+            }
+        }
+        selectedIndex = value ? selectedIndex : ( typeof index == 'number' ? index : selectedIndex);
+        if(selectedIndex < data.length){
+            this.setState({
+                value: data[selectedIndex][this.state.valueKey],
+                text: data[selectedIndex][this.state.textKey],
+                index: selectedIndex
+            });
+        }
     }
 
     onLogicalInit = (logic, state)=>{

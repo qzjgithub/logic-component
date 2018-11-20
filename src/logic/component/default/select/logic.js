@@ -65,6 +65,7 @@ export default {
         "valueKey" : "value",
         "value": "",
         "text": "",
+        "index":0,
         "textKey": "text",
         "defaultText":"",
         "noDataText":"",
