@@ -1,15 +1,16 @@
 export default {
   "status":{
-    "mouseDown":{
-      "styleTrue":{
-        "backgroundColor":"#000000"
-      },
-      "styleFalse":{
-        "backgroundColor":"transparent"
-      },
+    "touched":{
       "event":{
-        "mouseDown":1,
-        "mouseUp":0
+        "blur": 1
+      }
+    },
+    "empty":{
+      "event": {
+        change: (state)=>{
+          let v = state['value'];
+          return v==''||v==undefined||v==null;
+        }
       }
     }
   }
