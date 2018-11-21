@@ -14,42 +14,36 @@ class Select extends Component{
         this.state = {
             i18n: {}
         }
+    }
+
+    componentDidMount = () => {
         this.initParam();
     }
 
-    initParam = (prop) => {
-        let param = prop['param']||{};
+    initParam = () => {
+        let param = this.props['param']||{};
         let { value, index, data } = param;
         let selectedIndex = 0,item;
-        for(let i=0;i < data.length;i++){
-            item = data[i];
-            if(value){
+        if(value){
+            for(let i=0;i < data.length;i++){
+                item = data[i];
                 if(item['value'] == value){
                     selectedIndex = i;
                     break;
                 }
-            }else{
-                if(item['checked']){
-                    selectedIndex = i;
-                }
             }
+        }else if(typeof index == 'number' && index >=0 && index < data.length){
+            selectedIndex = index;
         }
-        selectedIndex = value ? selectedIndex : ( typeof index == 'number' ? index : selectedIndex);
-        if(selectedIndex < data.length){
-            this.setState({
-                value: data[selectedIndex][this.state.valueKey],
-                text: data[selectedIndex][this.state.textKey],
-                index: selectedIndex
-            });
-        }
-    }
-
-    onLogicalInit = (logic, state)=>{
-        console.log(logic,state);
+        item = data[selectedIndex];
+        this.setState({
+            value: item[this.state['valueKey']],
+            text: item[this.state['textKey']],
+            index: selectedIndex
+        });
     }
 
     itemClick = (item)=>{
-        console.log(item);
         this.setState({
             value: item[this.state['valueKey']],
             text: item[this.state['textKey']]
