@@ -41,8 +41,8 @@ class Status {
                 }){
         this._target = Util.isStringWithoutNull(target) ? target : Status.BASIC;
         this._styleToDom = !!styleToDom;
-        this._classTrue = Util.getArrayWithString(classTrue);
-        this._classFalse = Util.getArrayWithString(classFalse);
+        this._classTrue = this.coverClassTrue(classTrue);
+        this._classFalse = this.coverClassFalse(classFalse);
         this._styleTrue = Util.isKVObjectWithStringKey(styleTrue) ? styleTrue : {};
         this._styleFalse = Util.isKVObjectWithStringKey(styleFalse) ? styleFalse : {};
 
