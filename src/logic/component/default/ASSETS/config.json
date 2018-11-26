@@ -1,7 +1,9 @@
 {
   "name": "default",
   "style": {
-    "themeColor": "#314552",
+    "baseColor": "#314552",
+    "borderColorFactor": [-10, 120, 120],
+    "colorDecimal":16,
     "fontSize": "12",
     "unit": "px"
   },

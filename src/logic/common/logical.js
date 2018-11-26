@@ -144,7 +144,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             props['children'] = this.genChildren(children.props.children);
             props = this.checkProps(props);
 
-            props['className'] = `${config['name']||''} ${props['className']}`;
+            props['className'] = `${config['name']||''} ${props['className']}`.trim();
 
             return React.cloneElement(children,props);
         }
@@ -263,9 +263,10 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             });
             if(status.styleToDom){
                 let tail = Util.upFirstWord(this.state.status[state].toString());
-                className +=  ' '+(status[`class${tail}`]||[]).join(' ');
+                className +=  ' '+Array.from(status[`class${tail}`]||[]).join(' ');
                 style = Object.assign({},style,status[`style${tail}`]);
             }
+            className = className.trim();
         });
         return { list, prop : { className, style} };
     }

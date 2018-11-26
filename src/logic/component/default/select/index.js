@@ -82,5 +82,4 @@ Select.propTypes = {
     styleType : PropTypes.string
 }
 
-
 export default basic(Select,logic,config);

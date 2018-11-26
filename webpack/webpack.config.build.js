@@ -33,7 +33,7 @@ let config = {
     entry: entry,
     output: {
         path: path.resolve(__dirname, '../build'),
-        filename: '[name]/index.js'
+        filename: '[name]/genBaseStyle.js'
     },
     resolve: {
         extensions: ['.js','.styl']
