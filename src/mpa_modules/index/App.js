@@ -10,6 +10,7 @@ import test2 from '../../test/testComponent2';
 import { Button , Grid , Select } from '../../logic';
 import ButtonShow from '../../space_modules/button';
 import SelectShow from '../../space_modules/select';
+import TopSlipShow from '../../space_modules/topSlip';
 import './App.styl';
 
 import Header from '../../space_modules/header';
@@ -28,13 +29,15 @@ class App extends Component{
                 <li><Link to={'/button'}>按钮</Link></li>
                 <li><Link to={'/select'}>下拉框</Link></li>
                 <li><Link to={'/grid'}>列表</Link></li>
+                <li><Link to={'/topSlip'}>下滑提示</Link></li>
             </ul>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
                 <Route path={'/grid'} component={ Grid }/>
                 <Route path={'/test2'} component={ test2 }/>
                 <Route path={'/select'} component={ SelectShow }/>
-                <Redirect from={'/'} to={'/select'}/>
+                <Route path={'/topSlip'} component={ TopSlipShow }/>
+                <Redirect from={'/'} to={'/topSlip'}/>
             </Switch>
             {/*</Content>*/}
         </div>

@@ -1,0 +1,23 @@
+.TopSlip{
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  bottom: 100%;
+  padding: 5px;
+  transition: top 500ms linear;
+  top: -60px;
+  &>span{
+    color: #ffffff;
+    border:1px solid #28c6de;
+    padding: 5px 10px;
+    border-radius: 2px;
+    display: inline-block;
+    max-width: 20%;
+    max-height: 53px;
+    overflow: hidden;
+  }
+}
+
+.TopSlip.opened{
+  top: 0;
+}

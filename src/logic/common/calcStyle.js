@@ -7,19 +7,20 @@ const DEC_RGBA_REG = /^rgba\((\d{1,3})\,(\d{1,3})\,(\d{1,3})\,(0|1|(0{0,1}\.[0-9
 //十六进制表示颜色正则
 const HEX_COLOR_REG = /^#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/;
 /**
- * 修正值可以是负数，与基本色值作用如果小于0则用余数与255相加，大于255则取余
+ * 修正值可以是负数
  * @type {Array}
  */
 let Config = {
     //基本色解析后三原色的十进制值
     baseColor: 'rgb(255,255,255)',
-    baseRed: 255,
-    baseGreen: 255,
-    baseBlue: 255,
+    baseRed: 49,
+    baseGreen: 69,
+    baseBlue: 82,
     baseOpacity: 1,
     colorDecimal: 10,
     //根据基本色得到边线色的修正值，分别是红、绿、蓝
-    borderColorFactor: [-10, 120, 120, 0]
+    borderColorFactor: [-10, 120, 120, 0],
+    shadowColorFactor: [-110, 130, 170, 0]
 };
 
 const writeStylus = (config, target) => {
@@ -39,8 +40,13 @@ const writeStylus = (config, target) => {
 const resolveConfig = (config = {}) => {
     Object.assign(Config,config);
     resolveBaseColor();
-    let borderColor = calcBorderColor();
-    return { baseColor: Config['baseColor'], borderColor };
+    let borderColor = calcColor(Config['borderColorFactor']);
+    let shadowColor = calcColor(Config['shadowColorFactor']);
+    return {
+        baseColor: Config['baseColor'],
+        borderColor,
+        shadowColor
+    };
 }
 
 /**
@@ -71,10 +77,10 @@ const resolveBaseColor = (baseColor = Config['baseColor']) => {
 }
 
 /**
- * 计算边框颜色
+ * 根据参数计算颜色
  * @param factor
  */
-const calcBorderColor = (factor = Config['borderColorFactor']) => {
+const calcColor = (factor) => {
     let red, green, blue, opacity;
     red = calcPrimaryColor(Config['baseRed'] + factor[0]);
     green = calcPrimaryColor(Config['baseGreen'] + factor[1]);
@@ -90,10 +96,7 @@ const calcBorderColor = (factor = Config['borderColorFactor']) => {
  * @param colour
  */
 const calcPrimaryColor = (colour)=>{
-    colour = colour % 255;
-    if(colour < 0){
-        colour += 255;
-    }
+    colour = colour < 0 ? 0 : (colour > 255 ? 255 : colour);
     return colour;
 }
 
@@ -129,5 +132,5 @@ const getColorByDecimal = (colorArr, decimal) => {
 module.exports.writeStylus = writeStylus;
 module.exports.resolveConfig = resolveConfig;
 module.exports.resolveBaseColor = resolveBaseColor;
-module.exports.calcBorderColor = calcBorderColor;
+module.exports.calcColor = calcColor;
 module.exports.getColorByDecimal = getColorByDecimal;

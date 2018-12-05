@@ -1,5 +1,4 @@
 {
   "name":"Button",
-  "theme":"default",
-  "i18n":"public"
+  "theme":"default"
 }
