@@ -39,12 +39,13 @@ plugins.push(new Copy([{
 }]));
 
 entry['common'] = 'babel-polyfill';
+entry['iconfont'] = path.resolve(__dirname, '../src/logic/component/default/ASSETS/font/iconfont.js');
 entries.forEach((item) => {
     entry[item] = `${mpadir}/${item}/index.js`;
     plugins.push(new HtmlWebpackPlugin({
         template : `${mpadir}/${item}/index.html`,
         filename: `${item}/index.html`,
-        chunks: ['common',item],
+        chunks: ['common','iconfont',item],
         inject: true
     }));
 });

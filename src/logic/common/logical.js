@@ -208,6 +208,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                     }
                 });
 
+                console.log(this.props.data['id'],newValue);
                 this.setState({
                     status: newValue
                 },() => {

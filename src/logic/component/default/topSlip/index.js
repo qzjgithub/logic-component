@@ -43,7 +43,6 @@ class TopSlip extends Component{
     }
 
     componentWillReceiveProps(newProps, oldProps){
-        console.log("receiveProps");
         let param = newProps['param']||{};
         if(param['message']){
             let queue = this.state.queue||[];

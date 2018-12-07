@@ -64,7 +64,9 @@ class Select extends Component{
         return <div>
             <Button styleType={'left'} className={'text'} sign={'text'}>
                 { this.state[displayKey] || lang[displayKey] }
-                <i className={'icondown iconfont icon-triangledownfill'}></i>
+                <svg className={'iconfont'}>
+                    <use xlinkHref="#icon-triangledownfill"></use>
+                </svg>
             </Button>
             {data && data.length ? <ul className={'list'} sign={'list'}>
                 { data.map((item, ind)=>{
