@@ -135,6 +135,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     //得到dom
     getBone = (bone) => {
         let children = this.bone = bone;
+        console.log(children.type);
         if (!this.logic.status.size) {
             return children;
         } else {
@@ -156,13 +157,13 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             return element.map((child) => {
                 return this.genChildren(child);
             });
-        } else if (Util.isKVObject(element)) { //如果是对象则先检测其状态，在检测其子元素
+        } else if (typeof element.type != "function" && Util.isKVObject(element)) { //如果是对象则先检测其状态，在检测其子元素
             let props, sign = element.props.sign;
             if(sign && this.signKV.has(sign)){ //检测是否需要与状态绑定
                 props = this.genStatusRelate(sign, element.props);
             }
             let children = element.props && element.props.children;
-            if (children) {//检测是否有子元素，有就继续循环解析元素
+            if (children) {//检测是否有子元素，且不是logical包装过的元素，就继续循环解析元素
                 props = props || {};
                 props['children'] = this.genChildren(children);
                 return React.cloneElement(element, props);
@@ -182,7 +183,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             let seq = new SequenceEvent();
             seq.events.push((ev)=>{ //第一个方法确定新值改变规律
                 this.logic.values = Object.assign({},this.state.status);
-                let newValue = this.state.status;
+                let newValue = Object.assign({},this.state.status);
                 Object.keys(v['status']).forEach((sk)=>{
                     let s = v['status'][sk];
                     if(s===2){
@@ -208,12 +209,11 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                     }
                 });
 
-                console.log(this.props.data['id'],newValue);
                 this.setState({
                     status: newValue
                 },() => {
                     nParam.push(this.state)
-                    let onChanged = this.props['onChanged']; //检测并调用onchange方法
+                    let onChanged = this.props['onChanged']; //检测并调用onchanged方法
                     if(onChanged && JSON.stringify(newValue) != JSON.stringify(oldValue)){
                         onChanged.call(this,...nParam);
                     }

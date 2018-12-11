@@ -7,6 +7,7 @@ module.exports.Input = require('./component/default/input').default;
 module.exports.Select = require('./component/default/select').default;
 module.exports.TopSlip = require('./component/default/topSlip').default;
 module.exports.Tree = require('./component/default/tree').default;
+module.exports.TreeItem = require('./component/default/treeItem').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

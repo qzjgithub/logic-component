@@ -1,30 +1,4 @@
 export default {
-    "status": {
-        "disabled":{
-            "classTrue":"disabled"
-        },
-        "flexIconClicked":{
-            "target": "flexIcon",
-            "event": {
-                "click": 1
-            }
-        },
-        "opened":{
-            "classTrue":"opened",
-            "motivation":{
-                "flexIconClick": 2
-            },
-            "defaultState":false
-        }
-    },
-    "motivation": {
-        "flexIconClick":{
-            "status":{
-                "flexIconClicked": true
-            },
-            "trigger": true
-        }
-    },
     "keys": {
         "value": "",
         "text": "",
