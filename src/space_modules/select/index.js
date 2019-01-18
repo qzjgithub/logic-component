@@ -22,8 +22,7 @@ class SelectShow extends Component{
 
     render(){
         return <div className={"Show"}>
-            <Select param={{ data:
-                    [{value: '1',text: 'apple'},{value:'2',text:'orange'}],
+            <Select param={{ data: [{value: '1',text: 'apple'},{value:'2',text:'orange'}],
                     value: '1'
             }} onChanged={this.onChanged}/>
         </div>

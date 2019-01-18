@@ -2,6 +2,7 @@ itemSize = 20;
 iconSize = 18;
 textPad = 5;
 lineHor = 5;
+nodeHeight = 30;
 
 animateTime = 300ms;
 
@@ -26,12 +27,19 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
     color: #35ced2;
     margin: 0;
     padding: 0;
+    height: nodeHeight px;
+    line-height: nodeHeight px;
   }
 
   &>p>span{
     display: inline-block;
     vertical-align: text-bottom;
     height: itemSize px;
+  }
+
+  &>p>span.icon{
+    width: iconSize px;
+    background-repeat: no-repeat;
   }
 
   &>p>.flexIcon:before{
@@ -41,7 +49,7 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
     display: inline-block;
     position: absolute;
     left: (itemSize/2 - 1) px;
-    height: (itemSize/2) px;
+    height: (nodeHeight/2) px;
     width: (itemSize/2) px;
     bottom: (itemSize/2) px;
   }
@@ -51,19 +59,19 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
     border-right: line;
     position: absolute;
     left: (itemSize/2 - 1) px;
-    height: (itemSize/2) px;
+    height: (nodeHeight/2) px;
     top: (itemSize/2) px;
   }
 
   &.nonLeaf>p>.flexIcon:before{
     bottom: ((itemSize + iconSize)/2) px;
-    height: ((itemSize - iconSize)/2) px;
+    height: ((nodeHeight - iconSize)/2) px;
     border-bottom: 0;
   }
 
   &.nonLeaf>p>.flexIcon:after{
     top: ((itemSize + iconSize)/2) px;
-    height: ((itemSize - iconSize)/2) px;
+    height: ((nodeHeight - iconSize)/2) px;
   }
 
   &.rootNode>p>.flexIcon:before{
@@ -74,13 +82,13 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
     border: lineHidden;
   }
 
-  &.firstNode>p>.flexIcon:before{
+  /*&.firstNode>p>.flexIcon:before{
     height: itemSize px;
   }
 
   &.firstNode.nonLeaf>p>.flexIcon:before{
     height: (itemSize - iconSize/2) px;
-  }
+  }*/
 
   &>p>i{
     display: inline-block;
@@ -98,6 +106,7 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
 
   &>p>.text{
     margin-left: textPad px;
+    vertical-align: inherit;
   }
   &>.list{
     height: 0;

@@ -19,10 +19,10 @@ class TreeShow extends Component{
         return <div className={"Show"}>
             {d.map((item, index) => {
                 return <Tree key={item['id']}
-                             data={ item }
-                             param={{ iconEnable:false }}
-                             onChanged={this.onChanged}
-                             last={index == (d.length - 1)}/> })}
+                    data={ item }
+                    param={{ iconEnable:true ,textKey: 'display_name',valueKey:'id'}}
+                    onChanged={this.onChanged}
+                    last={index === (d.length - 1)}/> })}
         </div>
     }
 }

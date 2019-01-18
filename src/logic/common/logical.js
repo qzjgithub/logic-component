@@ -135,7 +135,6 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     //得到dom
     getBone = (bone) => {
         let children = this.bone = bone;
-        console.log(children.type);
         if (!this.logic.status.size) {
             return children;
         } else {
@@ -157,7 +156,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             return element.map((child) => {
                 return this.genChildren(child);
             });
-        } else if (typeof element.type != "function" && Util.isKVObject(element)) { //如果是对象则先检测其状态，在检测其子元素
+        } else if ( Util.isKVObject(element) ) { //如果是对象则先检测其状态，在检测其子元素
             let props, sign = element.props.sign;
             if(sign && this.signKV.has(sign)){ //检测是否需要与状态绑定
                 props = this.genStatusRelate(sign, element.props);
@@ -214,7 +213,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 },() => {
                     nParam.push(this.state)
                     let onChanged = this.props['onChanged']; //检测并调用onchanged方法
-                    if(onChanged && JSON.stringify(newValue) != JSON.stringify(oldValue)){
+                    if(onChanged && JSON.stringify(newValue) !== JSON.stringify(oldValue)){
                         onChanged.call(this,...nParam);
                     }
                     let parentK = this.props[k];

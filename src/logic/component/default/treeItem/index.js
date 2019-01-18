@@ -16,6 +16,7 @@ class TreeItem extends Component{
     }
 
     onFlexIconClick = (ev,o,n,s,p) => {
+        console.log(new Date().getMilliseconds());
         if(this.animateTimer){
             clearTimeout(this.animateTimer);
             this.animateTimer = null;
@@ -27,12 +28,14 @@ class TreeItem extends Component{
             for(let i=0;i<children.length;i++){
                 h += children[i].offsetHeight;
             }
-            console.log(h);
+            // h = 200;
             this.setState({
                 listStyle: {
-                    height: h
+                    height: `${h}px`
                 }
             });
+            // list.height = `${h}px`;
+            console.log(new Date().getMilliseconds());
             this.animateTimer = setTimeout(() => {
                 this.setState({
                     listStyle: {
@@ -46,7 +49,7 @@ class TreeItem extends Component{
             console.log(h);
             this.setState({
                 listStyle: {
-                    height: h,
+                    height: `${h}px`,
                     overflow: 'hidden'
                 }
             });
@@ -57,6 +60,21 @@ class TreeItem extends Component{
                     }
                 })
             },20);
+        }
+    }
+
+    getIconDom = (data) => {
+        let {iconType , icon } = data;
+        if(iconType === 'url'){
+            return <span className={'icon'} style={{'backgroundUrl':icon}}></span>
+        }else if(iconType === 'image'){
+            return <span className={`icon ${icon}`}></span>
+        }else{
+            return <span>
+                <svg className={'iconfont'}>
+                    <use xlinkHref={ `#${ data['icon'] || 'icon-file-unknown'}`}></use>
+                </svg>
+            </span>
         }
     }
 
@@ -77,7 +95,7 @@ class TreeItem extends Component{
         }
         let status = this.state.status || {};
         let opened = !!status.opened;
-        return <section className={ treeItemClass }>
+        return <section className={ treeItemClass } key={data[this.state.idKey]}>
             <p>
                 <span sign="flexIcon"
                       onClick={this.onFlexIconClick}
@@ -87,12 +105,7 @@ class TreeItem extends Component{
                     </svg> :
                     '' }</span>
                 <i></i>
-                { this.state.iconEnable &&
-                <span>
-                    <svg className={'iconfont'}>
-                        <use xlinkHref={ `#${ data['icon'] || 'icon-file-unknown'}`}></use>
-                    </svg>
-                </span> }
+                { this.state.iconEnable && this.getIconDom(data)}
                 <span className={"text"}>{ data[this.state.textKey] }</span>
             </p>
             <div className={'list'} ref={"list"} style={this.state.listStyle}>{ this.props.children }</div>
