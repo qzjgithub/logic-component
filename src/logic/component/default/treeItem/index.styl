@@ -107,6 +107,11 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
   &>p>.text{
     margin-left: textPad px;
     vertical-align: inherit;
+    cursor: pointer;
+  }
+  &>p>.text:hover,&>p>.text.checked{
+    color: #f9591a;
+    text-decoration: underline;
   }
   &>.list{
     height: 0;

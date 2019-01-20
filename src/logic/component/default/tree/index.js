@@ -15,7 +15,7 @@ class Tree extends Component{
 
     getTreeItem = (data,first,last) => {
         let children = data['children'] || [];
-        let props = Object.assign({},this.props,{ data: data ,first: first, last: last});
+        let props = Object.assign({},this.props,{ data: data ,first: first, last: last, opened: !!data['opened']});
         return <TreeItem {...props}>
             { children && children.map((item,index) => {
                 return this.getTreeItem(item,index==0, index==(children.length-1));

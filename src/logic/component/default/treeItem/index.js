@@ -5,18 +5,36 @@ import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
 
-const animateTime = 300;
+const animateTime = 500;
 
 class TreeItem extends Component{
     constructor(props, context) {
         super(props, context);
+        let opened = props.opened;
+        let style = {};
+        if(opened){
+            style = {
+                height: 'auto',
+                overflow: 'visible'
+            }
+        }else{
+            style = {
+                height: 0,
+                overflow: 'hidden'
+            }
+        }
         this.state = Object.assign(logic.keys || {},{
-            listStyle : {}
+            listStyle : style
         });
+        this.openDisabled = false;
     }
 
     onFlexIconClick = (ev,o,n,s,p) => {
-        console.log(new Date().getMilliseconds());
+        if(this.openDisabled) {
+            n['opened'] = o['opened'];
+            return n;
+        }
+        this.openDisabled = true;
         if(this.animateTimer){
             clearTimeout(this.animateTimer);
             this.animateTimer = null;
@@ -28,38 +46,32 @@ class TreeItem extends Component{
             for(let i=0;i<children.length;i++){
                 h += children[i].offsetHeight;
             }
-            // h = 200;
-            this.setState({
-                listStyle: {
-                    height: `${h}px`
-                }
-            });
-            // list.height = `${h}px`;
-            console.log(new Date().getMilliseconds());
+            list.style.height = `${h}px`;
             this.animateTimer = setTimeout(() => {
                 this.setState({
                     listStyle: {
                         height: 'auto',
                         overflow: 'visible'
                     }
+                },() => {
+                    this.openDisabled = false;
                 });
             },animateTime);
         }else{
             h = list.offsetHeight;
-            console.log(h);
-            this.setState({
-                listStyle: {
-                    height: `${h}px`,
-                    overflow: 'hidden'
-                }
-            });
+            list.style.height = `${h}px`;
             setTimeout(() => {
                 this.setState({
                     listStyle: {
-                        height: 0
+                        height: 0,
+                        overflow: 'hidden'
                     }
-                })
-            },20);
+                },() => {
+                    this.animateTimer = setTimeout(() => {
+                        this.openDisabled = false;
+                    },animateTime);
+                });
+            },10);
         }
     }
 
@@ -95,6 +107,8 @@ class TreeItem extends Component{
         }
         let status = this.state.status || {};
         let opened = !!status.opened;
+
+        let checked = data[this.state.valueKey] === this.state.value;
         return <section className={ treeItemClass } key={data[this.state.idKey]}>
             <p>
                 <span sign="flexIcon"
@@ -106,7 +120,7 @@ class TreeItem extends Component{
                     '' }</span>
                 <i></i>
                 { this.state.iconEnable && this.getIconDom(data)}
-                <span className={"text"}>{ data[this.state.textKey] }</span>
+                <span className={`text ${checked?'checked':''}`}>{ data[this.state.textKey] }</span>
             </p>
             <div className={'list'} ref={"list"} style={this.state.listStyle}>{ this.props.children }</div>
         </section>

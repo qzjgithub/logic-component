@@ -16,11 +16,13 @@ class TreeShow extends Component{
 
     render(){
         let d = data;//[Object.assign(data[3],{ root: true })];
+        // d[0]['children'][0]['children'] = null;
+        let value = d[0]['id'];
         return <div className={"Show"}>
             {d.map((item, index) => {
                 return <Tree key={item['id']}
                     data={ item }
-                    param={{ iconEnable:true ,textKey: 'display_name',valueKey:'id'}}
+                    param={{ iconEnable:true ,value, textKey: 'display_name',valueKey:'id'}}
                     onChanged={this.onChanged}
                     last={index === (d.length - 1)}/> })}
         </div>

@@ -11,10 +11,9 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         this.initLogic();
         this.bone = super.render();
         this.signKV = new Map();
-        this.state = Object.assign(this.state || {},{
+        this.state = Object.assign({},this.state || {},this.initKeys(),{
             status : this.initStatus()
-        }, this.initKeys());
-
+        });
         this.config = config;
 
         if(this.onLogicalInit){
@@ -82,6 +81,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             }
         }
         return keys;
+    
     }
 
     //生成targetKV键值对
@@ -95,7 +95,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         });
     }
 
-    componentWillReceiveProps(nextProp){
+   /*  componentWillReceiveProps(nextProp){
         if(super.componentWillReceiveProps){
             super.componentWillReceiveProps(nextProp);
         }
@@ -130,7 +130,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 onChanged.call(this,...param);
             }
         });
-    }
+    } */
 
     //得到dom
     getBone = (bone) => {
@@ -140,10 +140,8 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         } else {
             this.genSignKv(this.logic.status);
             let props = this.genStatusRelate(Status.BASIC,children.props);
-
             props['children'] = this.genChildren(children.props.children);
             props = this.checkProps(props);
-
             props['className'] = `${config['name']||''} ${props['className']}`.trim();
 
             return React.cloneElement(children,props);
@@ -195,7 +193,10 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                 let { info , oldValue } = data;
                 newValue = data['newValue'];
 
-                info['oldEvent'] && info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status']]);//执行原组件传入的方法
+                if(info['oldEvent']){
+                    let eValue = info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status']]);//执行原组件传入的方法
+                    newValue = eValue || newValue;
+                }
                 return [info,oldValue,newValue];
             });
 

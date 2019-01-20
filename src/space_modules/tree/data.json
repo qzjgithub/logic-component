@@ -27,6 +27,7 @@
     "capacity": "0",
     "fac_type": "3",
     "iconType": "image",
+    "opened": true,
     "children": [
       {
         "id": "444000003",
@@ -56,6 +57,7 @@
         "capacity": "0",
         "fac_type": "-1",
         "iconType": "image",
+        "opened": true,
         "children": [
           {
             "id": "444000005",
@@ -4343,7 +4345,8 @@
         "is_forecast": "false",
         "feeder_id": "0",
         "capacity": "0",
-        "fac_type": "-1"
+        "fac_type": "-1",
+        "opened":false
       }
     ],
     "root": true
