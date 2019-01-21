@@ -15,12 +15,31 @@ class Tree extends Component{
 
     getTreeItem = (data,first,last) => {
         let children = data['children'] || [];
-        let props = Object.assign({},this.props,{ data: data ,first: first, last: last, opened: !!data['opened']});
-        return <TreeItem {...props}>
+        let props = Object.assign({},this.props,{ data: data ,first: first, last: last, opened: !!data['opened'],value:this.state.value});
+        return <TreeItem {...props} onTextClick={this.itemClick}>
             { children && children.map((item,index) => {
-                return this.getTreeItem(item,index==0, index==(children.length-1));
+                return this.getTreeItem(item,index===0, index===(children.length-1));
             }) }
         </TreeItem>
+    }
+
+    onFlexIconClick = (opened,data) => {
+        console.log(opened,data);
+    }
+
+    itemClick = (value,id,text, data) => {
+        let flag = true;
+        if(this.props.onTextClick){
+            flag = this.props.onTextClick(value,id,text,data);
+        }else{
+            flag = true;
+        }
+        if(flag){
+            this.setState({
+                value: value
+            });
+        }
+        return flag;
     }
 
     render(){

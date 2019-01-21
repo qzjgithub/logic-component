@@ -29,11 +29,18 @@ class TreeItem extends Component{
         this.openDisabled = false;
     }
 
-    onFlexIconClick = (ev,o,n,s,p) => {
+    componentWillReceiveProps(nextProps){
+        this.setState({value:nextProps.value});
+    }
+
+    onFlexIconClick = (ev,o,n) => {
         if(this.openDisabled) {
             n['opened'] = o['opened'];
             return n;
         }
+        /*if(this.props.onFlexIconClick){
+            this.props.onFlexIconClick(n['opened'],this.props.data);
+        }*/
         this.openDisabled = true;
         if(this.animateTimer){
             clearTimeout(this.animateTimer);
@@ -46,6 +53,11 @@ class TreeItem extends Component{
             for(let i=0;i<children.length;i++){
                 h += children[i].offsetHeight;
             }
+            /*this.setState({
+                listStyle: {
+                    height: `${h}px`
+                }
+            });*/
             list.style.height = `${h}px`;
             this.animateTimer = setTimeout(() => {
                 this.setState({
@@ -57,9 +69,17 @@ class TreeItem extends Component{
                     this.openDisabled = false;
                 });
             },animateTime);
+
         }else{
             h = list.offsetHeight;
             list.style.height = `${h}px`;
+            /*this.setState({
+                listStyle: {
+                    height: `${h}px`,
+                }
+            },() => {
+
+            });*/
             setTimeout(() => {
                 this.setState({
                     listStyle: {
@@ -71,22 +91,34 @@ class TreeItem extends Component{
                         this.openDisabled = false;
                     },animateTime);
                 });
-            },10);
+            });
         }
     }
 
     getIconDom = (data) => {
         let {iconType , icon } = data;
         if(iconType === 'url'){
-            return <span className={'icon'} style={{'backgroundUrl':icon}}></span>
+            return <span className={'icon'} style={{'backgroundUrl':icon}}> </span>
         }else if(iconType === 'image'){
-            return <span className={`icon ${icon}`}></span>
+            return <span className={`icon ${icon}`}> </span>
         }else{
             return <span>
                 <svg className={'iconfont'}>
-                    <use xlinkHref={ `#${ data['icon'] || 'icon-file-unknown'}`}></use>
+                    <use xlinkHref={ `#${ data['icon'] || 'icon-file-unknown'}`}> </use>
                 </svg>
             </span>
+        }
+    }
+
+    onTextClick = (value, id, text, data) => {
+        let flag = true;
+        if(this.props.onTextClick){
+            flag = this.props.onTextClick(value,id, text, data);
+        }else{
+            flag = true;
+        }
+        if(flag){
+            this.setState({value : value});
         }
     }
 
@@ -109,18 +141,24 @@ class TreeItem extends Component{
         let opened = !!status.opened;
 
         let checked = data[this.state.valueKey] === this.state.value;
+
+        let id = data[this.state.idKey];
+        let value = data[this.state.valueKey];
+        let text = data[this.state.textKey];
         return <section className={ treeItemClass } key={data[this.state.idKey]}>
             <p>
                 <span sign="flexIcon"
                       onClick={this.onFlexIconClick}
                       className={'flexIcon'}>{ children.length ?
                     <svg className={'iconfont'}>
-                        <use xlinkHref={ opened ? '#icon-minus-circle':'#icon-plus-circle'}></use>
+                        <use xlinkHref={ opened ? '#icon-minus-circle':'#icon-plus-circle'}> </use>
                     </svg> :
                     '' }</span>
-                <i></i>
+                <i> </i>
                 { this.state.iconEnable && this.getIconDom(data)}
-                <span className={`text ${checked?'checked':''}`}>{ data[this.state.textKey] }</span>
+                <span className={`text ${checked?'checked':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
+                    { data[this.state.textKey] }
+                </span>
             </p>
             <div className={'list'} ref={"list"} style={this.state.listStyle}>{ this.props.children }</div>
         </section>
