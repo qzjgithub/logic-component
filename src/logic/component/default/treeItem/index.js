@@ -34,14 +34,14 @@ class TreeItem extends Component{
     }
 
     onFlexIconClick = (ev,o,n) => {
-        if(this.openDisabled) {
+        /* if(this.openDisabled) {
             n['opened'] = o['opened'];
             return n;
+        } */
+        if(this.props.onVisibleChange){
+            this.props.onVisibleChange(n['opened'],this.props.order);
         }
-        /*if(this.props.onFlexIconClick){
-            this.props.onFlexIconClick(n['opened'],this.props.data);
-        }*/
-        this.openDisabled = true;
+        /* this.openDisabled = true;
         if(this.animateTimer){
             clearTimeout(this.animateTimer);
             this.animateTimer = null;
@@ -53,11 +53,6 @@ class TreeItem extends Component{
             for(let i=0;i<children.length;i++){
                 h += children[i].offsetHeight;
             }
-            /*this.setState({
-                listStyle: {
-                    height: `${h}px`
-                }
-            });*/
             list.style.height = `${h}px`;
             this.animateTimer = setTimeout(() => {
                 this.setState({
@@ -73,13 +68,6 @@ class TreeItem extends Component{
         }else{
             h = list.offsetHeight;
             list.style.height = `${h}px`;
-            /*this.setState({
-                listStyle: {
-                    height: `${h}px`,
-                }
-            },() => {
-
-            });*/
             setTimeout(() => {
                 this.setState({
                     listStyle: {
@@ -92,7 +80,7 @@ class TreeItem extends Component{
                     },animateTime);
                 });
             });
-        }
+        } */
     }
 
     getIconDom = (data) => {
@@ -122,6 +110,19 @@ class TreeItem extends Component{
         }
     }
 
+    getHeights = (node,h = 0) => {
+        if(node && node.props.children){
+            h += node.props.children.length * 30;
+            console.log(h);
+            node.props.children.forEach((child) => {
+                h += this.getHeights(child,h);
+            });
+            return h;
+        }else{
+            return 0;
+        }
+    }
+
     render(){
         const data = this.props.data || [];
         let children = data['children'] || [];
@@ -145,6 +146,23 @@ class TreeItem extends Component{
         let id = data[this.state.idKey];
         let value = data[this.state.valueKey];
         let text = data[this.state.textKey];
+
+        
+        let style = {};
+        if(opened){
+            console.log(data[this.state.textKey],opened, this.props.children);
+            let h = this.getHeights({props:{children: this.props.children}});
+            console.log(h);
+            style = {
+                height: h+'px',
+                overflow: 'hidden'
+            }
+        }else{
+            style = {
+                height: '0',
+                overflow: 'hidden'
+            }
+        }
         return <section className={ treeItemClass } key={data[this.state.idKey]}>
             <p>
                 <span sign="flexIcon"
@@ -160,7 +178,7 @@ class TreeItem extends Component{
                     { data[this.state.textKey] }
                 </span>
             </p>
-            <div className={'list'} ref={"list"} style={this.state.listStyle}>{ this.props.children }</div>
+            <div className={'list'} ref={"list"} style={style}>{ this.props.children }</div>
         </section>
     }
 }
@@ -169,7 +187,10 @@ TreeItem.propTypes = {
     styleType : PropTypes.string,
     data: PropTypes.object,
     last: PropTypes.bool,
-    first: PropTypes.bool
+    first: PropTypes.bool,
+    order: PropTypes.array,
+    onTextClick: PropTypes.func,
+    onVisibleChange: PropTypes.func
 }
 
 

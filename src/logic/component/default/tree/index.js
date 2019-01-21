@@ -10,21 +10,40 @@ import TreeItem from '../treeItem';
 class Tree extends Component{
     constructor(props, context) {
         super(props, context);
-        this.state = logic.keys || {};
+        this.state = Object.assign(logic.keys,{
+            openeds: {}
+        });
     }
 
-    getTreeItem = (data,first,last) => {
+    getTreeItem = (data,first,last,order) => {
+        let opened = this.state.openeds[order.join('-')];
+        if(opened === undefined){
+            opened = !!data['opened'];
+        }
+        let props = Object.assign({},this.props,
+            { 
+                data: data ,
+                first: first, 
+                last: last, 
+                opened: opened,
+                value:this.state.value,
+                order: order
+            });
         let children = data['children'] || [];
-        let props = Object.assign({},this.props,{ data: data ,first: first, last: last, opened: !!data['opened'],value:this.state.value});
-        return <TreeItem {...props} onTextClick={this.itemClick}>
-            { children && children.map((item,index) => {
-                return this.getTreeItem(item,index===0, index===(children.length-1));
+        return <TreeItem {...props} onTextClick={this.itemClick} onVisibleChange={this.visibleChange} key={order.join('-')}>
+            { opened && !!children.length && children.map((item,index) => {
+                return this.getTreeItem(item,index===0, index===(children.length-1),[...order,index]);
             }) }
         </TreeItem>
     }
 
-    onFlexIconClick = (opened,data) => {
-        console.log(opened,data);
+    visibleChange = (opened,order) => {
+        console.log(opened,order);
+        let openeds = this.state.openeds;
+        openeds[order.join('-')] = opened;
+        this.setState({
+            openeds
+        });
     }
 
     itemClick = (value,id,text, data) => {
@@ -44,17 +63,14 @@ class Tree extends Component{
 
     render(){
         const data = this.props.data || [];
-        const last = this.props.last;
-        const first = this.props.first;
-        return <div>{ this.getTreeItem(data,first,last) }</div>
+        return <div>{ data.map((item,index) => { return this.getTreeItem(item,index===0,index===(data.length - 1),[index]) })}</div>
     }
 }
 
 Tree.propTypes = {
     styleType : PropTypes.string,
-    data: PropTypes.object,
-    last: PropTypes.bool,
-    first: PropTypes.bool
+    data: PropTypes.array,
+    onTextClick: PropTypes.func
 }
 
 

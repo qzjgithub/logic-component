@@ -16,7 +16,7 @@ class TreeShow extends Component{
 
     onTextClick = (value,id,text,data) => {
         console.log(value,id,text,data);
-        return false;
+        return true;
     }
 
     render(){
@@ -24,13 +24,10 @@ class TreeShow extends Component{
         // d[0]['children'][0]['children'] = null;
         let value = d[0]['id'];
         return <div className={"Show"}>
-            {d.map((item, index) => {
-                return <Tree key={item['id']}
-                    data={ item }
-                    onTextClick={this.onTextClick}
-                    param={{ iconEnable:true ,value, textKey: 'display_name',valueKey:'id'}}
-                    onChanged={this.onChanged}
-last={index === (d.length - 1)}/> })}
+            <Tree data={ d }
+                onTextClick={this.onTextClick}
+                param={{ iconEnable:true ,value, textKey: 'display_name',valueKey:'id'}}
+                onChanged={this.onChanged}/>
         </div>
     }
 }
