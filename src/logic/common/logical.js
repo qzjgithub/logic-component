@@ -136,7 +136,9 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     getBone = (bone) => {
         let children = this.bone = bone;
         if (!this.logic.status.size) {
-            return children;
+            let props = children.props;
+            let className = `${config['name']||''} ${props['className']||''}`.trim();
+            return React.cloneElement(children,{className : className});
         } else {
             this.genSignKv(this.logic.status);
             let props = this.genStatusRelate(Status.BASIC,children.props);

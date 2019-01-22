@@ -5,82 +5,41 @@ import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
 
-const animateTime = 500;
+const animateTime = 300;
 
 class TreeItem extends Component{
     constructor(props, context) {
         super(props, context);
-        let opened = props.opened;
-        let style = {};
-        if(opened){
-            style = {
-                height: 'auto',
-                overflow: 'visible'
-            }
-        }else{
-            style = {
-                height: 0,
-                overflow: 'hidden'
-            }
-        }
-        this.state = Object.assign(logic.keys || {},{
-            listStyle : style
-        });
+        this.state = logic.keys || {};
         this.openDisabled = false;
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({value:nextProps.value});
+        let status = this.state.status ||{};
+        status['opened'] = nextProps['opened'];
+        this.setState({
+            value: nextProps.value,
+            status: status
+        });
     }
 
     onFlexIconClick = (ev,o,n) => {
-        /* if(this.openDisabled) {
+        if(this.openDisabled) {
             n['opened'] = o['opened'];
             return n;
-        } */
+        }
+        this.openDisabled = true;
+        let opened = n['opened'];
         if(this.props.onVisibleChange){
-            this.props.onVisibleChange(n['opened'],this.props.order);
-        }
-        /* this.openDisabled = true;
-        if(this.animateTimer){
-            clearTimeout(this.animateTimer);
-            this.animateTimer = null;
-        }
-        let list = this.refs['list'] || {};
-        let h = 0;
-        if(n['opened']){
-            let children = list['children'] || [];
-            for(let i=0;i<children.length;i++){
-                h += children[i].offsetHeight;
+            if(opened){
+                this.props.onVisibleChange(n['opened'],this.props.order);
+            }else{
+                this.props.onVisibleChange(n['opened'],this.props.order,true);
             }
-            list.style.height = `${h}px`;
-            this.animateTimer = setTimeout(() => {
-                this.setState({
-                    listStyle: {
-                        height: 'auto',
-                        overflow: 'visible'
-                    }
-                },() => {
-                    this.openDisabled = false;
-                });
-            },animateTime);
-
-        }else{
-            h = list.offsetHeight;
-            list.style.height = `${h}px`;
             setTimeout(() => {
-                this.setState({
-                    listStyle: {
-                        height: 0,
-                        overflow: 'hidden'
-                    }
-                },() => {
-                    this.animateTimer = setTimeout(() => {
-                        this.openDisabled = false;
-                    },animateTime);
-                });
-            });
-        } */
+                this.openDisabled = false;
+            },animateTime);
+        }
     }
 
     getIconDom = (data) => {
@@ -111,16 +70,13 @@ class TreeItem extends Component{
     }
 
     getHeights = (node,h = 0) => {
-        if(node && node.props.children){
+        if(node.props.opened && node.props.children){
             h += node.props.children.length * 30;
-            console.log(h);
             node.props.children.forEach((child) => {
-                h += this.getHeights(child,h);
+                h = this.getHeights(child,h);
             });
-            return h;
-        }else{
-            return 0;
         }
+        return h;
     }
 
     render(){
@@ -142,6 +98,7 @@ class TreeItem extends Component{
         let opened = !!status.opened;
 
         let checked = data[this.state.valueKey] === this.state.value;
+        let searched = this.props.searched;
 
         let id = data[this.state.idKey];
         let value = data[this.state.valueKey];
@@ -150,9 +107,7 @@ class TreeItem extends Component{
         
         let style = {};
         if(opened){
-            console.log(data[this.state.textKey],opened, this.props.children);
-            let h = this.getHeights({props:{children: this.props.children}});
-            console.log(h);
+            let h = this.getHeights({props:{children: this.props.children, opened: true}});
             style = {
                 height: h+'px',
                 overflow: 'hidden'
@@ -174,7 +129,7 @@ class TreeItem extends Component{
                     '' }</span>
                 <i> </i>
                 { this.state.iconEnable && this.getIconDom(data)}
-                <span className={`text ${checked?'checked':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
+                <span className={`text ${checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
                     { data[this.state.textKey] }
                 </span>
             </p>
@@ -189,6 +144,7 @@ TreeItem.propTypes = {
     last: PropTypes.bool,
     first: PropTypes.bool,
     order: PropTypes.array,
+    searched: PropTypes.bool,
     onTextClick: PropTypes.func,
     onVisibleChange: PropTypes.func
 }

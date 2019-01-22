@@ -7,43 +7,61 @@ import './index.styl';
 
 import TreeItem from '../treeItem';
 
+const animateTime = 300;
+
 class Tree extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = Object.assign(logic.keys,{
-            openeds: {}
+            openeds: {},
+            searchValue: '',
+            searched: false,
+            searcheds : {}
         });
+    }
+
+    componentWillReceiveProps(nextProps){
+        this.setState({value:nextProps.value});
     }
 
     getTreeItem = (data,first,last,order) => {
         let opened = this.state.openeds[order.join('-')];
         if(opened === undefined){
-            opened = !!data['opened'];
+            opened = data['opened'] ? 1 : 0;
         }
         let props = Object.assign({},this.props,
             { 
                 data: data ,
                 first: first, 
                 last: last, 
-                opened: opened,
+                opened: opened === 1,
                 value:this.state.value,
-                order: order
+                order: order,
+                searched: this.state.searcheds[order.join('-')]
             });
         let children = data['children'] || [];
         return <TreeItem {...props} onTextClick={this.itemClick} onVisibleChange={this.visibleChange} key={order.join('-')}>
-            { opened && !!children.length && children.map((item,index) => {
+            { opened !== 0 && !!children.length && children.map((item,index) => {
                 return this.getTreeItem(item,index===0, index===(children.length-1),[...order,index]);
             }) }
         </TreeItem>
     }
 
-    visibleChange = (opened,order) => {
-        console.log(opened,order);
+    visibleChange = (opened,order,loading) => {
         let openeds = this.state.openeds;
-        openeds[order.join('-')] = opened;
+        openeds[order.join('-')] = loading ? 2 : ( opened ? 1 : 0 );
         this.setState({
-            openeds
+            openeds : openeds
         });
+        if(loading){
+            setTimeout(() => {
+               openeds = this.state.openeds;
+               openeds[order.join('-')] = opened ? 1 : 0;
+               this.setState({
+                   openeds : openeds
+               });
+            },animateTime);
+        }
     }
 
     itemClick = (value,id,text, data) => {
@@ -55,21 +73,84 @@ class Tree extends Component{
         }
         if(flag){
             this.setState({
-                value: value
+                value: value,
+                searcheds : {}
             });
         }
         return flag;
     }
 
+    searchChange = (e) => {
+        this.setState({
+            searchValue: e.target.value
+        });
+    }
+
+    searchEvent = (e) => {
+        if(!this.state.searchValue) {
+            this.setState({
+                searcheds : {}
+            });
+            return;
+        }
+        let tagName = e.target.tagName;
+        if(tagName === 'INPUT'){
+            let key = e.key;
+            if(key !== 'Enter'){
+                return;
+            }
+        }
+        let data = this.props.data || [];
+        let searcheds = {},openeds = this.state.openeds;
+        data.forEach((item,index) => {
+            this.search(item,[index],searcheds,openeds);
+        });
+        this.setState({
+            searcheds : searcheds,
+            openeds: openeds
+        });
+    }
+
+    search = (item,order,searcheds,openeds) => {
+        let searched = false;
+        let value = this.state.searchValue;
+        let text = item[this.state.textKey];
+        if(text.indexOf(value) > -1){
+            searcheds[order.join('-')] = true;
+            searched = true;
+        }
+        let childSearched = false;
+        let children = item['children'];
+        if(children && children.length){
+            children.forEach((v,index) => {
+                let res = this.search(v,[...order,index],searcheds,openeds);
+                childSearched = childSearched || res;
+            });
+        }
+        if(childSearched){
+            openeds[order.join('-')] = 1;
+        }
+        return searched;
+    }
+
     render(){
         const data = this.props.data || [];
-        return <div>{ data.map((item,index) => { return this.getTreeItem(item,index===0,index===(data.length - 1),[index]) })}</div>
+        return <div>
+            {this.props.search && <div className={'search'}>
+                <input onChange={this.searchChange} value={this.state.searchValue} onKeyPress={this.searchEvent}/>
+                <svg className={'iconfont'} onClick={this.searchEvent}>
+                    <use xlinkHref={ '#icon-sousuo'}> </use>
+                </svg>
+            </div>}
+            { data.map((item,index) => { return this.getTreeItem(item,index===0,index===(data.length - 1),[index]) })}
+        </div>
     }
 }
 
 Tree.propTypes = {
     styleType : PropTypes.string,
     data: PropTypes.array,
+    search: PropTypes.bool,
     onTextClick: PropTypes.func
 }
 

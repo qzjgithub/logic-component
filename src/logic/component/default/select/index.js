@@ -65,7 +65,7 @@ class Select extends Component{
             <Button styleType={'left'} className={'text'} sign={'text'}>
                 { this.state[displayKey] || lang[displayKey] }
                 <svg className={'iconfont'}>
-                    <use xlinkHref="#icon-triangledownfill"></use>
+                    <use xlinkHref="#icon-triangledownfill"> </use>
                 </svg>
             </Button>
             {data && data.length ? <ul className={'list'} sign={'list'}>
