@@ -130,7 +130,7 @@ class Tree extends Component{
         if(childSearched){
             openeds[order.join('-')] = 1;
         }
-        return searched;
+        return searched || childSearched;
     }
 
     render(){
