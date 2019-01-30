@@ -18,9 +18,12 @@ class Select extends Component{
     }
 
     itemClick = (value,text)=>{
+        let status = this.state.status;
+        status['opened'] = false;
         this.setState({
             value: value,
-            text: text
+            text: text,
+            status: status
         });
         if(this.props.onSelected){
             this.props.onSelected(value,text);
@@ -30,13 +33,15 @@ class Select extends Component{
     getList = (value) => {
         let text = '';
         let dom = (this.props.children||[]).map((item) => {
+            let checked = false;
             if(item.type.name === 'Option'){
                 if(value === item.props.value){
                     text = item.props.children;
+                    checked = true;
                 }
-                return React.cloneElement(item,{selectBridge: this.itemClick})
+                return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked})
             }
-        })
+        });
         return { dom, text }
     }
 
@@ -84,8 +89,18 @@ class Option extends Component{
     }
 
     render(){
-        return <li sign={'item'} onClick={() => this.onClick(this.props.value,this.props.children)}>{ this.props.children }</li>
+        return <li sign={'item'}
+                   className={this.props.checked?'checked':''}
+                   onClick={() => this.onClick(this.props.value,this.props.children)}>
+            { this.props.children }
+            </li>
     }
+}
+
+Option.propTypes = {
+    value : PropTypes.string,
+    checked: PropTypes.bool,
+    selectBridge: PropTypes.func
 }
 
 module.exports.Option = Option;

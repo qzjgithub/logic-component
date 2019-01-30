@@ -7,8 +7,8 @@ export default {
             "classTrue":"opened",
             "motivation":{
                 "textClick": 2,
-                "textBlur": 0,
-                "itemClick": 0
+                "itemClick": 0,
+                "textBlur": 0
             }
         },
         "textClicked":{

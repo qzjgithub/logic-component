@@ -15,6 +15,7 @@ import TreeShow from '../../space_modules/tree';
 import './App.styl';
 
 import Header from '../../space_modules/header';
+import CutoverShow from "../../space_modules/cutover";
 
 class App extends Component{
     constructor(props, context) {
@@ -29,6 +30,7 @@ class App extends Component{
                 <li><Link to={'/test2'}>测试</Link></li>
                 <li><Link to={'/button'}>按钮</Link></li>
                 <li><Link to={'/select'}>下拉框</Link></li>
+                <li><Link to={'/cutover'}>切换</Link></li>
                 <li><Link to={'/grid'}>列表</Link></li>
                 <li><Link to={'/topSlip'}>下滑提示</Link></li>
                 <li><Link to={'/tree'}>树节点</Link></li>
@@ -38,9 +40,10 @@ class App extends Component{
                 <Route path={'/grid'} component={ Grid }/>
                 <Route path={'/test2'} component={ test2 }/>
                 <Route path={'/select'} component={ SelectShow }/>
+                <Route path={'/cutover'} component={ CutoverShow }/>
                 <Route path={'/topSlip'} component={ TopSlipShow }/>
                 <Route path={'/tree'} component={ TreeShow }/>
-                <Redirect from={'/'} to={'/tree'}/>
+                <Redirect from={'/'} to={'/cutover'}/>
             </Switch>
             {/*</Content>*/}
         </div>
