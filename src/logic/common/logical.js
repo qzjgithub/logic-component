@@ -11,7 +11,8 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
         this.initLogic();
         this.bone = super.render();
         this.signKV = new Map();
-        this.state = Object.assign({},this.state || {},this.initKeys(),{
+        this.keys = this.initKeys();
+        this.state = Object.assign({},this.state || {},{
             status : this.initStatus()
         });
         this.config = config;
@@ -75,7 +76,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             keys = logic['keys'];
             for(let key in keys){
                 let pk = param[key];
-                if(pk != undefined){
+                if(pk !== undefined){
                     keys[key] = pk;
                 }
             }

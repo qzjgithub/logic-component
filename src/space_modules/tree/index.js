@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Tree} from '../../logic';
+import {Tree,TreeItem} from '../../logic';
 import './index.styl';
 
 import data from './data.json';
@@ -27,7 +27,10 @@ class TreeShow extends Component {
             <Tree data={d}
                   onTextClick={this.onTextClick}
                   search={true}
-                  param={{iconEnable: true, value, textKey: 'display_name', valueKey: 'id'}}
+                  iconEnable={true}
+                  value={value}
+                  textKey={'display_name'}
+                  valueKey={'id'}
                   onChanged={this.onChanged}/>
         </div>
     }

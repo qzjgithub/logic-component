@@ -12,70 +12,58 @@ class Select extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
-            i18n: {}
+            value: undefined,
+            text: undefined
         }
     }
 
-    componentDidMount = () => {
-        this.initParam();
+    itemClick = (value,text)=>{
+        this.setState({
+            value: value,
+            text: text
+        });
+        if(this.props.onSelected){
+            this.props.onSelected(value,text);
+        }
     }
 
-    initParam = () => {
-        let param = this.props['param']||{};
-        let { value, index, data } = param;
-        let selectedIndex = 0,item;
-        if(value){
-            for(let i=0;i < data.length;i++){
-                item = data[i];
-                if(item['value'] == value){
-                    selectedIndex = i;
-                    break;
+    getList = (value) => {
+        let text = '';
+        let dom = (this.props.children||[]).map((item) => {
+            if(item.type.name === 'Option'){
+                if(value === item.props.value){
+                    text = item.props.children;
                 }
+                return React.cloneElement(item,{selectBridge: this.itemClick})
             }
-        }else if(typeof index == 'number' && index >=0 && index < data.length){
-            selectedIndex = index;
-        }
-        item = data[selectedIndex];
-        this.setState({
-            value: item[this.state['valueKey']],
-            text: item[this.state['textKey']],
-            index: selectedIndex
-        });
-    }
-
-    itemClick = (item)=>{
-        this.setState({
-            value: item[this.state['valueKey']],
-            text: item[this.state['textKey']]
-        });
+        })
+        return { dom, text }
     }
 
     render(){
-        let displayKey = 'text', value = this.state['value'];
-        if(!Util.isStringWithoutNull(value)){
+        let displayKey = '', value = this.state['value'];
+        if(Util.isUndefined(value)){
+            value = this.props.initValue || this.initValue;
+        }
+        if(!value){
             displayKey = 'defaultText';
         }
-        let data = this.state['data'];
-        if(!data || !data.length){
+        if(!this.props.children || !this.props.children.length){
             displayKey = 'noDataText';
         }
-        let lang = this.state['i18n'];
-        let textKey = this.state['textKey'];
+        let list = this.getList(value);
+        let text = list.text;
+        if(displayKey){
+            text = this.props[displayKey] || this[displayKey];
+        }
         return <div>
             <Button styleType={'left'} className={'text'} sign={'text'}>
-                { this.state[displayKey] || lang[displayKey] }
+                { text }
                 <svg className={'iconfont'}>
                     <use xlinkHref="#icon-triangledownfill"> </use>
                 </svg>
             </Button>
-            {data && data.length ? <ul className={'list'} sign={'list'}>
-                { data.map((item, ind)=>{
-                    return <li key={ind} sign={'item'}
-                               onClick={() => {this.itemClick(item) }}>
-                        { item[textKey] }
-                        </li>
-                }) }
-            </ul> : ''}
+            <ul className={'list'} sign={'list'}>{ list.dom }</ul>
         </div>;
     }
 }
@@ -83,5 +71,23 @@ class Select extends Component{
 Select.propTypes = {
     styleType : PropTypes.string
 }
+
+class Option extends Component{
+    constructor(props, context) {
+        super(props, context);
+    }
+
+    onClick = (value,text) => {
+        if(this.props.selectBridge){
+           this.props.selectBridge(value,text);
+        }
+    }
+
+    render(){
+        return <li sign={'item'} onClick={() => this.onClick(this.props.value,this.props.children)}>{ this.props.children }</li>
+    }
+}
+
+module.exports.Option = Option;
 
 export default basic(Select,logic,config);

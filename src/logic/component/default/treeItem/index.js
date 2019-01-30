@@ -10,7 +10,7 @@ const animateTime = 300;
 class TreeItem extends Component{
     constructor(props, context) {
         super(props, context);
-        this.state = logic.keys || {};
+        this.state = {};
         this.openDisabled = false;
     }
 
@@ -97,12 +97,12 @@ class TreeItem extends Component{
         let status = this.state.status || {};
         let opened = !!status.opened;
 
-        let checked = data[this.state.valueKey] === this.state.value;
+        let checked = data[this.props.valueKey] === this.state.value;
         let searched = this.props.searched;
 
-        let id = data[this.state.idKey];
-        let value = data[this.state.valueKey];
-        let text = data[this.state.textKey];
+        let id = data[this.props.idKey||this.idKey];
+        let value = data[this.props.valueKey||this.valueKey];
+        let text = data[this.props.textKey||this.textKey];
 
         
         let style = {};
@@ -118,7 +118,7 @@ class TreeItem extends Component{
                 overflow: 'hidden'
             }
         }
-        return <section className={ treeItemClass } key={data[this.state.idKey]}>
+        return <section className={ treeItemClass } key={data[this.props.idKey||this.idKey]}>
             <p>
                 <span sign="flexIcon"
                       onClick={this.onFlexIconClick}
@@ -128,9 +128,9 @@ class TreeItem extends Component{
                     </svg> :
                     '' }</span>
                 <i> </i>
-                { this.state.iconEnable && this.getIconDom(data)}
+                { (this.props.iconEnable||this.iconEnable) && this.getIconDom(data)}
                 <span className={`text ${checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
-                    { data[this.state.textKey] }
+                    { data[this.props.textKey||this.textKey] }
                 </span>
             </p>
             <div className={'list'} ref={"list"} style={style}>{ this.props.children }</div>

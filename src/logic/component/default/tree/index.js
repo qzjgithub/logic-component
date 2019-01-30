@@ -12,12 +12,12 @@ const animateTime = 300;
 class Tree extends Component{
     constructor(props, context) {
         super(props, context);
-        this.state = Object.assign(logic.keys,{
+        this.state = {
             openeds: {},
             searchValue: '',
             searched: false,
             searcheds : {}
-        });
+        }
     }
 
     componentWillReceiveProps(nextProps){
@@ -114,7 +114,7 @@ class Tree extends Component{
     search = (item,order,searcheds,openeds) => {
         let searched = false;
         let value = this.state.searchValue;
-        let text = item[this.state.textKey];
+        let text = item[this.props.textKey||this.textKey];
         if(text.indexOf(value) > -1){
             searcheds[order.join('-')] = true;
             searched = true;

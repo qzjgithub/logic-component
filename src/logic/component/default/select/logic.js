@@ -61,12 +61,7 @@ export default {
         }
     },
     "keys": {
-        "data":[],
-        "valueKey" : "value",
-        "value": "",
-        "text": "",
-        "index":0,
-        "textKey": "text",
+        "initValue": "",
         "defaultText":"",
         "noDataText":"",
         "name": ""

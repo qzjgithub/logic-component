@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, hashHistory} from 'react-router';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 
 import createHashHistory from 'history/createHashHistory';
 
