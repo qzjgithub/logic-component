@@ -4,6 +4,7 @@ import basic from '../basic/index';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
+import Icon from '../icon';
 
 const animateTime = 300;
 
@@ -50,9 +51,7 @@ class TreeItem extends Component{
             return <span className={`icon ${icon}`}> </span>
         }else{
             return <span>
-                <svg className={'iconfont'}>
-                    <use xlinkHref={ `#${ data['icon'] || 'icon-file-unknown'}`}> </use>
-                </svg>
+                <Icon type={data['icon'] || 'file-unknown'}/>
             </span>
         }
     }
@@ -123,9 +122,7 @@ class TreeItem extends Component{
                 <span sign="flexIcon"
                       onClick={this.onFlexIconClick}
                       className={'flexIcon'}>{ children.length ?
-                    <svg className={'iconfont'}>
-                        <use xlinkHref={ opened ? '#icon-minus-circle':'#icon-plus-circle'}> </use>
-                    </svg> :
+                    <Icon type={ opened ? 'minus-circle': 'plus-circle'}/> :
                     '' }</span>
                 <i> </i>
                 { (this.props.iconEnable||this.iconEnable) && this.getIconDom(data)}

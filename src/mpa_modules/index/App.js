@@ -16,6 +16,8 @@ import './App.styl';
 
 import Header from '../../space_modules/header';
 import CutoverShow from "../../space_modules/cutover";
+import DialogShow from '../../space_modules/dialog';
+import LoadingShow from '../../space_modules/loading';
 
 class App extends Component{
     constructor(props, context) {
@@ -34,6 +36,8 @@ class App extends Component{
                 <li><Link to={'/grid'}>列表</Link></li>
                 <li><Link to={'/topSlip'}>下滑提示</Link></li>
                 <li><Link to={'/tree'}>树节点</Link></li>
+                <li><Link to={'/dialog'}>弹框</Link></li>
+                <li><Link to={'/loading'}>加载中</Link></li>
             </ul>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
@@ -43,7 +47,9 @@ class App extends Component{
                 <Route path={'/cutover'} component={ CutoverShow }/>
                 <Route path={'/topSlip'} component={ TopSlipShow }/>
                 <Route path={'/tree'} component={ TreeShow }/>
-                <Redirect from={'/'} to={'/cutover'}/>
+                <Route path={'/dialog'} component={ DialogShow }/>
+                <Route path={'/loading'} component={ LoadingShow }/>
+                <Redirect from={'/'} to={'/dialog'}/>
             </Switch>
             {/*</Content>*/}
         </div>

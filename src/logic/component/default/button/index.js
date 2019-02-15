@@ -4,6 +4,7 @@ import basic from '../basic/index';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
+import Loading from '../loading';
 
 class Button extends Component{
     constructor(props, context) {
@@ -16,14 +17,16 @@ class Button extends Component{
     render(){
         let lang = this.state['i18n'] || {};
         let styleType = this.props.styleType || '';
-        return <button className={ styleType }>
+        return <button className={ `${styleType} ${this.props.loading ? 'disabled': ''}` }>
+            {this.props.loading && <Loading/>}
             {this.props.children || lang['text']}
             </button>;
     }
 }
 
 Button.propTypes = {
-    styleType : PropTypes.string
+    styleType : PropTypes.string,
+    loading: PropTypes.bool
 }
 
 

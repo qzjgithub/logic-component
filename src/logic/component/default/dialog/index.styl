@@ -1,0 +1,39 @@
+lineColor = #116d75;
+.Dialog{
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,0.3);
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  &>article{
+    text-align: left;
+    margin: auto;
+    display: inline-block;
+    min-width: 300px;
+    min-height: 100px;
+    background-color: #0c5259;
+    margin-top: 20%;
+    border-radius: 4px;
+    border: 1px solid lineColor;
+  }
+  div.content{
+    padding: 5px 10px 10px 10px;
+  }
+  header.title{
+    border-bottom: 1px solid lineColor;
+    line-height: 26px;
+    padding: 10px 10px 5px 10px;
+  }
+  .cross-close{
+    cursor: pointer;
+    float: right;
+  }
+  .cross-close:hover{
+    opacity: 0.6;
+  }
+}
+.Dialog.hide{
+  display: none;
+}

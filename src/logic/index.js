@@ -11,6 +11,9 @@ module.exports.TopSlip = require('./component/default/topSlip').default;
 module.exports.Tree = require('./component/default/tree').default;
 module.exports.TreeItem = require('./component/default/treeItem').default;
 module.exports.Cutover = require('./component/default/cutover').default;
+module.exports.Dialog = require('./component/default/dialog').default;
+module.exports.Icon = require('./component/default/icon').default;
+module.exports.Loading = require('./component/default/loading').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

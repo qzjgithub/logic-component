@@ -2,6 +2,8 @@ import React, { Component,Fragment } from 'react';
 import PropTypes from 'prop-types';
 import './index.styl';
 
+import Icon from '../icon';
+
 import Util from '../../../common/Util';
 
 class Cutover extends Component{
@@ -19,7 +21,7 @@ class Cutover extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        if(!nextProps.showWidth){
+        if(nextProps.showWidth){
             this.showWidth = nextProps.showWidth;
         }
         if(nextProps.value){
@@ -110,6 +112,9 @@ class Cutover extends Component{
         this.setState({
             status: status
         });
+        if(this.props.onChanged){
+            this.props.onChanged(value);
+        }
 
         setTimeout(()=>{
             this.index = index;
@@ -131,17 +136,13 @@ class Cutover extends Component{
         }
         return <ul className={`Cutover ${disabled?'disabled':''}`}>
             <li className={'arrow prev'}>
-                <svg className={'iconfont'} onClick={()=>this.svgClick(1)}>
-                    <use xlinkHref={ '#icon-zuo'}> </use>
-                </svg>
+                <Icon type={'zuo'} onClick={()=>this.svgClick(1)}/>
             </li>
             <li className={'show'} style={{width: this.showWidth}}>
                 { this.getChildren() }
                 </li>
             <li className={'arrow next'}>
-                <svg className={'iconfont'} onClick={()=>this.svgClick(2)}>
-                    <use xlinkHref={ '#icon-gengduo'}> </use>
-                </svg>
+                <Icon type={'gengduo'} onClick={()=>this.svgClick(2)}/>
             </li>
         </ul>
     }

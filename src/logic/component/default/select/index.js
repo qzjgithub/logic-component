@@ -7,6 +7,7 @@ import './index.styl';
 
 import Util from '../../../common/Util';
 import Button from '../button';
+import Icon from '../icon';
 
 class Select extends Component{
     constructor(props, context) {
@@ -14,6 +15,14 @@ class Select extends Component{
         this.state = {
             value: undefined,
             text: undefined
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.value){
+            this.setState({
+                value: nextProps.value
+            });
         }
     }
 
@@ -34,13 +43,11 @@ class Select extends Component{
         let text = '';
         let dom = (this.props.children||[]).map((item) => {
             let checked = false;
-            if(item.type.name === 'Option'){
-                if(value === item.props.value){
-                    text = item.props.children;
-                    checked = true;
-                }
-                return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked})
+            if(value === item.props.value){
+                text = item.props.children;
+                checked = true;
             }
+            return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked})
         });
         return { dom, text }
     }
@@ -64,9 +71,7 @@ class Select extends Component{
         return <div>
             <Button styleType={'left'} className={'text'} sign={'text'}>
                 { text }
-                <svg className={'iconfont'}>
-                    <use xlinkHref="#icon-triangledownfill"> </use>
-                </svg>
+                <Icon type={'triangledownfill'}/>
             </Button>
             <ul className={'list'} sign={'list'}>{ list.dom }</ul>
         </div>;

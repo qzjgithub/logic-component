@@ -4,6 +4,7 @@ import basic from '../basic/index';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
+import Icon from '../icon';
 
 import TreeItem from '../treeItem';
 
@@ -87,6 +88,7 @@ class Tree extends Component{
     }
 
     searchEvent = (e) => {
+        console.log(e);
         if(!this.state.searchValue) {
             this.setState({
                 searcheds : {}
@@ -138,9 +140,7 @@ class Tree extends Component{
         return <div>
             {this.props.search && <div className={'search'}>
                 <input onChange={this.searchChange} value={this.state.searchValue} onKeyPress={this.searchEvent}/>
-                <svg className={'iconfont'} onClick={this.searchEvent}>
-                    <use xlinkHref={ '#icon-sousuo'}> </use>
-                </svg>
+                <Icon type={'sousuo'} onClick={this.searchEvent}/>
             </div>}
             { data.map((item,index) => { return this.getTreeItem(item,index===0,index===(data.length - 1),[index]) })}
         </div>
