@@ -7,7 +7,7 @@ import 'mpa-bridge-dom';
 
 import test2 from '../../test/testComponent2';
 
-import { Button , Grid , Select } from '../../logic';
+import { Button , Grid , Select, Menu } from '../../logic';
 import ButtonShow from '../../space_modules/button';
 import SelectShow from '../../space_modules/select';
 import TopSlipShow from '../../space_modules/topSlip';
@@ -18,6 +18,10 @@ import Header from '../../space_modules/header';
 import CutoverShow from "../../space_modules/cutover";
 import DialogShow from '../../space_modules/dialog';
 import LoadingShow from '../../space_modules/loading';
+import MenuShow from '../../space_modules/menu';
+import FormShow from '../../space_modules/form';
+
+const MenuItem = Menu.MenuItem;
 
 class App extends Component{
     constructor(props, context) {
@@ -25,20 +29,20 @@ class App extends Component{
     }
 
     render(){
-        return <div>
-            <Header/>
-            {/*<Content>*/}
-            <ul>
-                <li><Link to={'/test2'}>测试</Link></li>
-                <li><Link to={'/button'}>按钮</Link></li>
-                <li><Link to={'/select'}>下拉框</Link></li>
-                <li><Link to={'/cutover'}>切换</Link></li>
-                <li><Link to={'/grid'}>列表</Link></li>
-                <li><Link to={'/topSlip'}>下滑提示</Link></li>
-                <li><Link to={'/tree'}>树节点</Link></li>
-                <li><Link to={'/dialog'}>弹框</Link></li>
-                <li><Link to={'/loading'}>加载中</Link></li>
-            </ul>
+        return <div className={'logic-demo'}>
+            <Menu>
+                <MenuItem text={<Link to={'/test2'}>测试</Link>}/>
+                <MenuItem text={<Link to={'/button'}>按钮</Link>}/>
+                <MenuItem text={<Link to={'/select'}>下拉框</Link>}/>
+                <MenuItem text={<Link to={'/cutover'}>切换</Link>}/>
+                <MenuItem text={<Link to={'/grid'}>列表</Link>}/>
+                <MenuItem text={<Link to={'/topSlip'}>下滑提示</Link>}/>
+                <MenuItem text={<Link to={'/tree'}>树节点</Link>}/>
+                <MenuItem text={<Link to={'/dialog'}>弹框</Link>}/>
+                <MenuItem text={<Link to={'/loading'}>加载中</Link>}/>
+                <MenuItem text={<Link to={'/menu'}>菜单</Link>}/>
+                <MenuItem text={<Link to={'/form'}>表单</Link>}/>
+            </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
                 <Route path={'/grid'} component={ Grid }/>
@@ -49,6 +53,8 @@ class App extends Component{
                 <Route path={'/tree'} component={ TreeShow }/>
                 <Route path={'/dialog'} component={ DialogShow }/>
                 <Route path={'/loading'} component={ LoadingShow }/>
+                <Route path={'/menu'} component={ MenuShow }/>
+                <Route path={'/form'} component={ FormShow }/>
                 <Redirect from={'/'} to={'/dialog'}/>
             </Switch>
             {/*</Content>*/}

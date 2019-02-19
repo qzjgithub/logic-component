@@ -17,7 +17,9 @@ class DialogShow extends Component{
     render(){
         return <div className={"Show"}>
             <button onClick={this.show}>展示</button>
-            <Dialog ref={'dialog'} title={'弹框测试'}>弹框</Dialog>
+            <Dialog ref={'dialog'} title={'弹框测试'} height={'300px'} width={'500px'}>
+                <p>弹框</p>
+            </Dialog>
         </div>
     }
 }

@@ -24,20 +24,26 @@ class Dialog extends Component{
     }
 
     render(){
-        return <section>
-            <article>
-                <header className={'title'}>
-                    <span>{this.props.title}</span>
-                    <span className={"cross-close"} sign="close"><Icon type={'guanbi1'}/></span>
-                </header>
-                <div className={'content'}> { this.props.children } </div>
-            </article>
+        return <section id={this.props.id || `dialog_${new Date().getTime()}`} className={this.props.className||''}>
+            <div>
+                <article style={{ height: this.props.height||'',width: this.props.width||''}}>
+                    <header className={'title'}>
+                        <span>{this.props.title}</span>
+                        <span className={"cross-close"} sign="close"><Icon type={'guanbi1'}/></span>
+                    </header>
+                    <div className={'content'}> { this.props.children } </div>
+                </article>
+            </div>
         </section>;
     }
 }
 
 Dialog.propTypes = {
-    title: PropTypes.string
+    title: PropTypes.string,
+    height: PropTypes.any,
+    width: PropTypes.any,
+    id: PropTypes.string,
+    className: PropTypes.string
 }
 
 

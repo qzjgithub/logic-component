@@ -8,7 +8,7 @@ class Icon extends Component{
     }
 
     render(){
-        return <svg {...this.props} className={'iconfont'}>
+        return <svg {...this.props} className={`iconfont ${this.props.className||''}`}>
             <use xlinkHref={`#icon-${this.props.type}`}> </use>
         </svg>
     }

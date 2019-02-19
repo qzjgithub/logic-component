@@ -14,6 +14,8 @@ module.exports.Cutover = require('./component/default/cutover').default;
 module.exports.Dialog = require('./component/default/dialog').default;
 module.exports.Icon = require('./component/default/icon').default;
 module.exports.Loading = require('./component/default/loading').default;
+module.exports.Menu = require('./component/default/menu').default;
+module.exports.Form = require('./component/default/form').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

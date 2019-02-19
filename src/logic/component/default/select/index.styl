@@ -1,16 +1,18 @@
 .Select {
-
+  vertical-align: top;
   position: relative;
   display: inline-block;
 
   & > .text {
     min-width : 100px;
+    display: block;
     & > .iconfont {
       color: #35ced2;
       float: right;
       font-size: 10px;
       height: 16px;
       width: 14px;
+      margin-top: 4px;
     }
   }
 
@@ -24,6 +26,8 @@
     box-sizing: border-box;
     border-top: 0;
     width: 100%;
+    z-index: 99;
+    background-color: #0c5259;
     &>li{
       cursor: pointer;
       padding-left: 5px;
@@ -33,6 +37,37 @@
     }
     &>li.checked{
       background-color: rgba(255,255,255,0.3);
+    }
+  }
+
+  &.multi{
+    .Button:hover{
+      opacity : 1;
+    }
+    & > .text {
+      min-width: 200px;
+    }
+    &>.list>li{
+      &.checked{
+        background-color:transparent;
+      }
+      .mutli-sign{
+        float: right;
+        margin-right: 2px;
+      }
+    }
+    .multi-text{
+      padding: 2px 5px;
+      border-radius: 3px;
+      vertical-align: top;
+      margin-right: 5px;
+      box-shadow: 0 0 2px rgba(255,255,255,0.5);
+      &>svg{
+        vertical-align: middle;
+        margin-left: 5px;
+        height: 14px;
+        width: 14px;
+      }
     }
   }
 
