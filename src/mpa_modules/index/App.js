@@ -28,6 +28,10 @@ class App extends Component{
         super(props, context);
     }
 
+    test = () => {
+        console.log('test');
+    }
+
     render(){
         return <div className={'logic-demo'}>
             <Menu>
@@ -62,8 +66,9 @@ class App extends Component{
     }
 }
 
-App.contextTypes = {
+/*App.contextTypes = {
     store: PropTypes.object
-}
+}*/
 
-export default connect(state => state )(App);
+// export default connect(state => state )(App);
+export default App;

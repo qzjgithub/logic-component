@@ -1,8 +1,5 @@
 export default {
     "status": {
-        "disabled":{
-            "classTrue":"disabled"
-        },
         "down": {
             "classTrue":"down",
             "event": {

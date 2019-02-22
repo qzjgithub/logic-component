@@ -9,16 +9,23 @@ class Menu extends Component{
     }
 
     getChildren(){
-        if(this.props.children){
-            if(this.props.children.length){
+        let c = this.props.children;
+        if(c){
+            if(typeof c === 'object' && c.length){
                 return this.props.children.map((item)=>{
-                    return React.cloneElement(item,{ checkSign: this.props.checkSign});
+                    if(item.type){
+                        return React.cloneElement(item,{ checkSign: this.props.checkSign});
+                    }else{
+                        return item;
+                    }
                 });
-            }else if(this.props.children.length !== 0){
+            }else if(c.type && c.length !== 0){
                 return React.cloneElement(this.props.children,{ checkSign: this.props.checkSign});
+            }else{
+                return c;
             }
         }else{
-            return '';
+            return c;
         }
     }
 

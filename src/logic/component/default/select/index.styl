@@ -2,10 +2,14 @@
   vertical-align: top;
   position: relative;
   display: inline-block;
+  min-width : 100px;
 
   & > .text {
-    min-width : 100px;
+    width: 100%;
     display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     & > .iconfont {
       color: #35ced2;
       float: right;
@@ -28,9 +32,11 @@
     width: 100%;
     z-index: 99;
     background-color: #0c5259;
+    padding-bottom: 5px;
     &>li{
       cursor: pointer;
       padding-left: 5px;
+      margin-top: 5px;
     }
     &>li:hover{
       background-color: rgba(255,255,255,0.1);
@@ -41,11 +47,9 @@
   }
 
   &.multi{
+    min-width: 200px;
     .Button:hover{
       opacity : 1;
-    }
-    & > .text {
-      min-width: 200px;
     }
     &>.list>li{
       &.checked{
@@ -81,5 +85,4 @@
     opacity: 0.4;
     cursor: default;
   }
-
 }

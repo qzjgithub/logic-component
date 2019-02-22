@@ -144,8 +144,8 @@ class Select extends Component{
         }
         return <div className={this.props.mode || 'single'}>
             <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
-                { text }
                 <Icon type={'unfold'}/>
+                { text }
             </Button>
             <ul className={'list'} sign={'list'}>{ list.dom }</ul>
         </div>;

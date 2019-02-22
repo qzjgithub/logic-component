@@ -17,7 +17,7 @@ class Button extends Component{
     render(){
         let lang = this.state['i18n'] || {};
         let styleType = this.props.styleType || '';
-        return <button className={ `${styleType} ${this.props.loading ? 'disabled': ''}` }>
+        return <button className={ `${styleType} ${(this.props.loading||this.props.disabled) ? 'disabled': ''}` }>
             {this.props.loading && <Loading/>}
             {this.props.children || lang['text']}
             </button>;
@@ -26,7 +26,8 @@ class Button extends Component{
 
 Button.propTypes = {
     styleType : PropTypes.string,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    disabled: PropTypes.bool
 }
 
 

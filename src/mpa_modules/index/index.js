@@ -8,17 +8,29 @@ import createHashHistory from 'history/createHashHistory';
 
 import configureStore from '../../redux/store/configureStore';
 import App from './App';
+import { LocaleProvider } from 'antd';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
 
 const state = window.__initialState__ || undefined;
 const store = configureStore(hashHistory, state);
 const history = createHashHistory();
-
-render(
-    <Provider store={ store }>
+/*<Provider store={ store }>
         <Router history={ history }>
+            <LocaleProvider locale={zh_CN}>
             <section>
                 <Route path="/" component={ App } />
             </section>
+            </LocaleProvider>
+        </Router>
+    </Provider>,*/
+render(
+    <Provider store={ store }>
+        <Router history={ history }>
+            <LocaleProvider locale={zh_CN}>
+                <section>
+                    <Route path="/" component={ App } />
+                </section>
+            </LocaleProvider>
         </Router>
     </Provider>,
     document.getElementById('root')

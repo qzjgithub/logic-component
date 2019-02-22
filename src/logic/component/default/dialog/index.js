@@ -12,7 +12,6 @@ class Dialog extends Component{
         super(props, context);
         this.state = {
         }
-
     }
 
     show = () => {
@@ -24,6 +23,7 @@ class Dialog extends Component{
     }
 
     render(){
+        console.log(this.state.status);
         return <section id={this.props.id || `dialog_${new Date().getTime()}`} className={this.props.className||''}>
             <div>
                 <article style={{ height: this.props.height||'',width: this.props.width||''}}>

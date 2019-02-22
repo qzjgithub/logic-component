@@ -25,12 +25,12 @@ class Form extends Component{
            err[name] = data.err;
            values[name] = data.value;
         });
-        console.log(values);
         return { err : result ? null: err, values }
     }
 
     getChildren = () => {
         let c = this.props.children;
+        this.names = [];
         let name;
         if(c && typeof c === 'object'){
             if(!c.length && c.length !== 0 && c.type && c.props.name){
@@ -60,9 +60,9 @@ class Form extends Component{
     }
 
     render(){
-        return <secion>
+        return <section className={'Form'}>
             { this.getChildren() }
-        </secion>
+        </section>
     }
 }
 
@@ -81,17 +81,24 @@ class FormItem extends Component{
         let err = null;
 
         let ele = this.refs[this.key];
+        let value;
         if(!ele || !ele.getValue){
-            return {err: 'has no getValue method.',result: false, value: null}
+            if(ele.picker){
+                value = ele.picker.state.value;
+            }else{
+                return {err: 'has no getValue method.',result: false, value: null}
+            }
+        }else{
+            value = this.refs[this.key].getValue();
         }
-
-        let value = this.refs[this.key].getValue();
         let rules = this.props.rules || [];
 
         let hasRequire = false;
         let isNull = false;
 
-        if(!value || !value.length){
+        if(!value){
+            isNull = true;
+        }else if(value && value instanceof Array && !value.length){
             isNull = true;
         }
         for(let rule of rules){
@@ -120,14 +127,14 @@ class FormItem extends Component{
         let c = this.props.children;
         if(c && typeof c === 'object'){
             if(!c.length && c.length !== 0 && c.type){
-                return React.cloneElement(c,{ref: this.key});
+                return <div>{ React.cloneElement(c,{ref: this.key}) }</div>
             }else if(c.length === 1 && c[0].type){
-                return React.cloneElement(c[0],{ref: this.key});
+                return <div>{React.cloneElement(c[0],{ref: this.key})}</div>;
             }else if(c.length){
                 let hasKey = false;
                 return c.map((item) => {
                    if(!hasKey && item && item.type && item.props.formSign){
-                       return React.cloneElement(item,{ref: this.key});
+                       return <div>{React.cloneElement(item,{ref: this.key})}</div>;
                    } else{
                        return item;
                    }
@@ -141,7 +148,7 @@ class FormItem extends Component{
     }
 
     render(){
-        return <div>
+        return <div className={`FormItem ${this.props.noLabel ? 'noLabel':''}`}>
             <label>{ this.props.label||'' }</label>
             { this.getChildren() }
         </div>
@@ -152,6 +159,7 @@ FormItem.propTypes = {
     label: PropTypes.any,
     name: PropTypes.string,
     rules: PropTypes.array,
+    noLabel: PropTypes.bool
 }
 
 Form.FormItem = FormItem;
