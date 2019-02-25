@@ -118,6 +118,21 @@ class Select extends Component{
         return this.state.value;
     }
 
+    clear = () => {
+        let value;
+        switch(this.props.mode){
+            case 'multi':
+                value = [];
+                break;
+            case 'single':
+            default:
+                value = '';
+        }
+        this.setState({
+            value: value
+        });
+    }
+
     render(){
         let displayKey = '', value = this.state['value'];
         if(Util.isUndefined(value)){

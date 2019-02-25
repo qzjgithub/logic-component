@@ -76,6 +76,15 @@ class FormItem extends Component{
         super(props, context);
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.name !== this.props.name){
+            let dom = this.refs[this.key];
+            if(dom && dom.clear){
+                dom.clear();
+            }
+        }
+    }
+
     validate = () => {
         let result = true;
         let err = null;
