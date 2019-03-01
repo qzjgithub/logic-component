@@ -14,6 +14,22 @@ class Dialog extends Component{
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.show !== this.props.show){
+            let status = this.state.status;
+            status['closed'] = !nextProps.show;
+            this.setState({
+                status: status
+            });
+        }
+    }
+
+    componentDidMount(){
+        if(this.props.show){
+            this.show();
+        }
+    }
+
     show = () => {
         let status = this.state.status;
         status['closed'] = false;
@@ -42,7 +58,8 @@ Dialog.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
     id: PropTypes.string,
-    className: PropTypes.string
+    className: PropTypes.string,
+    show: PropTypes.bool
 }
 
 
