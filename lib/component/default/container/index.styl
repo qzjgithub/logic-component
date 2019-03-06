@@ -1,0 +1,54 @@
+.Container{
+  background-color: transparent;
+  border:1px solid #28c6de;
+  border-radius: 3px;
+  cursor: pointer;
+  height: 26px;
+  padding: 0 5px;
+  color: #27bdca;
+
+  &.medium{
+    padding: 0 15px;
+  }
+
+  &.big{
+    padding: 0 25px;
+  }
+
+  &.fixed{
+    width: 70px;
+  }
+
+  &.fixed-medium{
+    width: 100px;
+  }
+
+  &.fixed-big{
+    width: 150px;
+  }
+
+  &.left{
+    text-align: left;
+  }
+
+  &.right{
+    text-align: right;
+  }
+
+  &:hover{
+    opacity : 0.9;
+  }
+
+  &:focus{
+    outline : 0;
+  }
+
+  &.down{
+    opacity : 0.7;
+  }
+
+  &.disabled{
+    opacity : 0.4;
+    cursor: default;
+  }
+}
