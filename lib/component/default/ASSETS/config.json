@@ -1,7 +1,11 @@
 {
   "name": "default",
   "style": {
-    "themeColor": "#000000"
+    "baseColor": "#314552",
+    "borderColorFactor": [-10, 120, 120],
+    "colorDecimal":16,
+    "fontSize": "12",
+    "unit": "px"
   },
   "language":"zh"
 }
