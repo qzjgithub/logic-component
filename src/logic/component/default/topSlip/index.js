@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -93,4 +93,4 @@ TopSlip.propTypes = {
     styleType : PropTypes.string
 }
 
-export default basic(TopSlip,logic,config);
+export default logical(TopSlip,logic,config);

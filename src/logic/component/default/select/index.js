@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -75,7 +75,11 @@ class Select extends Component{
 
     getList = (value) => {
         let text = '';
-        let dom = (this.props.children||[]).map((item) => {
+        let children = this.props.children;
+        if(children && !(children instanceof Array)){
+            children = [ children ];
+        }
+        let dom = (children||[]).map((item) => {
             let checked = false;
             if(value === item.props.value){
                 this.text = item.props.children;
@@ -94,7 +98,11 @@ class Select extends Component{
             value = [];
         }
         let mode = this.props.mode;
-        let dom = (this.props.children||[]).map((item) => {
+        let children = this.props.children;
+        if(children && !(children instanceof Array)){
+            children = [ children ];
+        }
+        let dom = (children||[]).map((item) => {
             let checked = false;
             if(value.indexOf(item.props.value) > -1){
                 this.text.push(item.props.children);
@@ -138,10 +146,11 @@ class Select extends Component{
         if(Util.isUndefined(value)){
             value = this.props.initValue || this.initValue;
         }
-        if(!value || !value.length){
+        if((!value && value != 0) || (value instanceof Array && !value.length)){
             displayKey = 'defaultText';
         }
-        if(!this.props.children || !this.props.children.length){
+        let children = this.props.children;
+        if(!children || (children instanceof Array && !children.length)){
             displayKey = 'noDataText';
         }
         let list;
@@ -200,6 +209,6 @@ Option.propTypes = {
     selectBridge: PropTypes.func
 }
 
-module.exports.Option = Option;
+Select.Option = Option;
 
-export default basic(Select,logic,config);
+export default logical(Select,logic,config);

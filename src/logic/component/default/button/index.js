@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -31,4 +31,4 @@ Button.propTypes = {
 }
 
 
-export default basic(Button,logic,config);
+export default logical(Button,logic,config);

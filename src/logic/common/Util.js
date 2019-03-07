@@ -96,6 +96,15 @@ class Util {
     }
 
     /**
+     * 值不是undefined,不是null,不是NaN,不是"",不是“0”
+     * @param value
+     * @returns {boolean}
+     */
+    static isRealOrZero(value){
+        return value === 0 || !!value;
+    }
+
+    /**
      * 将对象转换为map
      * @param object
      * @returns {Map<any, any>}

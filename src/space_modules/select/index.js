@@ -20,14 +20,14 @@ class SelectShow extends Component{
 
     render(){
         return <div className={"Show"}>
-            <Select initValue={'2'} defaultText={'请选择数据'} noDataText={'没有数据'}>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'}>
                 <Option value={'1'}>apple</Option>
-                <Option value={'2'}>orange</Option>
+                {/*<Option value={'2'}>orange</Option>*/}
             </Select>
 
-            <Select initValue={['2']} defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'}>
-                <Option value={'1'}>apple</Option>
-                <Option value={'2'}>orange</Option>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'}>
+                {[<Option value={'1'}>apple</Option>]}
+                {/*<Option value={'2'}>orange</Option>*/}
             </Select>
         </div>
     }
