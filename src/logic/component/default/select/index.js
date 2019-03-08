@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
+import { isRealOrZero } from '../../../common/Util';
 import './index.styl';
 
 import Util from '../../../common/Util';
@@ -13,9 +14,9 @@ class Select extends Component{
     text;
     constructor(props, context) {
         super(props, context);
-        let mode = this.props.mode;
-        let value = this.props.value || this.props.initValue;
-        if(!value){
+        let {value , initValue, mode } = this.props;
+        value = isRealOrZero(value) ? value : initValue;
+        if(!isRealOrZero(value)){
             switch(mode){
                 case 'multi':
                     value = [];
@@ -179,7 +180,9 @@ class Select extends Component{
 Select.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
-    mode: PropTypes.string //multi,single
+    mode: PropTypes.string, //multi,single
+    initValue: PropTypes.any,
+    value: PropTypes.any
 }
 
 class Option extends Component{
