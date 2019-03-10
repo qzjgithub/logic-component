@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Select from '../select';
-import { isInteger, patchZero } from '../../../common/Util';
+import { isInteger, patchZero, isRealOrZero } from '../../../common/Util';
+import './index.styl';
 
 const Option = Select.Option;
 
@@ -92,6 +93,7 @@ class Timer extends Component{
      * @returns {Array}
      */
     genArray = (min, max, interval) => {
+        console.log(min,max);
         let arr = [];
         for(let i = min;i <= max;){
             arr.push(i);
@@ -161,22 +163,79 @@ class Timer extends Component{
         this.setState({
             [type]: value
         });
+        if(this.props.onChange){
+            this.props.onChange(this.getValue(),this.getFormatValue());
+        }
+    }
+
+    getHourDom = () => {
+        let dom = [];
+        if(!this.props.hourHide){
+            dom.push(
+                <Select value={this.state.hour} onSelected={(value) => this.setValue(value,'hour')}>
+                { this.getOptionDom(this.state.hourArr) }
+            </Select>
+            );
+            dom.push(<span>{ this.props.hourText || '时'}</span>);
+        }
+        return dom;
+    }
+
+    getMinuteDom = () => {
+        let dom = [];
+        if(!this.props.minuteHide){
+            dom.push(
+                <Select value={this.state.minute} onSelected={(value) => this.setValue(value,'minute')}>
+                { this.getOptionDom(this.state.minuteArr) }
+            </Select>
+            );
+            dom.push(
+                <span>{ this.props.minuteText || '分'}</span>
+            );
+        }
+        return dom;
+    }
+
+    getSecondDom = () => {
+        let dom = [];
+        if(!this.props.secondHide){
+            dom.push(
+                <Select value={this.state.second} onSelected={(value) => this.setValue(value,'second')}>
+                { this.getOptionDom(this.state.secondArr) }
+            </Select>
+            );
+            dom.push(
+                <span>{ this.props.secondText || '秒'}</span>
+            );
+        }
+        return dom;
+    }
+
+    getValue = () => {
+        return {
+            hour: this.state.hour,
+            minute: this.state.minute,
+            seconde: this.state.second
+        }
+    }
+
+    getFormatValue = () => {
+        let format = this.props.format;
+        if(!isRealOrZero(format)){
+            format = 'hh:mm:ss';
+        }
+        return format.replace('hh',patchZero(this.state.hour))
+        .replace('mm',patchZero(this.state.minute))
+        .replace('ss',patchZero(this.state.second));
     }
 
     render(){
         return <div className={'Timer'}>
-            <Select value={this.state.hour} onSelected={(value) => this.setValue(value,'hour')}>
-                { this.getOptionDom(this.state.hourArr) }
-            </Select>
-            <span>{ this.props.hourText || '时'}</span>
-            <Select value={this.state.minute} onSelected={(value) => this.setValue(value,'minute')}>
-                { this.getOptionDom(this.state.minuteArr) }
-            </Select>
-            <span>{ this.props.minuteText || '分'}</span>
-            <Select value={this.state.second} onSelected={(value) => this.setValue(value,'second')}>
-                { this.getOptionDom(this.state.secondArr) }
-            </Select>
-            <span>{ this.props.secondText || '秒'}</span>
+            {[
+                ...this.getHourDom(),
+                ...this.getMinuteDom(),
+                ...this.getSecondDom()
+                ]}
         </div>
     }
 }

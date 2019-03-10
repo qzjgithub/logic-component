@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Timer } from '../../logic';
+import { Calendar } from '../../logic';
 
-class TimerShow extends Component{
+class CalendarShow extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -11,12 +11,10 @@ class TimerShow extends Component{
 
     render(){
         return <div>
-            <Timer/>
-            <Timer hourHide={true}/>
-            <Timer hourRange={ {min: 3, max: 22, interval: 2} }/>
+            <Calendar/>
             </div>
     }
 }
 
 
-export default TimerShow;
+export default CalendarShow;

@@ -21,6 +21,7 @@ import LoadingShow from '../../space_modules/loading';
 import MenuShow from '../../space_modules/menu';
 import FormShow from '../../space_modules/form';
 import TimerShow from '../../space_modules/timer';
+import CalendarShow from '../../space_modules/calendar';
 
 const MenuItem = Menu.MenuItem;
 
@@ -48,6 +49,7 @@ class App extends Component{
                 <MenuItem text={<Link to={'/menu'}>菜单</Link>}/>
                 <MenuItem text={<Link to={'/form'}>表单</Link>}/>
                 <MenuItem text={<Link to={'/timer'}>时间</Link>}/>
+                <MenuItem text={<Link to={'/calendar'}>日历</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
@@ -62,6 +64,7 @@ class App extends Component{
                 <Route path={'/menu'} component={ MenuShow }/>
                 <Route path={'/form'} component={ FormShow }/>
                 <Route path={'/timer'} component={ TimerShow }/>
+                <Route path={'/calendar'} component={ CalendarShow }/>
                 <Redirect from={'/'} to={'/dialog'}/>
             </Switch>
             {/*</Content>*/}
