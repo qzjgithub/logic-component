@@ -5,21 +5,23 @@ console.log(__dirname,__filename,process.cwd());
 const jsReg = /^.+\.js$/;
 const sourcePath = path.resolve(__dirname,'src/logic');
 const libPath = path.resolve(__dirname,'lib');
-const targetPath = path.resolve(process.cwd(),'node_modules/logic');
+const targetPath = path.resolve(process.cwd(),'node_modules/logic-component/lib');
 
 function copy(){
     if(!fs.existsSync(path.resolve(process.cwd(),'node_modules'))) return;
-    if(!fs.existsSync(path.resolve(process.cwd(),'node_modules/logic'))){
+    if(!fs.existsSync(path.resolve(process.cwd(),'node_modules/logic-component'))){
         fs.mkdir(targetPath,(err)=>{
             if(!err){
                 console.log('创建logic成功');
                 copyLib();
                 copySource();
+                copyIndex();
             }
         });
     }else{
         copyLib();
         copySource();
+        copyIndex();
     }
 }
 
@@ -56,5 +58,8 @@ function writeFile(file,joins,data){
     fs.writeFileSync(path.resolve(curPath,file),data);
 }
 
+function copyIndex(){
+    let data = fs.readFileSync(path.resolve(__dirname,'index.js'));
+    fs.writeFileSync(path.resolve(path.resolve(process.cwd(),'node_modules/logic-component'),'index.js'),data);
+}
 copy();
-// fs.writeFileSync(path.resolve(targetPath,'component/default/button/index.styl'),'caonima');

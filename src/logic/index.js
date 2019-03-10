@@ -6,9 +6,7 @@ import './component/default/ASSETS/common.styl';
 module.exports.Button = require('./component/default/button').default;
 module.exports.Grid = require('./component/default/grid').default;
 module.exports.Input = require('./component/default/input').default;
-let Select = require('./component/default/select').default;
-Select.Option = require('./component/default/select').Option;
-module.exports.Select = Select;
+module.exports.Select = require('./component/default/select').default;
 module.exports.TopSlip = require('./component/default/topSlip').default;
 module.exports.Tree = require('./component/default/tree').default;
 module.exports.TreeItem = require('./component/default/treeItem').default;
@@ -18,6 +16,7 @@ module.exports.Icon = require('./component/default/icon').default;
 module.exports.Loading = require('./component/default/loading').default;
 module.exports.Menu = require('./component/default/menu').default;
 module.exports.Form = require('./component/default/form').default;
+module.exports.Timer = require('./component/default/timer').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

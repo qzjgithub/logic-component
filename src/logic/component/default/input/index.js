@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -14,4 +14,4 @@ class Input extends Component{
     }
 }
 
-export default basic(Input,logic,config);
+export default logical(Input,logic,config);

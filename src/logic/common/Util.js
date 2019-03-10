@@ -96,6 +96,33 @@ class Util {
     }
 
     /**
+     * 是存在或者是0
+     * @param value
+     * @returns {boolean}
+     */
+    static isRealOrZero(value){
+        return !Util.isUndefined(value) && !Util.isNull(value) && value !== "";
+    }
+
+    /**
+     * 判断是不是一个数字
+     * @param value
+     * @returns {boolean}
+     */
+    static isNumber(value){
+        return typeof value === 'number';
+    }
+
+    /**
+     * 判断是否是一个整数
+     * @param value
+     * @returns {boolean}
+     */
+    static isInteger(value){
+        return Util.isNumber(value) && value%1 === 0;
+    }
+
+    /**
      * 将对象转换为map
      * @param object
      * @returns {Map<any, any>}
@@ -152,6 +179,19 @@ class Util {
         }else{
             return text;
         }
+    }
+
+    /**
+     * 小于10补0
+     * @param value
+     * @returns {string}
+     */
+    static patchZero(value){
+        let str = String(value);
+        if(Util.isInteger(value) && value < 10){
+            str = `0${value}`;
+        }
+        return str;
     }
 
     /**

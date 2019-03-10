@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -147,4 +147,4 @@ TreeItem.propTypes = {
 }
 
 
-export default basic(TreeItem,logic,config);
+export default logical(TreeItem,logic,config);

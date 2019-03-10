@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import basic from '../basic/index';
+import logical from '../../../common/logical';
 import Button from '../button/index';
 import Input from '../input/index';
 import config from './config.json';
@@ -41,4 +41,4 @@ class Grid extends Component{
     }
 }
 
-export default basic(Grid,logic,config);
+export default logical(Grid,logic,config);
