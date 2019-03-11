@@ -93,7 +93,6 @@ class Timer extends Component{
      * @returns {Array}
      */
     genArray = (min, max, interval) => {
-        console.log(min,max);
         let arr = [];
         for(let i = min;i <= max;){
             arr.push(i);
