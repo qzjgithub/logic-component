@@ -215,7 +215,7 @@ class Timer extends Component{
         return {
             hour: this.state.hour,
             minute: this.state.minute,
-            seconde: this.state.second
+            second: this.state.second
         }
     }
 

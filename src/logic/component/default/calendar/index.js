@@ -18,7 +18,7 @@ class Calendar extends Component{
     maxDate;
     constructor(props, context) {
         super(props, context);
-        this.initParam();
+        this.initParam(null, this.props);
         let date = this.getDate();
         moment.locale(this.props.lang || 'zh');
         this.state = Object.assign(this.initData(),{
@@ -31,27 +31,32 @@ class Calendar extends Component{
         if(this.props.timerConfig!==false){
             this.setTimer();
         }
+        this.setState({
+            valid : this.getValid(this.state.date)
+        });
     }
 
     componentWillReceiveProps(nextProps){
         if(nextProps){
-
+            this.initParam(nextProps.date || this.state.date, nextProps);
+            this.setState({
+                ...this.initData()
+            });
         }
     }
 
     /**
-     *
-     *
+     * 初始化参数
      */
-    initParam = (datetime) => {
-        datetime = datetime || this.props.date || this.props.initDate || moment();
+    initParam = (datetime, props) => {
+        datetime = datetime || props.date || props.initDate || moment();
         if(!moment.isMoment(datetime)){
             console.log('initDate is not moment');
             datetime = moment();
         }
         this.date = datetime;
 
-        let { minDate , maxDate } = this.props;
+        let { minDate , maxDate } = props;
         if(minDate && moment.isMoment(minDate)){
             this.minDate = minDate;
         }else{
@@ -183,7 +188,15 @@ class Calendar extends Component{
             minuteRange: this.genMinMax(datetime,4),
             secondRange: this.genMinMax(datetime,5),
             onChange: (value,text) => {
-                this.setState(value);
+                let date = this.state.date;
+                if(date && moment.isMoment(date)){
+                    date.hour(value.hour).minute(value.minute).second(value.second);
+                }
+                this.setState({
+                    ...value,
+                    date,
+                    valid: this.getValid(date)
+                });
                 if(onChange){
                     onChange(value,text)
                 }
@@ -334,6 +347,20 @@ class Calendar extends Component{
                 this.setTimer();
             }
         });
+    }
+
+    getValid = (date) => {
+        let valid = true;
+        if(date){
+            if(this.compareDate(date) === 0){
+                if(this.props.disableDate && this.props.disableDate(date)){
+                    valid = false;
+                }
+            }else{
+                valid = false;
+            }
+        }
+        return valid;
     }
 
     setTimer = () => {
