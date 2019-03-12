@@ -44,12 +44,6 @@ class Select extends Component{
         let values = this.state.value;
         switch(this.props.mode){
             case 'multi':
-                /*if(values === undefined){
-                    let initValue = this.props.initValue;
-                    values = initValue && initValue.length ? initValue : [];
-                }else if(!values){
-                    values = [];
-                }*/
                 let ind = values.indexOf(value);
                 if(ind > -1){
                     values.splice(ind,1);
@@ -170,7 +164,7 @@ class Select extends Component{
         return <div className={this.props.mode || 'single'}>
             <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
-                { text }
+                { text || value}
             </Button>
             <ul className={'list'} sign={'list'}>{ list.dom }</ul>
         </div>;
