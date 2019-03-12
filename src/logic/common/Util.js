@@ -186,10 +186,16 @@ class Util {
      * @param value
      * @returns {string}
      */
-    static patchZero(value){
+    static patchZero(value,num){
+        num = num || 2;
         let str = String(value);
-        if(Util.isInteger(value) && value < 10){
-            str = `0${value}`;
+        if(Util.isInteger(value) && str.length < num){
+            let s = '';
+            while(num > str.length){
+                num--;
+                s += '0';
+            }
+            str = `${s}${value}`;
         }
         return str;
     }

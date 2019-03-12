@@ -35,7 +35,7 @@ class Timer extends Component{
         if(nextProps){
             this.setState(Object.assign(
                 this.state,this.getValueAndArray(
-                    Object.assign(this.props,nextProps),
+                    Object.assign({},this.props,nextProps),
                     this.state)));
         }
     }
@@ -161,10 +161,11 @@ class Timer extends Component{
     setValue = (value,type) => {
         this.setState({
             [type]: value
+        },() => {
+            if(this.props.onChange){
+                this.props.onChange(this.getValue(),this.getFormatValue());
+            }
         });
-        if(this.props.onChange){
-            this.props.onChange(this.getValue(),this.getFormatValue());
-        }
     }
 
     getHourDom = () => {
@@ -255,7 +256,8 @@ Timer.propTypes = {
     second: PropTypes.number,
     hourText: PropTypes.string,
     minuteText: PropTypes.string,
-    secondText: PropTypes.string
+    secondText: PropTypes.string,
+    onChange: PropTypes.func
 }
 
 export default Timer

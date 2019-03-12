@@ -5,6 +5,7 @@ import Icon from '../icon';
 import Select from '../select';
 import Timer from '../timer';
 import moment from 'moment';
+import { isInteger, patchZero, isRealOrZero } from '../../../common/Util';
 import { zh } from './i18n';
 
 const Option = Select.Option;
@@ -12,39 +13,43 @@ const Option = Select.Option;
 const TYPES = ['year','month','date','hour','minute','second'];
 
 class Calendar extends Component{
-    initDate;
+    date;
     minDate;
     maxDate;
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            yearArr: [],
-            monthArr: [],
-            dateArr: [],
-            hourArr: [],
-            minuteArr: [],
-            secondArr: [],
-            year: 0,
-            month: 0,
-            date:0,
-            hour: 0,
-            minute: 0,
-            second: 0
-        }
         this.initParam();
-        this.initData();
+        let date = this.getDate();
+        moment.locale(this.props.lang || 'zh');
+        this.state = Object.assign(this.initData(),{
+            valid: true,
+            date: date
+        });
+    }
+
+    componentDidMount(){
+        if(this.props.timerConfig!==false){
+            this.setTimer();
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps){
+
+        }
     }
 
     /**
-     * 初始化生成日历的基准日期
+     *
+     *
      */
-    initParam = () => {
-        let datetime = this.props.date || this.props.initDate || moment();
+    initParam = (datetime) => {
+        datetime = datetime || this.props.date || this.props.initDate || moment();
         if(!moment.isMoment(datetime)){
             console.log('initDate is not moment');
             datetime = moment();
         }
-        this.initDate = datetime;
+        this.date = datetime;
 
         let { minDate , maxDate } = this.props;
         if(minDate && moment.isMoment(minDate)){
@@ -61,8 +66,8 @@ class Calendar extends Component{
             this.minDate = null;
             this.maxDate = null;
         }
-        if(this.compareDate(this.initDate,'second')!==0){
-            this.initDate = this.minDate || this.maxDate;
+        if(this.compareDate(this.date,'second')!==0){
+            this.date = this.minDate || this.maxDate;
         }
     }
 
@@ -71,12 +76,11 @@ class Calendar extends Component{
      * @returns {{year: *, yearArr: Array}}
      */
     initData = () => {
-        let datetime = this.initDate;
+        let datetime = this.date;
         let year = datetime.year();
         let month = datetime.month();
         let date = datetime.date();
         let days = datetime.daysInMonth();
-        let week = datetime.weekday();
         let hour = datetime.hour();
         let minute = datetime.minute();
         let second = datetime.second();
@@ -87,9 +91,19 @@ class Calendar extends Component{
             yearArr: this.genYearArr(year,compareFlag && datetime),
             month,
             monthArr: this.genMonthArr(month,compareFlag && datetime),
-            date,
-            dateArr: this.genDateArr(date,datetime,days,week),
+            dateArr: this.genDateArr(date,datetime,days),
             hour,
+            minute,
+            second
+        }
+    }
+
+    getDate = (datetime) => {
+        datetime = datetime || (this.state||{}).date || this.props.date || this.props.initDate;
+        if(datetime && moment.isMoment(datetime) && this.compareDate(datetime,'date') === 0){
+            datetime;
+        }else{
+            return null
         }
     }
 
@@ -143,7 +157,9 @@ class Calendar extends Component{
         return arr;
     }
 
-    genDateArr = (date, datetime, days, week) => {
+    genDateArr = (date, datetime, days) => {
+        datetime.date(1);
+        let week = datetime.weekday();
         let arr = [];
         for(let i = 0;i < week; i++){
             arr.push(null);
@@ -156,13 +172,26 @@ class Calendar extends Component{
                 arr.push(!this.isDisableDate(datetime)) :
                 arr.push(false);
         }
+        return arr;
     }
 
-    genHourConfig = (hour) => {
-
+    genTimerConfig = (datetime) => {
+        let timerConfig = this.props.timerConfig || {};
+        let onChange = timerConfig.onChange;
+        return Object.assign(timerConfig,{
+            hourRange: this.genMinMax(datetime,3),
+            minuteRange: this.genMinMax(datetime,4),
+            secondRange: this.genMinMax(datetime,5),
+            onChange: (value,text) => {
+                this.setState(value);
+                if(onChange){
+                    onChange(value,text)
+                }
+            }
+        });
     }
 
-    isDisableDate(datetime){
+    isDisableDate = (datetime) => {
         let { disableDate } = this.props;
         let flag = true;
         if(disableDate){
@@ -181,7 +210,7 @@ class Calendar extends Component{
         return flag;
     }
 
-    compareDate(datetime,type){
+    compareDate = (datetime,type) => {
         if(this.minDate && datetime.isBefore(this.minDate,type)){
             return -1;
         }
@@ -191,57 +220,160 @@ class Calendar extends Component{
         return 0;
     }
 
-    genMinMax(datetime,tyInd){
+    genMinMax = (datetime,tyInd) => {
         let obj = (this.props.timerConfig || {})[TYPES[tyInd]] || {};
+        if(!datetime){
+            return obj;
+        }
         let min, max;
-        if(this.minDate && this.minDate.isSame(datetime, TYPES[tyInd + 1])){
+        if(this.minDate && this.minDate.isSame(datetime, TYPES[tyInd - 1])){
             min = this.minDate.minute();
-            if(obj.min && obj.min > min){
+            if(isRealOrZero(obj.min) && obj.min > min){
                 min = obj.min;
             }
+            obj.min = min;
         }
-        if(this.maxDate && this.maxDate.isSame(datetime,TYPES[tyInd + 1])){
+        if(this.maxDate && this.maxDate.isSame(datetime,TYPES[tyInd - 1])){
             max = this.maxDate.minute();
-            if(obj.max && obj.max < max){
+            if(isRealOrZero(obj.max) && obj.max < max){
                 max = obj.max;
             }
+            obj.max = max;
+        }
+        return obj;
+    }
+
+    genYearDom = () => {
+        return this.state.yearArr.map((v) =>{
+            return <Option value={v} key={v}>{ patchZero(v,4) }</Option>
+        });
+    }
+
+    genMonthDom = () => {
+        let texts = moment.monthsShort();
+        return this.state.monthArr.map((v) =>{
+            return <Option value={v} key={v}>{ texts[v] }</Option>
+        });
+    }
+
+    genWeekDom = () => {
+        let texts = moment.weekdaysMin();
+        let sunday = texts.shift();
+        texts.push(sunday);
+        return texts.map((v, ind) => {
+            return <li value={ind} key={ind}>{v}</li>
+        })
+    }
+
+    genDateDom = () => {
+        let day = 0;
+        let cur = moment().year(this.state.year).month(this.state.month);
+        let date = this.state.date;
+        return this.state.dateArr.map((v,index) => {
+            if(v === null){
+                return <span className={'empty'}> </span>;
+            }else{
+                day++;
+                cur.date(day);
+                let cls = '';
+                if(v === false){
+                    cls += 'disabled ';
+                }
+                if(date && date.isSame(cur,'date')){
+                    cls += 'selected ';
+                }
+                if(this.props.signToday !== false && moment().isSame(cur,'date')){
+                    cls += 'today ';
+                }
+                return <span className={cls} onClick={() => this.setDate(index)}>{ day }</span>
+            }
+        });
+    }
+
+    getMinDayDate = () => {
+        if(this.state.date){
+            return this.state.date.date(1);
+        }else{
+            return moment().year(this.state.year)
+                .month(this.state.month)
+                .date(1)
+                .hour(this.state.hour)
+                .minute(this.state.minute)
+                .second(this.state.second);
+        }
+    }
+
+    addMonth = () => {
+        this.date = this.getMinDayDate().add(1,'months')
+        this.setState(this.initData());
+    }
+
+    subtractMonth = () => {
+        this.date = this.getMinDayDate().subtract(1,'months');
+        this.setState(this.initData());
+    }
+
+    setYear = (value) => {
+        this.date = this.getMinDayDate().year(value);
+        this.setState(this.initData());
+    }
+
+    setMonth = (value) => {
+        this.date = this.getMinDayDate().month(value);
+        this.setState(this.initData());
+    }
+
+    setDate = (index) => {
+        let datetime = this.getMinDayDate();
+        let weekday = datetime.weekday();
+        datetime.date(index - weekday + 1);
+        this.setState({
+            date: datetime
+        },() => {
+            if(this.props.timerConfig!==false){
+                this.setTimer();
+            }
+        });
+    }
+
+    setTimer = () => {
+        let timer = this.refs['timer'];
+        if(timer){
+            this.setState(timer.getValue());
         }
     }
 
     render(){
+        let { timerConfig } = this.props;
+        let showTimer = timerConfig !== false;
+        if(showTimer){
+            timerConfig = this.genTimerConfig(this.state.date);
+        }
+        let { hour, minute, second } = this.state;
+        timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });
+        let disabledSvg = this.compareDate(this.date,'month');
         return <section className={'Calendar'}>
             <header>
-                <Icon type={'zuo'} />
-                <Select>
-                    <Option value={2019}>2019</Option>
+                <Icon type={'zuo'} onClick={this.subtractMonth}
+                      className={ disabledSvg === -1 ? 'disabled': ''}/>
+                <Select value={this.state.year} onSelected={this.setYear}>
+                    { this.genYearDom() }
                 </Select>
-                <Select>
-                    <Option value={0}>一</Option>
+                <Select value={this.state.month} onSelected={this.setMonth}>
+                    { this.genMonthDom() }
                 </Select>
-                <Icon type={'gengduo'} />
+                <Icon type={'gengduo'} onClick={this.addMonth}
+                      className={ disabledSvg === 1 ? 'disabled': ''}/>
             </header>
             <ul>
-                <li>一</li>
-                <li>二</li>
-                <li>三</li>
-                <li>四</li>
-                <li>五</li>
-                <li>六</li>
-                <li>日</li>
+                { this.genWeekDom() }
             </ul>
             <div>
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-                <span>6</span>
-                <span>7</span>
-                <span>8</span>
+                { this.genDateDom() }
             </div>
-            <footer>
-                <Timer/>
-            </footer>
+            {showTimer && <footer>
+                <Timer {...timerConfig} ref={'timer'}/>
+            </footer>}
         </section>
     }
 }
@@ -251,10 +383,12 @@ Calendar.propTypes = {
     disableDate: PropTypes.func,
     initDate: PropTypes.object,//没有默认当前时间
     timerConfig: PropTypes.any,//false表示不展示，配置则读取
+    lang: PropTypes.string,
     langObj: PropTypes.object,
     date: PropTypes.object,
     minDate: PropTypes.object,
-    maxDate: PropTypes.object
+    maxDate: PropTypes.object,
+    signToday: PropTypes.bool
 }
 
 export default Calendar;
