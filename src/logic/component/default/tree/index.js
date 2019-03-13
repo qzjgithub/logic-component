@@ -148,7 +148,6 @@ class Tree extends Component{
 }
 
 Tree.propTypes = {
-    styleType : PropTypes.string,
     data: PropTypes.array,
     search: PropTypes.bool,
     onTextClick: PropTypes.func

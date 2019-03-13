@@ -136,14 +136,15 @@ class TreeItem extends Component{
 }
 
 TreeItem.propTypes = {
-    styleType : PropTypes.string,
     data: PropTypes.object,
     last: PropTypes.bool,
     first: PropTypes.bool,
     order: PropTypes.array,
     searched: PropTypes.bool,
     onTextClick: PropTypes.func,
-    onVisibleChange: PropTypes.func
+    onVisibleChange: PropTypes.func,
+    selectMode: PropTypes.string,//multi,single,auto
+    selectType: PropTypes.func
 }
 
 
