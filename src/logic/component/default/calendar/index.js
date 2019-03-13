@@ -183,7 +183,7 @@ class Calendar extends Component{
     genTimerConfig = (datetime) => {
         let timerConfig = this.props.timerConfig || {};
         let onChange = timerConfig.onChange;
-        return Object.assign(timerConfig,{
+        return Object.assign({},timerConfig,{
             hourRange: this.genMinMax(datetime,3),
             minuteRange: this.genMinMax(datetime,4),
             secondRange: this.genMinMax(datetime,5),
@@ -192,10 +192,11 @@ class Calendar extends Component{
                 if(date && moment.isMoment(date)){
                     date.hour(value.hour).minute(value.minute).second(value.second);
                 }
+                let valid = this.getValid(date);
                 this.setState({
                     ...value,
                     date,
-                    valid: this.getValid(date)
+                    valid
                 });
                 if(onChange){
                     onChange(value,text)
@@ -234,20 +235,22 @@ class Calendar extends Component{
     }
 
     genMinMax = (datetime,tyInd) => {
-        let obj = (this.props.timerConfig || {})[TYPES[tyInd]] || {};
+        let key = `${TYPES[tyInd]}Range`;
+        let obj = (this.props.timerConfig || {})[key] || {};
+        obj = JSON.parse(JSON.stringify(obj));
         if(!datetime){
             return obj;
         }
         let min, max;
         if(this.minDate && this.minDate.isSame(datetime, TYPES[tyInd - 1])){
-            min = this.minDate.minute();
+            min = this.minDate[TYPES[tyInd]]();
             if(isRealOrZero(obj.min) && obj.min > min){
                 min = obj.min;
             }
             obj.min = min;
         }
         if(this.maxDate && this.maxDate.isSame(datetime,TYPES[tyInd - 1])){
-            max = this.maxDate.minute();
+            max = this.maxDate[TYPES[tyInd]]();
             if(isRealOrZero(obj.max) && obj.max < max){
                 max = obj.max;
             }
@@ -378,11 +381,18 @@ class Calendar extends Component{
         }
         let { hour, minute, second } = this.state;
         timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });
-        let disabledSvg = this.compareDate(this.date,'month');
+        let leftDisabled = false;
+        if(this.minDate && (this.minDate.month()) >= this.state.month){
+            leftDisabled = true;
+        }
+        let rightDisabled = false;
+        if(this.maxDate && (this.maxDate.month()) <= this.state.month){
+            rightDisabled = true;
+        }
         return <section className={'Calendar'}>
             <header>
                 <Icon type={'zuo'} onClick={this.subtractMonth}
-                      className={ disabledSvg === -1 ? 'disabled': ''}/>
+                      className={ leftDisabled ? 'disabled': ''}/>
                 <Select value={this.state.year} onSelected={this.setYear}>
                     { this.genYearDom() }
                 </Select>
@@ -390,7 +400,7 @@ class Calendar extends Component{
                     { this.genMonthDom() }
                 </Select>
                 <Icon type={'gengduo'} onClick={this.addMonth}
-                      className={ disabledSvg === 1 ? 'disabled': ''}/>
+                      className={ rightDisabled ? 'disabled': ''}/>
             </header>
             <ul>
                 { this.genWeekDom() }

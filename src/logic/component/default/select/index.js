@@ -32,7 +32,8 @@ class Select extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.value){
+        let value = nextProps.value;
+        if(value || value == 0){
             this.setState({
                 value: nextProps.value
             });
