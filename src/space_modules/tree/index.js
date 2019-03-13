@@ -23,6 +23,7 @@ class TreeShow extends Component {
         let d = data;//[Object.assign(data[3],{ root: true })];
         // d[0]['children'][0]['children'] = null;
         let value = d[0]['id'];
+        console.log(d);
         return <div className={"Show"}>
             <Tree data={d}
                   onTextClick={this.onTextClick}
@@ -31,6 +32,7 @@ class TreeShow extends Component {
                   value={value}
                   textKey={'display_name'}
                   valueKey={'id'}
+                  selectMode={'multi'}
                   onChanged={this.onChanged}/>
         </div>
     }

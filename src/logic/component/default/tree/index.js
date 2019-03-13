@@ -22,7 +22,7 @@ class Tree extends Component{
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({value:nextProps.value});
+        this.setState({value: nextProps.value});
     }
 
     getTreeItem = (data,first,last,order) => {
@@ -73,6 +73,24 @@ class Tree extends Component{
             flag = true;
         }
         if(flag){
+            /* let sv = this.state.value;
+            switch(this.props.selectMode){
+                case 'multi':
+                    if(!sv || !(sv instanceof Array)){
+                        sv = [];
+                    }
+                    let ind = sv.indexOf(value);
+                    if(ind > -1){
+                        sv.splice(ind,1);
+                    }else{
+                        sv.push(value);
+                    }
+                    break;
+                case 'single':
+                case 'aut':
+                defalut:
+                    sv = value;
+            } */
             this.setState({
                 value: value,
                 searcheds : {}
@@ -150,7 +168,11 @@ class Tree extends Component{
 Tree.propTypes = {
     data: PropTypes.array,
     search: PropTypes.bool,
-    onTextClick: PropTypes.func
+    onTextClick: PropTypes.func,
+    selectMode: PropTypes.string,//multi,single,auto
+    selectable: PropTypes.func,
+    valueKey: PropTypes.string,
+    value: PropTypes.any
 }
 
 

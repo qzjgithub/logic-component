@@ -37,7 +37,6 @@ class Calendar extends Component{
     componentWillReceiveProps(nextProps){
         if(nextProps){
             let datetime = nextProps.date || this.state.date;
-            console.log(datetime);
             this.initParam(datetime, nextProps);
             if(datetime){
                 datetime = moment(this.date);
@@ -84,7 +83,6 @@ class Calendar extends Component{
                 this.date = moment(this.date);
             }
         }
-        console.log(this.date);
     }
 
     /**
