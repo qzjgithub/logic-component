@@ -19,6 +19,7 @@ module.exports.Form = require('./component/default/form').default;
 module.exports.Timer = require('./component/default/timer').default;
 module.exports.Calendar = require('./component/default/calendar').default;
 module.exports.Datepicker = require('./component/default/datepicker').default;
+module.exports.DateRangepicker = require('./component/default/dateRangepicker').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

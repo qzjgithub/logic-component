@@ -1,4 +1,4 @@
-.Datepicker{
+.DateRangepicker{
   & > .list {
     display: none;
     color: #ffffff;
@@ -7,10 +7,14 @@
     border:1px solid #28c6de;
     .Calendar{
       border: 0;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .Calendar:first-child{
+      margin-right: 5px;
     }
   }
   & > .text {
-    min-width: 170px;
     &>svg{
       position: relative;
       top: 3px;

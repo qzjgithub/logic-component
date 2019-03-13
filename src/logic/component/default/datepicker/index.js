@@ -18,10 +18,12 @@ class Datepicker extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps){
-            let value = nextProps.value || this.state.value;
-            this.setState({
-                value
-            });
+            let value = nextProps.value;
+            if(value !== undefined){
+                this.setState({
+                    value
+                });
+            }
         }
     }
 
@@ -81,7 +83,7 @@ class Datepicker extends Component{
         let value = this.state.value;
         let valid = moment.isMoment(value);
         if(calendar && valid){
-            valid = this.getValid(value);
+            valid = calendar.getValid(value);
         }
         return { value, valid }
     }
@@ -95,7 +97,7 @@ class Datepicker extends Component{
             text = this.props.defaultText || '请选择时间';
         }
         return <div>
-            <Button sign={'text'} className={'text'}>
+            <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`}>
                 <span>{ text }</span>
                 { this.props.hasClear !== false &&
                     <Icon type={'guanbi1'} onClick={this.clear}/>

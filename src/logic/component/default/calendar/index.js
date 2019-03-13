@@ -37,6 +37,7 @@ class Calendar extends Component{
     componentWillReceiveProps(nextProps){
         if(nextProps){
             let datetime = nextProps.date || this.state.date;
+            console.log(datetime);
             this.initParam(datetime, nextProps);
             if(datetime){
                 datetime = moment(this.date);
@@ -64,12 +65,12 @@ class Calendar extends Component{
 
         let { minDate , maxDate } = props;
         if(minDate && moment.isMoment(minDate)){
-            this.minDate = minDate;
+            this.minDate = moment(minDate);
         }else{
             this.minDate = null;
         }
         if(maxDate && moment.isMoment(maxDate)){
-            this.maxDate = maxDate;
+            this.maxDate = moment(maxDate);
         }else{
             this.maxDate = null;
         }
@@ -79,7 +80,11 @@ class Calendar extends Component{
         }
         if(this.compareDate(this.date,'second')!==0){
             this.date = this.minDate || this.maxDate;
+            if(moment.isMoment(this.date)){
+                this.date = moment(this.date);
+            }
         }
+        console.log(this.date);
     }
 
     /**
@@ -218,11 +223,11 @@ class Calendar extends Component{
         let flag = true;
         if(disableDate){
             datetime.hour(0).minute(0).second(0);
-            if(!disableDate(datetime)){
+            if(!disableDate(moment(datetime))){
                 flag = false;
             }else{
                 datetime.hour(23).minute(59).second(59);
-                if(!disableDate(datetime)){
+                if(!disableDate(moment(datetime))){
                     flag = false;
                 }
             }
@@ -359,7 +364,7 @@ class Calendar extends Component{
         let valid = true;
         if(date){
             if(this.compareDate(date) === 0){
-                if(this.props.disableDate && this.props.disableDate(date)){
+                if(this.props.disableDate && this.props.disableDate(moment(date))){
                     valid = false;
                 }
             }else{
@@ -406,11 +411,12 @@ class Calendar extends Component{
         let { hour, minute, second } = this.state;
         timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });
         let leftDisabled = false;
-        if(this.minDate && (this.minDate.month()) >= this.state.month){
+        let cur = moment().year(this.state.year).month(this.state.month);
+        if(this.minDate && this.minDate.isSameOrAfter(cur,'month')){
             leftDisabled = true;
         }
         let rightDisabled = false;
-        if(this.maxDate && (this.maxDate.month()) <= this.state.month){
+        if(this.maxDate && this.maxDate.isSameOrBefore(cur,'month')){
             rightDisabled = true;
         }
         return <section className={'Calendar'}>

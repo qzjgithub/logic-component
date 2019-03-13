@@ -23,6 +23,7 @@ import FormShow from '../../space_modules/form';
 import TimerShow from '../../space_modules/timer';
 import CalendarShow from '../../space_modules/calendar';
 import DatepickerShow from '../../space_modules/datepicker';
+import DateRangepickerShow from '../../space_modules/dateRangepicker';
 
 const MenuItem = Menu.MenuItem;
 
@@ -52,6 +53,7 @@ class App extends Component{
                 <MenuItem text={<Link to={'/timer'}>时间</Link>}/>
                 <MenuItem text={<Link to={'/calendar'}>日历</Link>}/>
                 <MenuItem text={<Link to={'/datepicker'}>时间框</Link>}/>
+                <MenuItem text={<Link to={'/dateRangepicker'}>时间选择框</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
@@ -68,7 +70,8 @@ class App extends Component{
                 <Route path={'/timer'} component={ TimerShow }/>
                 <Route path={'/calendar'} component={ CalendarShow }/>
                 <Route path={'/datepicker'} component={ DatepickerShow }/>
-                <Redirect from={'/'} to={'/datepicker'}/>
+                <Route path={'/dateRangepicker'} component={ DateRangepickerShow }/>
+                <Redirect from={'/'} to={'/dateRangepicker'}/>
             </Switch>
             {/*</Content>*/}
         </div>
