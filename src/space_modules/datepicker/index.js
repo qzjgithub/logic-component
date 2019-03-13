@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Calendar } from '../../logic';
+import { Datepicker } from '../../logic';
 import moment from 'moment';
 
-class CalendarShow extends Component{
+class DatepickerShow extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -16,14 +16,10 @@ class CalendarShow extends Component{
 
     render(){
         return <div>
-            <Calendar minDate={moment().subtract(1,'d')}
-                      signToday={false}
-                      maxDate={moment().add(6,'d')}
-                      disableDate={this.disableDate}/>
-            <Calendar/>
+            <Datepicker/>
             </div>
     }
 }
 
 
-export default CalendarShow;
+export default DatepickerShow;

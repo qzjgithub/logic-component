@@ -28,9 +28,7 @@ class Calendar extends Component{
     }
 
     componentDidMount(){
-        if(this.props.timerConfig!==false){
-            this.setTimer();
-        }
+        this.setTimer();
         this.setState({
             valid : this.getValid(this.state.date)
         });
@@ -38,9 +36,17 @@ class Calendar extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps){
-            this.initParam(nextProps.date || this.state.date, nextProps);
+            let datetime = nextProps.date || this.state.date;
+            this.initParam(datetime, nextProps);
+            if(datetime){
+                datetime = moment(this.date);
+            }
             this.setState({
-                ...this.initData()
+                ...this.initData(),
+                date: datetime,
+                valid: this.getValid(datetime)
+            },() => {
+                this.setTimer();
             });
         }
     }
@@ -54,7 +60,7 @@ class Calendar extends Component{
             console.log('initDate is not moment');
             datetime = moment();
         }
-        this.date = datetime;
+        this.date = moment(datetime);
 
         let { minDate , maxDate } = props;
         if(minDate && moment.isMoment(minDate)){
@@ -193,14 +199,16 @@ class Calendar extends Component{
                     date.hour(value.hour).minute(value.minute).second(value.second);
                 }
                 let valid = this.getValid(date);
+                if(onChange){
+                    onChange(value,text)
+                }
                 this.setState({
                     ...value,
                     date,
                     valid
+                },() => {
+                    this.triggerOnChange();
                 });
-                if(onChange){
-                    onChange(value,text)
-                }
             }
         });
     }
@@ -307,16 +315,12 @@ class Calendar extends Component{
     }
 
     getMinDayDate = () => {
-        if(this.state.date){
-            return this.state.date.date(1);
-        }else{
-            return moment().year(this.state.year)
-                .month(this.state.month)
-                .date(1)
-                .hour(this.state.hour)
-                .minute(this.state.minute)
-                .second(this.state.second);
-        }
+        return moment().year(this.state.year)
+            .month(this.state.month)
+            .date(1)
+            .hour(this.state.hour)
+            .minute(this.state.minute)
+            .second(this.state.second);
     }
 
     addMonth = () => {
@@ -344,11 +348,10 @@ class Calendar extends Component{
         let weekday = datetime.weekday();
         datetime.date(index - weekday + 1);
         this.setState({
-            date: datetime
+            date: datetime,
+            valid: this.getValid(datetime)
         },() => {
-            if(this.props.timerConfig!==false){
-                this.setTimer();
-            }
+            this.setTimer(this.triggerOnChange);
         });
     }
 
@@ -366,11 +369,32 @@ class Calendar extends Component{
         return valid;
     }
 
-    setTimer = () => {
+    setTimer = (callback) => {
         let timer = this.refs['timer'];
-        if(timer){
-            this.setState(timer.getValue());
+        if(this.props.timerConfig !== false && timer){
+            this.setState(timer.getValue(),() => {
+                callback && callback();
+            });
+        }else{
+            callback && callback();
         }
+    }
+
+    triggerOnChange = () => {
+        if(this.props.onChange){
+            let { value, valid } = this.getValue();
+            this.props.onChange(value,valid);
+        }
+    }
+
+    getValue = () => {
+        let datetime = this.state.date;
+        if(datetime && moment.isMoment(datetime)){
+            datetime.hour(this.state.hour)
+                .minute(this.state.minute)
+                .second(this.state.second);
+        }
+        return { value: datetime, valid: this.getValid(datetime)}
     }
 
     render(){
@@ -416,7 +440,7 @@ class Calendar extends Component{
 }
 
 Calendar.propTypes = {
-    format: PropTypes.string,//YYYY-MM-DD hh:mm:ss
+    format: PropTypes.string,//YYYY-MM-DD HH:mm:ss
     disableDate: PropTypes.func,
     initDate: PropTypes.object,//没有默认当前时间
     timerConfig: PropTypes.any,//false表示不展示，配置则读取
@@ -425,7 +449,8 @@ Calendar.propTypes = {
     date: PropTypes.object,
     minDate: PropTypes.object,
     maxDate: PropTypes.object,
-    signToday: PropTypes.bool
+    signToday: PropTypes.bool,
+    onChange: PropTypes.func
 }
 
 export default Calendar;

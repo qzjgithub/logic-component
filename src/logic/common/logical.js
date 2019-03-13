@@ -9,7 +9,6 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
     constructor(props, context) {
         super(props, context);
         this.initLogic();
-        this.bone = super.render();
         this.signKV = new Map();
         this.keys = this.initKeys();
         this.state = Object.assign({},this.state || {},{
@@ -135,7 +134,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
 
     //得到dom
     getBone = (bone) => {
-        let children = this.bone = bone;
+        let children = bone;
         if (!this.logic.status.size) {
             let props = children.props;
             let className = `${config['name']||''} ${props['className']||''}`.trim();
