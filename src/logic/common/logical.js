@@ -183,27 +183,33 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             seq.events.push((ev)=>{ //第一个方法确定新值改变规律
                 this.logic.values = Object.assign({},this.state.status);
                 let newValue = Object.assign({},this.state.status);
+                let newState = Object.assign({},this.state);
                 Object.keys(v['status']).forEach((sk)=>{
                     let s = v['status'][sk];
                     if(s===2){
-                        s = !newValue[sk];
+                        newValue[sk] = !newValue[sk];
+                    }else if(s instanceof Function){
+                        newState = this.call(this,this.state,newValue);
+                        newValue = newState.status;
+                    }else{
+                        newValue[sk] = s;
                     }
-                    newValue[sk] = s;
                 });
 
                 let data = this.triggerMotivation(v,this.logic.values,newValue);//得到状态改变引起的激励
                 let { info , oldValue } = data;
                 newValue = data['newValue'];
+                newState['status'] = newValue;
 
                 if(info['oldEvent']){
-                    let eValue = info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status']]);//执行原组件传入的方法
+                    let eValue = info['oldEvent'].call(this,...[ev, oldValue, newValue, info['status'],newState]);//执行原组件传入的方法
                     newValue = eValue || newValue;
                 }
-                return [info,oldValue,newValue];
+                return [info,oldValue,newValue,newState];
             });
 
-            seq.events.push((info,oldValue,newValue)=>{ //第二个方法，根据新值的改变调用方法产生激励
-                let mev,nParam = [oldValue, newValue, info['status']];
+            seq.events.push((info,oldValue,newValue,newState)=>{ //第二个方法，根据新值的改变调用方法产生激励
+                let mev,nParam = [oldValue, newValue, info['status'],newState];
                 Object.keys(info['movt']).forEach((mn)=>{ //循环调用引起的激励产生的事件
                     if(info['movt'][mn]){
                         mev = this.props['on'+Util.upFirstWord(mn)];
@@ -211,9 +217,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                     }
                 });
 
-                this.setState({
-                    status: newValue
-                },() => {
+                this.setState(newState,() => {
                     nParam.push(this.state)
                     let onChanged = this.props['onChanged']; //检测并调用onchanged方法
                     if(onChanged && JSON.stringify(newValue) !== JSON.stringify(oldValue)){
@@ -261,7 +265,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
                         sts[state] = 2;
                         break;
                     default:
-                        sts[state] = !!value.call(this,this.state);
+                        sts[state] = value;
                 }
             });
             if(status.styleToDom){

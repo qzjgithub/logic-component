@@ -25,6 +25,7 @@ import CalendarShow from '../../space_modules/calendar';
 import DatepickerShow from '../../space_modules/datepicker';
 import DateRangepickerShow from '../../space_modules/dateRangepicker';
 import TreeSelectShow from '../../space_modules/treeSelect';
+import PaginationShow from "../../space_modules/pagination";
 
 const MenuItem = Menu.MenuItem;
 
@@ -56,6 +57,7 @@ class App extends Component{
                 <MenuItem text={<Link to={'/datepicker'}>时间框</Link>}/>
                 <MenuItem text={<Link to={'/dateRangepicker'}>时间选择框</Link>}/>
                 <MenuItem text={<Link to={'/treeSelect'}>树下啦</Link>}/>
+                <MenuItem text={<Link to={'/pagination'}>分页</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
@@ -74,6 +76,7 @@ class App extends Component{
                 <Route path={'/datepicker'} component={ DatepickerShow }/>
                 <Route path={'/dateRangepicker'} component={ DateRangepickerShow }/>
                 <Route path={'/treeSelect'} component={ TreeSelectShow }/>
+                <Route path={'/pagination'} component={ PaginationShow }/>
                 <Redirect from={'/'} to={'/treeSelect'}/>
             </Switch>
             {/*</Content>*/}

@@ -33,7 +33,7 @@ class Util {
      * @returns {boolean}
      */
     static isStringWithoutNull(object){
-        return this.isString(object) && object != "";
+        return Util.isString(object) && object != "";
     }
 
     /**
@@ -55,9 +55,9 @@ class Util {
      * @param object
      */
     static isArrayWithString(object){
-        if(!this.isArray(object)) return false;
+        if(!Util.isArray(object)) return false;
         for(let obj of new Set(object)){
-            if(!this.isString(obj) || !obj){
+            if(!Util.isString(obj) || !obj){
                 Util.Console('error','object inner has a element is not String');
                 return false;
             }
@@ -71,7 +71,7 @@ class Util {
      * @returns {boolean}
      */
     static isKVObject(object){
-        if(!this.isUndefined(object) && !this.isNull(object) && (object instanceof Object) && !(object instanceof Array)){
+        if(!Util.isUndefined(object) && !Util.isNull(object) && (object instanceof Object) && !(object instanceof Array)){
             return true;
         }else{
             Util.Console('error','object in not an object or is an Array');
@@ -85,9 +85,9 @@ class Util {
      * @returns {boolean}
      */
     static isKVObjectWithStringKey(object){
-        if(!this.isKVObject(object)) return false;
+        if(!Util.isKVObject(object)) return false;
         for(let key of Object.keys(object)){
-            if(!this.isStringWithoutNull(key)){
+            if(!Util.isStringWithoutNull(key)){
                 Util.Console('error','the object key is not a string or is ""');
                 return false;
             }
@@ -129,7 +129,7 @@ class Util {
      */
     static objectToMap(object){
         let map = new Map();
-        if(!this.isKVObjectWithStringKey(object)) return map;
+        if(!Util.isKVObjectWithStringKey(object)) return map;
         for(let key of Object.keys(object)){
             map.set(key, object[key]);
         }

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import logical from '../../../common/logical';
+import PropTypes from 'prop-types';
 import Button from '../button/index';
 import Input from '../input/index';
-import config from './config.json';
-import logic from './logic.js';
 import './index.styl';
 
 class Grid extends Component{
@@ -28,7 +26,7 @@ class Grid extends Component{
     }
 
     render(){
-        return <div>
+        return <div className={'Grid'}>
             <ul>
                 <li><Button sign={'btn'} onChanged={this.onButtonChanged} onClick={this.onButtonClick}>
                     <a>+</a>
@@ -41,4 +39,8 @@ class Grid extends Component{
     }
 }
 
-export default logical(Grid,logic,config);
+Grid.propTypes = {
+    data: PropTypes.array,
+}
+
+export default Grid;

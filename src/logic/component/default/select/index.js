@@ -177,7 +177,8 @@ Select.propTypes = {
     width: PropTypes.any,
     mode: PropTypes.string, //multi,single
     initValue: PropTypes.any,
-    value: PropTypes.any
+    value: PropTypes.any,
+    onSelected: PropTypes.func
 }
 
 class Option extends Component{
