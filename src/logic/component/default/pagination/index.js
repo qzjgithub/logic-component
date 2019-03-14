@@ -2,7 +2,7 @@ import React, { Component ,Fragment} from 'react';
 import PropTypes from 'prop-types';
 import './index.styl';
 
-import { isRealOrZero , isKVObject, isArray} from '../../../common/Util';
+import { isRealOrZero , isArray} from '../../../common/Util';
 
 class Pagination extends Component{
     constructor(props, context) {
@@ -160,14 +160,16 @@ class PageElement extends Component{
                 oldEvent = children.props[event];
                 return React.cloneElement(children,{
                     [event]: (...args) => {
+                        let flag = true;
+                        if(oldEvent){
+                            flag = oldEvent(...args);
+                        }
+                        if(!flag) return;
                         let triggerParam;
                         if(param){
                             triggerParam = param(...args);
                         }
                         bridge && bridge(triggerParam);
-                        if(oldEvent){
-                            oldEvent(...args);
-                        }
                     }
                 });
             }
