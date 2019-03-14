@@ -7,7 +7,6 @@ export default {
             "classTrue":"opened",
             "motivation":{
                 "textClick": 2,
-                "itemClick": 0,
                 "textBlur": 0
             }
         },
@@ -26,16 +25,10 @@ export default {
             }
         },
         "listHover": {
-            "target": "list",
+            "target": "treeList",
             "event": {
                 "mouseEnter": 1,
                 "mouseLeave": 0
-            }
-        },
-        "itemClicked":{
-            "target": "item",
-            "event": {
-                "click": 1
             }
         }
     },
@@ -50,12 +43,6 @@ export default {
             "status":{
                 "blured": true,
                 "listHover": false
-            },
-            "trigger": true
-        },
-        "itemClick":{
-            "status":{
-                "itemClicked": true
             },
             "trigger": true
         }

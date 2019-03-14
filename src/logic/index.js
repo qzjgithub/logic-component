@@ -20,6 +20,7 @@ module.exports.Timer = require('./component/default/timer').default;
 module.exports.Calendar = require('./component/default/calendar').default;
 module.exports.Datepicker = require('./component/default/datepicker').default;
 module.exports.DateRangepicker = require('./component/default/dateRangepicker').default;
+module.exports.TreeSelect = require('./component/default/treeSelect').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

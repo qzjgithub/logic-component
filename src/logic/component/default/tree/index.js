@@ -155,7 +155,8 @@ class Tree extends Component{
 
     render(){
         const data = this.props.data || [];
-        return <div>
+        let cls = this.props.className || '';
+        return <div className={cls}>
             {this.props.search && <div className={'search'}>
                 <input onChange={this.searchChange} value={this.state.searchValue} onKeyPress={this.searchEvent}/>
                 <Icon type={'sousuo'} onClick={this.searchEvent}/>
@@ -172,7 +173,8 @@ Tree.propTypes = {
     selectMode: PropTypes.string,//multi,single,auto
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
-    value: PropTypes.any
+    value: PropTypes.any,
+    className: PropTypes.string
 }
 
 

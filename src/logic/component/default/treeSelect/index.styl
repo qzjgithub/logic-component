@@ -2,7 +2,7 @@
   vertical-align: top;
   position: relative;
   display: inline-block;
-  min-width : 100px;
+  min-width : 200px;
 
   & > .text {
     width: 100%;
@@ -20,67 +20,23 @@
     }
   }
 
-  & > .list{
+  & > .treeList{
     display: none;
-    color: #ffffff;
-    border:1px solid #28c6de;
     position: absolute;
-    list-style: none;
-    text-align: left;
-    box-sizing: border-box;
-    border-top: 0;
-    width: 100%;
+    border:1px solid #28c6de;
     z-index: 99;
-    background-color: #0c5259;
-    padding-bottom: 5px;
-    line-height: 30px;
-    max-height: 200px;
+    max-height: 400px;
+    min-width: 260px;
     overflow: auto;
-    &>li{
-      cursor: pointer;
-      padding-left: 10px;
-      margin-top: 5px;
-    }
-    &>li:hover{
-      background-color: rgba(255,255,255,0.1);
-    }
-    &>li.checked{
-      background-color: rgba(255,255,255,0.3);
-    }
+    padding: 10px;
   }
 
-  &.multi{
-    min-width: 200px;
-    .Button:hover{
-      opacity : 1;
-    }
-    &>.list>li{
-      &.checked{
-        background-color:transparent;
-      }
-      .mutli-sign{
-        float: right;
-        margin-right: 2px;
-        margin-top: 5px;
-      }
-    }
-    .multi-text{
-      padding: 2px 5px;
-      border-radius: 3px;
-      vertical-align: top;
-      margin-right: 5px;
-      box-shadow: 0 0 2px rgba(255,255,255,0.5);
-      &>svg{
-        vertical-align: middle;
-        margin-left: 5px;
-        height: 14px;
-        width: 14px;
-      }
-    }
-  }
+  /*& > .treeList:hover{
+    display: block;
+  }*/
 
   &.opened{
-    & > .list{
+    & > .treeList{
       display: block;
     }
   }
