@@ -7,7 +7,7 @@ import 'mpa-bridge-dom';
 
 import test2 from '../../test/testComponent2';
 
-import { Button , Grid , Select, Menu } from '../../logic';
+import { Menu } from '../../logic';
 import ButtonShow from '../../space_modules/button';
 import SelectShow from '../../space_modules/select';
 import TopSlipShow from '../../space_modules/topSlip';
@@ -26,6 +26,7 @@ import DatepickerShow from '../../space_modules/datepicker';
 import DateRangepickerShow from '../../space_modules/dateRangepicker';
 import TreeSelectShow from '../../space_modules/treeSelect';
 import PaginationShow from "../../space_modules/pagination";
+import GridShow from '../../space_modules/gridShow';
 
 const MenuItem = Menu.MenuItem;
 
@@ -56,12 +57,12 @@ class App extends Component{
                 <MenuItem text={<Link to={'/calendar'}>日历</Link>}/>
                 <MenuItem text={<Link to={'/datepicker'}>时间框</Link>}/>
                 <MenuItem text={<Link to={'/dateRangepicker'}>时间选择框</Link>}/>
-                <MenuItem text={<Link to={'/treeSelect'}>树下啦</Link>}/>
+                <MenuItem text={<Link to={'/treeSelect'}>树下拉</Link>}/>
                 <MenuItem text={<Link to={'/pagination'}>分页</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
-                <Route path={'/grid'} component={ Grid }/>
+                <Route path={'/grid'} component={ GridShow }/>
                 <Route path={'/test2'} component={ test2 }/>
                 <Route path={'/select'} component={ SelectShow }/>
                 <Route path={'/cutover'} component={ CutoverShow }/>

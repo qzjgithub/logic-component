@@ -11,8 +11,20 @@ a{
   flex-direction: row;
   &>ul{
     width: 200px;
+    flex: none;
   }
   &>div{
     flex:auto;
+    overflow:auto;
+  }
+}
+.Show{
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  overflow: hidden;
+  &>.Grid{
+    height: 100%;
+    width: 100%;
   }
 }

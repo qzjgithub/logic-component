@@ -162,7 +162,10 @@ class Select extends Component{
         if(displayKey){
             text = this.props[displayKey] || this[displayKey];
         }
-        return <div className={this.props.mode || 'single'}>
+        let { mode, orient } = this.props;
+        let cls = mode || 'single ';
+        cls += orient ||'';
+        return <div className={cls}>
             <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
                 { text || value}
@@ -178,7 +181,8 @@ Select.propTypes = {
     mode: PropTypes.string, //multi,single
     initValue: PropTypes.any,
     value: PropTypes.any,
-    onSelected: PropTypes.func
+    onSelected: PropTypes.func,
+    orient: PropTypes.string,//up,down
 }
 
 class Option extends Component{

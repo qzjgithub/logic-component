@@ -1,4 +1,163 @@
 .Grid{
   background-color: transparent;
-  border:0;
+  border:1px solid #18565c;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+  font-size: 14px;
+  &>.scroll-body{
+    flex: auto;
+    overflow : auto;
+  }
+}
+.Grid-header{
+  display: flex;
+  flex-direction: row;
+  overflow : hidden;
+  &>.th{
+    background: rgba(0,0,0,.4);
+    flex: auto;
+    text-align: center;
+    line-height: 26px;
+    border-right: 1px solid #3d718f;
+    cursor: pointer;
+    &>svg.sort{
+      width: 10px;
+      fill: #32878a;
+      position: relative;
+      &:first{
+
+      }
+      &.desc{
+        top: 6px;
+        right: 10px;
+      }
+      &.active{
+        fill: #34becc;
+      }
+    }
+  }
+  &>.th:hover{
+    background-color: rgba(255,255,255,0.4);
+  }
+  &>.th.select{
+    flex: none;
+    width: 30px;
+    &>svg{
+      fill: #ffffff;
+      cursor: pointer;
+      position: relative;
+      top: 4px;
+    }
+  }
+}
+.Grid-body{
+  width: fit-content;
+  &>.tr{
+    display: flex;
+    flex-direction: row;
+    line-height: 26px;
+    cursor: pointer;
+    &>.td{
+      flex: auto;
+      text-align: center;
+      border-right: 1px solid #3d718f;
+    }
+    &>.td.select{
+      flex: none;
+      width: 30px;
+      &>svg{
+        fill: #ffffff;
+        position: relative;
+        top: 3px;
+      }
+    }
+  }
+  &>.tr:hover{
+    background-color: rgba(255,255,255,0.4);
+  }
+  &>.tr.selected{
+    background-color: rgba(255,255,255,0.4);
+  }
+  &>.tr:last-child{
+    border-bottom: 1px solid #3d718f;
+  }
+  &>.tr:nth-child(2n){
+    background: rgba(255,255,255,.1);
+  }
+  &>.tr:nth-child(2n):hover{
+    background-color: rgba(255,255,255,0.4);
+  }
+  &>.tr:nth-child(2n).selected{
+    background-color: rgba(255,255,255,0.4);
+  }
+}
+.Grid-footer{
+  &>div{
+    line-height: 26px;
+    margin: 5px auto;
+    color: #ffffff;
+    text-align: center;
+    position: relative;
+    &>p{
+      margin: 0;
+      position: absolute;
+      right: 5px;
+      bottom: 0;
+    }
+    &>input{
+      width: 30px;
+      height: 26px;
+      line-height: 18px;
+      text-align: center;
+      border: 1px solid #3d718f;
+      background-color: transparent;
+      color: #ffffff;
+      margin-right: 5px;
+      box-sizing: border-box;
+      border-radius: 4px;
+    }
+    &>svg{
+      width: 14px;
+      position: relative;
+      top: 3px;
+      cursor: pointer;
+      opacity : 0.5;
+      &:hover{
+        opacity: 1;
+      }
+      &.disabled{
+        cursor: default;
+        opacity: 0.2;
+      }
+      &.disabled:hover{
+        opacity: 0.2;
+      }
+    }
+    &>span{
+      letter-spacing: 4px;
+    }
+    &>.Select{
+      min-width: auto;
+      margin-left: 10px;
+      &>.text{
+        border-color: #3d718f;
+        height: 26px;
+        line-height: 18px;
+        color: #ffffff;
+        width: 50px;
+        padding: 0 3px 0 3px;
+        text-align: center;
+        &>.iconfont{
+          margin-top: 1px;
+        }
+      }
+      &>.list{
+        bottom: 26px;
+        border-color: #3d718f;
+      }
+    }
+  }
 }
