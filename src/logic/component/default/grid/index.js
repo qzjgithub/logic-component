@@ -215,8 +215,8 @@ class Grid extends Component{
     }
 
     bodyScroll = (e) => {
-        let scrollLeft = e.target.scrollLeft;
-        e.target.previousSibling.scrollLeft = scrollLeft;
+        // let scrollLeft = e.target.scrollLeft;
+        // e.target.previousSibling.scrollLeft = scrollLeft;
     }
 
     triggerChange = () => {
@@ -244,7 +244,7 @@ class Grid extends Component{
 
     getPageText2 = (param) => {
         if(!this.props.data || !this.props.data.length){
-            return <p>无数据</p>;
+            return <p><span>无数据</span></p>;
         }
         let { curPage, pageSize, total } = param;
         let start = ((curPage||1) - 1) * pageSize + 1;
@@ -260,7 +260,7 @@ class Grid extends Component{
         }else{
             pageText2 = `${start} - ${end} 共${total}条`
         }
-        return <p>{ pageText2 }</p>
+        return <p><span>{ pageText2 }</span></p>
     }
 
     getPageSizeOptionsDom = () => {
@@ -373,16 +373,19 @@ class Grid extends Component{
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
         return <section className={'Grid'}>
-            <header className={'Grid-header'}>
-                { this.getHeaderDom() }
-            </header>
-            <div className={'scroll-body'} onScroll={this.bodyScroll}>
-                <ul className={'Grid-body'}>
-                    { this.getBodyDom(data) }
-                </ul>
+            <div className={'scroll-x'}>
+                <header className={'Grid-header'}>
+                    { this.getHeaderDom() }
+                </header>
+                <div className={'scroll-y'} onScroll={this.bodyScroll}>
+                    <ul className={'Grid-body'}>
+                        { this.getBodyDom(data) }
+                    </ul>
+                </div>
             </div>
             <footer className={'Grid-footer'}>
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
+                    <p> </p>
                     <PageElement type={'first'} event={'onClick'}>
                         <Icon type={'zuo'} className={prevDisabled}/>
                     </PageElement>

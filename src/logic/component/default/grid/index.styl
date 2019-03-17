@@ -7,17 +7,28 @@
   box-sizing: border-box;
   overflow: hidden;
   font-size: 14px;
-  &>.scroll-body{
+  .scroll-x{
     flex: auto;
-    overflow : auto;
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .scroll-y{
+    flex: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: fit-content;
   }
 }
 .Grid-header{
   display: flex;
   flex-direction: row;
   overflow : hidden;
+  width: fit-content;
+  flex: none;
   &>.th{
-    background: rgba(0,0,0,.4);
+    background: rgba(0,0,0,0.4);
     flex: auto;
     text-align: center;
     line-height: 26px;
@@ -40,13 +51,13 @@
     }
   }
   &>.th:hover{
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.2);
   }
   &>.th.select{
     flex: none;
     width: 30px;
     &>svg{
-      fill: #ffffff;
+      fill: #85c0d0;
       cursor: pointer;
       position: relative;
       top: 4px;
@@ -54,7 +65,6 @@
   }
 }
 .Grid-body{
-  width: fit-content;
   &>.tr{
     display: flex;
     flex-direction: row;
@@ -69,17 +79,17 @@
       flex: none;
       width: 30px;
       &>svg{
-        fill: #ffffff;
+        fill: #85c0d0;
         position: relative;
         top: 3px;
       }
     }
   }
   &>.tr:hover{
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.2);
   }
   &>.tr.selected{
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.2);
   }
   &>.tr:last-child{
     border-bottom: 1px solid #3d718f;
@@ -88,24 +98,32 @@
     background: rgba(255,255,255,.1);
   }
   &>.tr:nth-child(2n):hover{
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.2);
   }
   &>.tr:nth-child(2n).selected{
-    background-color: rgba(255,255,255,0.4);
+    background-color: rgba(255,255,255,0.2);
   }
 }
 .Grid-footer{
+  flex: none;
   &>div{
     line-height: 26px;
     margin: 5px auto;
     color: #ffffff;
     text-align: center;
-    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     &>p{
       margin: 0;
-      position: absolute;
-      right: 5px;
-      bottom: 0;
+      flex: auto;
+      min-width: 30px;
+      position: relative;
+      height: 26px;
+      &>span{
+        position: absolute;
+        right: 5px;
+      }
     }
     &>input{
       width: 30px;
@@ -138,10 +156,12 @@
     }
     &>span{
       letter-spacing: 4px;
+      flex: none;
     }
     &>.Select{
       min-width: auto;
       margin-left: 10px;
+      margin-right: 5px;
       &>.text{
         border-color: #3d718f;
         height: 26px;
