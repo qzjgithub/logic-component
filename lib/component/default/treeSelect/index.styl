@@ -1,0 +1,48 @@
+.TreeSelect {
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  min-width : 200px;
+
+  & > .text {
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    & > .iconfont {
+      color: #35ced2;
+      float: right;
+      font-size: 10px;
+      height: 16px;
+      width: 14px;
+      margin-top: 4px;
+    }
+  }
+
+  & > .treeList{
+    display: none;
+    position: absolute;
+    border:1px solid #28c6de;
+    z-index: 99;
+    max-height: 400px;
+    min-width: 260px;
+    overflow: auto;
+    padding: 10px;
+  }
+
+  /*& > .treeList:hover{
+    display: block;
+  }*/
+
+  &.opened{
+    & > .treeList{
+      display: block;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
