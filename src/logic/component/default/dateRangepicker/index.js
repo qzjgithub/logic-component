@@ -140,7 +140,7 @@ class DateRangepicker extends Component{
         if(start && end && valid){
             valid = start.getValid(startDate) && end.getValid(endDate);
         }
-        return { start , end , valid }
+        return { startDate , endDate , valid }
     }
 
     render(){

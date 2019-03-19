@@ -424,8 +424,8 @@ Grid.propTypes = {
     sort: PropTypes.string,
     order: PropTypes.string,//asc,desc
     pageSizeOptions: PropTypes.array,
-    pageText1:PropTypes.string,
-    pageText2:PropTypes.string
+    pageText1: PropTypes.string,
+    pageText2: PropTypes.string
 }
 
 export default Grid;
