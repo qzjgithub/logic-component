@@ -423,7 +423,8 @@ class Grid extends Component{
         let { curPage, pages } = this.state.pagination;
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
-        return <section className={'Grid'} onDragOver={this.allCursor}>
+        let cls = this.props.className || '';
+        return <section className={`Grid ${cls}`} onDragOver={this.allCursor}>
             {/* <div className={'scroll-x'}>
             </div> */}
             <div draggable={true}
@@ -433,7 +434,7 @@ class Grid extends Component{
                 onMouseUp={this.endRewidth}
                 className={'Grid-rewidth'} 
                 ref={'rewidth'}> </div>
-            <header className={'Grid-header'}>
+                <header className={'Grid-header'}>
                     { this.getHeaderDom() }
                 </header>
                 <div className={'scroll-y'} onScroll={this.bodyScroll}>
@@ -473,6 +474,7 @@ class Grid extends Component{
 }
 
 Grid.propTypes = {
+    className: PropTypes.string,
     data: PropTypes.array,
     pagination: PropTypes.object,
     columns: PropTypes.array,//[{name:'',key:'',render:func(value,record,key,index),sorter:func(a,b),width: '',hidden:false}]
@@ -482,8 +484,8 @@ Grid.propTypes = {
     sort: PropTypes.string,
     order: PropTypes.string,//asc,desc
     pageSizeOptions: PropTypes.array,
-    pageText1:PropTypes.string,
-    pageText2:PropTypes.string
+    pageText1: PropTypes.string,
+    pageText2: PropTypes.string
 }
 
 export default Grid;

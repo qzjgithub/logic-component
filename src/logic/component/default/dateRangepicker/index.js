@@ -10,6 +10,8 @@ import Button from '../button';
 import Calendar from '../calendar';
 import Icon from '../icon';
 
+const defaultFormat = 'YYYY-MM-DD HH:mm:ss';
+
 class DateRangepicker extends Component{
     constructor(props, context) {
         super(props, context);
@@ -64,6 +66,7 @@ class DateRangepicker extends Component{
             if(onChange){
                 onChange(start,valid);
             }
+            this.triggerChange();
         }
         let disableDateRange = this.props.disableDate;
         if(disableDateRange){
@@ -98,6 +101,7 @@ class DateRangepicker extends Component{
             if(onChange){
                 onChange(end,valid);
             }
+            this.triggerChange();
         }
         let disableDateRange = this.props.disableDate;
         if(disableDateRange){
@@ -115,6 +119,8 @@ class DateRangepicker extends Component{
         this.setState({
             start: null,
             end: null
+        },() => {
+            this.triggerChange();
         });
     }
 
@@ -129,6 +135,8 @@ class DateRangepicker extends Component{
                 start: startDate,
                 end: endDate,
                 status
+            },() => {
+                this.triggerChange();
             });
         }
     }
@@ -140,21 +148,36 @@ class DateRangepicker extends Component{
         if(start && end && valid){
             valid = start.getValid(startDate) && end.getValid(endDate);
         }
-        return { start , end , valid }
+        return { startDate , endDate , valid }
+    }
+
+    getFormatValue = () => {
+        let { startDate, endDate, valid} = this.getValue();
+        let start = moment.isMoment(startDate) ? startDate.format(this.props.format || defaultFormat) :'';
+        let end = moment.isMoment(endDate) ? endDate.format(this.props.format || defaultFormat) :'';
+        return {start, end, valid };
+    }
+
+    triggerChange = () => {
+        if(this.props.onChange){
+            let dateValue = this.getValue();
+            let dateFormat = this.getFormatValue();
+            this.props.onChange(dateValue, dateFormat);
+        }
     }
 
     render(){
         let { start, end } = this.state;
         let text = '';
         if(start && moment.isMoment(start)){
-            text += start.format(this.props.format || 'YYYY-MM-DD HH:mm:ss');
+            text += start.format(this.props.format || defaultFormat);
             text += ' ~ ';
         }
         if(end && moment.isMoment(end)){
             if(!text){
                 text += ' ~ ';
             }
-            text += end.format(this.props.format || 'YYYY-MM-DD HH:mm:ss');
+            text += end.format(this.props.format || defaultFormat);
         }
         if(!text){
             text = this.props.defaultText || '请选择时间段';
@@ -195,7 +218,8 @@ DateRangepicker.propTypes = {
     defaultToday: PropTypes.bool,
     startConfig: PropTypes.object,
     endConfig: PropTypes.object,
-    confirmText: PropTypes.string
+    confirmText: PropTypes.string,
+    onChange: PropTypes.func
 }
 
 export default logical(DateRangepicker,logic,config);

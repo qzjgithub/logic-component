@@ -1,6 +1,6 @@
-import 'antd/lib/date-picker/style/index.css';
-import 'antd/lib/input/style/index.css';
-import './component/default/ASSETS/font/iconfont.css';
+// import 'antd/lib/date-picker/style/index.css';
+// import 'antd/lib/input/style/index.css';
+// import './component/default/ASSETS/font/iconfont.css';
 import './component/default/ASSETS/common.styl';
 
 module.exports.Button = require('./component/default/button').default;

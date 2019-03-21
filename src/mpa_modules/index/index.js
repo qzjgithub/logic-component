@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router, Route, browserHistory, hashHistory} from 'react-router';
 // import 'antd/dist/antd.css';
-
+// import 'antd/lib/date-picker/style/index.css';
+// import 'antd/lib/input/style/index.css';
+// import './component/default/ASSETS/font/iconfont.css';
 import createHashHistory from 'history/createHashHistory';
 
 import configureStore from '../../redux/store/configureStore';
