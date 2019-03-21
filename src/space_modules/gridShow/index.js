@@ -50,11 +50,11 @@ class TimerShow extends Component{
     }
 
     componentDidMount(){
-        setTimeout(()=> {
+        /* setTimeout(()=> {
             this.setState({
                 data: DATA
             });
-        }, 3000);
+        }, 3000); */
     }
 
     render(){
@@ -63,7 +63,7 @@ class TimerShow extends Component{
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'multi'}
-                  data={this.state.data}/>
+                  data={DATA}/>
             </div>
     }
 }
