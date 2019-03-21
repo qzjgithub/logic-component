@@ -372,7 +372,8 @@ class Grid extends Component{
         let { curPage, pages } = this.state.pagination;
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
-        return <section className={'Grid'}>
+        let cls = this.props.className || '';
+        return <section className={`Grid ${cls}`}>
             <div className={'scroll-x'}>
                 <header className={'Grid-header'}>
                     { this.getHeaderDom() }
@@ -415,6 +416,7 @@ class Grid extends Component{
 }
 
 Grid.propTypes = {
+    className: PropTypes.string,
     data: PropTypes.array,
     pagination: PropTypes.object,
     columns: PropTypes.array,//[{name:'',key:'',render:func(value,record,key,index),sorter:func(a,b),width: '',hidden:false}]
