@@ -7,6 +7,7 @@
   box-sizing: border-box;
   overflow: hidden;
   font-size: 14px;
+  position: relative;
   .scroll-x{
     flex: auto;
     display: flex;
@@ -17,16 +18,32 @@
   .scroll-y{
     flex: auto;
     overflow-y: auto;
-    overflow-x: hidden;
-    width: fit-content;
+    overflow-x: auto;
+  }
+}
+.Grid-rewidth{
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  border-left: 9px solid rgba(0,0,0,0);
+  border-right: 9px solid rgba(0,0,0,0);
+  z-index: -1;
+  opacity: 0;
+  &:after{
+    content: "";
+    display: block;
+    height: 100%;
+    width: 2px;
+    background-color: #97999a;
   }
 }
 .Grid-header{
   display: flex;
   flex-direction: row;
   overflow : hidden;
-  width: fit-content;
+  overflow-y: hidden;
   flex: none;
+  margin-right: 8px;
   &>.th{
     background: rgba(0,0,0,0.4);
     flex: auto;
@@ -38,9 +55,6 @@
       width: 10px;
       fill: #32878a;
       position: relative;
-      &:first{
-
-      }
       &.desc{
         top: 6px;
         right: 10px;
@@ -48,6 +62,20 @@
       &.active{
         fill: #34becc;
       }
+    }
+    &>a.rewidth{
+      display: inline-block;
+      height: 100%;
+      width: 3px;
+      border: 1px solid #ffffff00;
+      box-sizing: border-box;
+      float: right;
+      left: 2px;
+      position: relative;
+      cursor: col-resize;
+    }
+    &>a.rewidth:focus{
+      background-color: #ffffff;
     }
   }
   &>.th:hover{
@@ -65,6 +93,7 @@
   }
 }
 .Grid-body{
+  width: fit-content;
   &>.tr{
     display: flex;
     flex-direction: row;

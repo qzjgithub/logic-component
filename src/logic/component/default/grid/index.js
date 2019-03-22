@@ -219,8 +219,7 @@ class Grid extends Component{
     startRewidth = (e,key) => {
         let old = e.target.offsetLeft;
         let rewidthDom = this.refs['rewidth'];
-        rewidthDom.style.left = (old -10) + 'px';
-        rewidthDom.style['z-index'] = 1;
+        rewidthDom.style.cssText = `;left:${old-10}px;z-index:1;opacity:1`;
         this.key = key;
         this.oldW = e.target.parentElement.clientWidth;
         this.oldL = old - 10;
@@ -246,7 +245,7 @@ class Grid extends Component{
     endRewidth = (e) => {
         e.stopPropagation();
         let rewidthDom = this.refs['rewidth'];
-        rewidthDom.style['z-index'] = -1;
+        rewidthDom.style.cssText = ';z-index:-1;opacity:0;';
         let gap = e.pageX - this.oldX;
         let newW = this.oldW + gap;
         if(newW < 50){
