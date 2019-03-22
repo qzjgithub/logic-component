@@ -18,7 +18,9 @@ class Grid extends Component{
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
-        this.state = this.initParam(props);
+        this.state = Object.assign({
+            widthRecord: {}
+        },this.initParam(props));
     }
 
     componentWillReceiveProps(nextProps){
@@ -214,9 +216,54 @@ class Grid extends Component{
         });
     }
 
+    startRewidth = (e,key) => {
+        let old = e.target.offsetLeft;
+        let rewidthDom = this.refs['rewidth'];
+        rewidthDom.style.left = (old -10) + 'px';
+        rewidthDom.style['z-index'] = 1;
+        this.key = key;
+        this.oldW = e.target.parentElement.clientWidth;
+        this.oldL = old - 10;
+        this.oldX = e.pageX;
+    }
+
+    setCursor = (e) => {
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    allCursor = (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    moveRewidth = (e) => {
+        if(!this.oldX && this.oldX!==0) return;
+        let rewidthDom = this.refs['rewidth'];
+        let nextLeft = this.oldL + e.pageX - this.oldX;
+        rewidthDom.style.left = nextLeft + 'px';
+    }
+
+    endRewidth = (e) => {
+        e.stopPropagation();
+        let rewidthDom = this.refs['rewidth'];
+        rewidthDom.style['z-index'] = -1;
+        let gap = e.pageX - this.oldX;
+        let newW = this.oldW + gap;
+        if(newW < 50){
+            newW = 50;
+        }
+        this.oldX = null;
+        this.oldL = null;
+        let widthRecord = this.state.widthRecord;
+        widthRecord[this.key] = newW + 'px';
+        this.setState({
+            widthRecord
+        });
+    }
+
     bodyScroll = (e) => {
-        // let scrollLeft = e.target.scrollLeft;
-        // e.target.previousSibling.scrollLeft = scrollLeft;
+        let scrollLeft = e.target.scrollLeft;
+        e.target.previousSibling.scrollLeft = scrollLeft;
     }
 
     triggerChange = () => {
@@ -271,11 +318,12 @@ class Grid extends Component{
 
     getHeaderDom = () => {
         let { columns, selectMode } = this.props;
-        let { sort, order } = this.state;
+        let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
             let dom = columns.map((column) => {
                 let { name, key, hidden ,width} = column;
                 if(hidden) return '';
+                width = widthRecord[key] || width;
                 let style = {};
                 if(width){
                     style = {
@@ -286,7 +334,8 @@ class Grid extends Component{
                 return <div className={'th'} style={ style } onClick={() => this.setSort(key)}>
                     <span>{name}</span>
                     {this.getSortIcon(key,sort,order)}
-                    <i> </i>
+                    <a className={'rewidth'} 
+                        onMouseDown={(e) => this.startRewidth(e,key)}> </a>
                 </div>
             });
             if(selectMode === 'multi'){
@@ -338,11 +387,13 @@ class Grid extends Component{
 
     getTrDom = (d,gInd) => {
         let { columns, selectMode } = this.props;
+        let { widthRecord } = this.state;
         let dom = columns.map((column) => {
             let { hidden, width, render, key } = column;
             if(hidden){
                 return '';
             }
+            width = widthRecord[key] || width;
             let style = {};
             if(width){
                 style = {
@@ -373,8 +424,16 @@ class Grid extends Component{
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
         let cls = this.props.className || '';
-        return <section className={`Grid ${cls}`}>
-            <div className={'scroll-x'}>
+        return <section className={`Grid ${cls}`} onDragOver={this.allCursor}>
+            {/* <div className={'scroll-x'}>
+            </div> */}
+            <div draggable={true}
+                onDragStart={this.setCursor}
+                onDrag={this.moveRewidth}
+                onDragEnd={this.endRewidth}
+                onMouseUp={this.endRewidth}
+                className={'Grid-rewidth'} 
+                ref={'rewidth'}> </div>
                 <header className={'Grid-header'}>
                     { this.getHeaderDom() }
                 </header>
@@ -383,7 +442,6 @@ class Grid extends Component{
                         { this.getBodyDom(data) }
                     </ul>
                 </div>
-            </div>
             <footer className={'Grid-footer'}>
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
                     <p> </p>
