@@ -141,3 +141,18 @@ lineHidden = 1px lineStyle rgba(0,0,0,0);
     height: 0;
   }
 }
+
+.TreeItem.noCable{
+  &>p>.flexIcon:before{
+    opacity: 0;
+  }
+  &>p>.flexIcon:after{
+    opacity: 0;
+  }
+  &>p>i{
+    opacity: 0;
+  }
+  &>.list{
+    border-left: 0;
+  }
+}

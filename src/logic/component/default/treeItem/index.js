@@ -46,14 +46,14 @@ class TreeItem extends Component{
     }
 
     getIconDom = (data) => {
-        let {iconType , icon } = data;
+        let {iconType , icon, iconStyle } = data;
         if(iconType === 'url'){
             return <span className={'icon'} style={{'backgroundUrl':icon}}> </span>
         }else if(iconType === 'image'){
             return <span className={`icon ${icon}`}> </span>
         }else{
             return <span>
-                <Icon type={data['icon'] || 'file-unknown'}/>
+                <Icon type={data['icon'] || 'file-unknown'} style={iconStyle}/>
             </span>
         }
     }
@@ -61,7 +61,7 @@ class TreeItem extends Component{
     onTextClick = (value, id, text, data) => {
         let flag = this.getSelectable();
         if(flag && this.props.onTextClick){
-            let { props , selectMode } = this.props;
+            let { selectMode } = this.props;
             if(selectMode === 'multi'){
                 let sv = this.state.value;
                 if(!sv || !(sv instanceof Array)){
@@ -206,6 +206,9 @@ class TreeItem extends Component{
         if(this.props.last){
             treeItemClass += ' lastNode';
         }
+        if(this.props.cable === false){
+            treeItemClass += ' noCable'
+        }
         let status = this.state.status || {};
         let opened = !!status.opened;
 
@@ -255,7 +258,8 @@ TreeItem.propTypes = {
     selectMode: PropTypes.string,//multi,single,auto
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
-    value: PropTypes.any
+    value: PropTypes.any,
+    cable: PropTypes.bool
 }
 
 

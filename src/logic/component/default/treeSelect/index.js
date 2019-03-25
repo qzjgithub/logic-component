@@ -105,7 +105,11 @@ class TreeSelect extends Component{
             text = this.props[displayKey] || this[displayKey];
         }
         return <div>
-            <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
+            <Button styleType={'left'} 
+                className={'text'} 
+                sign={'text'} 
+                disabled={this.props.disabled}
+                style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
                 { text || value}
             </Button>

@@ -69,8 +69,6 @@ class Tree extends Component{
         let flag = true;
         if(this.props.onTextClick){
             flag = this.props.onTextClick(value,id,text,data);
-        }else{
-            flag = true;
         }
         if(flag){
             /* let sv = this.state.value;
@@ -94,6 +92,10 @@ class Tree extends Component{
             this.setState({
                 value: value,
                 searcheds : {}
+            },() => {
+                if(this.props.onChange){
+                    this.props.onChange(value);
+                }
             });
         }
         return flag;
@@ -174,7 +176,8 @@ Tree.propTypes = {
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
     value: PropTypes.any,
-    className: PropTypes.string
+    className: PropTypes.string,
+    cable: PropTypes.bool
 }
 
 

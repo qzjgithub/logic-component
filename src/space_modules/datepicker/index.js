@@ -16,7 +16,7 @@ class DatepickerShow extends Component{
 
     render(){
         return <div>
-            <Datepicker/>
+            <Datepicker calendarConfig={{lang: 'en'}}/>
             </div>
     }
 }

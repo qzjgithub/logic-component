@@ -230,6 +230,7 @@ const logical = (WrappedComponent, logic, config = {}) => class extends WrappedC
             });
             newProps[k] = (ev) => {
                 ev && ev.stopPropagation && ev.stopPropagation();
+                console.log(ev.type,ev.target);
                 seq.execute(ev);
             }
         });

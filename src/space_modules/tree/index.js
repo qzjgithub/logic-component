@@ -32,7 +32,8 @@ class TreeShow extends Component {
                   value={value}
                   textKey={'display_name'}
                   valueKey={'id'}
-                  selectMode={'multi'}
+                  selectMode={'auto'}
+                  cable={false}
                   onChanged={this.onChanged}/>
         </div>
     }

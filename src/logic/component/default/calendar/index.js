@@ -5,8 +5,9 @@ import Icon from '../icon';
 import Select from '../select';
 import Timer from '../timer';
 import moment from 'moment';
+import 'moment/locale/en-au';
+import'moment/locale/zh-cn';
 import { isInteger, patchZero, isRealOrZero } from '../../../common/Util';
-import { zh } from './i18n';
 
 const Option = Select.Option;
 
@@ -20,7 +21,7 @@ class Calendar extends Component{
         super(props, context);
         this.initParam(null, this.props);
         let date = this.getDate();
-        moment.locale(this.props.lang || 'zh');
+        this.setMomentLocal(this.props.lang || 'zh');
         this.state = Object.assign(this.initData(),{
             valid: true,
             date: date
@@ -41,6 +42,9 @@ class Calendar extends Component{
             if(datetime){
                 datetime = moment(this.date);
             }
+            if(nextProps.lang && nextProps.lang !== this.props.lang){
+                this.setMomentLocal(nextProps.lang);
+            }
             this.setState({
                 ...this.initData(),
                 date: datetime,
@@ -51,6 +55,16 @@ class Calendar extends Component{
         }
     }
 
+    setMomentLocal(lang){
+        switch(lang){
+            case 'zh':
+                moment.locale('zh-cn');
+                break;
+            case 'en':
+                moment.locale('en-au');
+                break;
+        }
+    }
     /**
      * 初始化参数
      */
@@ -454,7 +468,8 @@ Calendar.propTypes = {
     minDate: PropTypes.object,
     maxDate: PropTypes.object,
     signToday: PropTypes.bool,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    lang: PropTypes.string
 }
 
 export default Calendar;

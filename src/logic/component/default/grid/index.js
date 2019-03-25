@@ -290,7 +290,7 @@ class Grid extends Component{
 
     getPageText2 = (param) => {
         if(!this.props.data || !this.props.data.length){
-            return <p><span>无数据</span></p>;
+            return <p><span>{this.props.noDataText || '无数据'}</span></p>;
         }
         let { curPage, pageSize, total } = param;
         let start = ((curPage||1) - 1) * pageSize + 1;
@@ -484,7 +484,8 @@ Grid.propTypes = {
     order: PropTypes.string,//asc,desc
     pageSizeOptions: PropTypes.array,
     pageText1: PropTypes.string,
-    pageText2: PropTypes.string
+    pageText2: PropTypes.string,
+    noDataText: PropTypes.string
 }
 
 export default Grid;

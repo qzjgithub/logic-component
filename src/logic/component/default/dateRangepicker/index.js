@@ -115,7 +115,8 @@ class DateRangepicker extends Component{
         }
         return config;
     }
-    clear = () => {
+    clear = (e) => {
+        e.stopPropagation();
         this.setState({
             start: null,
             end: null
@@ -182,19 +183,21 @@ class DateRangepicker extends Component{
         if(!text){
             text = this.props.defaultText || '请选择时间段';
         }
+        console.log(start,end);
         return <div>
-            <Button sign={'text'} className={'text'}>
+            <Button sign={'text'} className={'text'} disabled={this.props.disabled}>
                 <span>{ text }</span>
-                { this.props.hasClear !== false &&
-                    <Icon type={'guanbi1'} onClick={this.clear}/>
+                { this.props.hasClear !== false &&  ( start || end ) && 
+                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
                 }
+                <Icon type={'unfold'} />
             </Button>
             <div sign={'list'} className={'list'}>
                 <Calendar {...this.getStartConfig()} ref={'start'}/>
                 <Calendar {...this.getEndConfig()} ref={'end'}/>
                 <p className={'control'}>
-                    {this.props.hasClear !== false &&
-                        <a onClick={this.clear} className={'clear'}>
+                    {this.props.hasClear !== false && ( start || end ) && 
+                        <a onClick={this.clear} className={'cleard'}>
                             {this.props.hasClear || '清除'}
                         </a>
                     }
