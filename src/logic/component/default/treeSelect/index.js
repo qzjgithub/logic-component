@@ -95,6 +95,15 @@ class TreeSelect extends Component{
         }
     }
 
+    keepFocus = (ev, oldValue, newValue) =>{
+        let textDom = this.refs['text'];
+        if(textDom){
+            textDom.parentElement.focus();
+        }
+        newValue['opened'] = true;
+        return newValue;
+    }
+
     render(){
         let displayKey = '', value = this.state['value'];
         if((!value && value != 0) || (value instanceof Array && !value.length)){
@@ -111,9 +120,9 @@ class TreeSelect extends Component{
                 disabled={this.props.disabled}
                 style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
-                { text || value}
+                <span ref={'text'}>{ text || value}</span>
             </Button>
-            <div className={'treeList'} sign={'treeList'}>
+            <div className={'treeList'} sign={'treeList'} onMouseLeave={this.keepFocus}>
                 <Tree {...this.getTreeConfig()}/>
             </div>
         </div>;

@@ -137,6 +137,18 @@ class Select extends Component{
         });
     }
 
+    keepFocus = (ev, oldValue, newValue) =>{
+        if(this.props.mode !== 'multi'){
+            return newValue;
+        }
+        let textDom = this.refs['text'];
+        if(textDom){
+            textDom.parentElement.focus();
+        }
+        newValue['opened'] = true;
+        return newValue;
+    }
+
     render(){
         let displayKey = '', value = this.state['value'];
         if(Util.isUndefined(value)){
@@ -168,9 +180,9 @@ class Select extends Component{
         return <div className={cls}>
             <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
-                { text || value}
+                <span ref={'text'}>{ text || value}</span>
             </Button>
-            <ul className={'list'} sign={'list'}>{ list.dom }</ul>
+            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>{ list.dom }</ul>
         </div>;
     }
 }

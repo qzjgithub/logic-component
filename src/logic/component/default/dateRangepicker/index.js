@@ -167,6 +167,15 @@ class DateRangepicker extends Component{
         }
     }
 
+    keepFocus = (ev, oldValue, newValue) =>{
+        let textDom = this.refs['text'];
+        if(textDom){
+            textDom.parentElement.focus();
+        }
+        newValue['opened'] = true;
+        return newValue;
+    }
+
     render(){
         let { start, end } = this.state;
         let text = '';
@@ -185,13 +194,13 @@ class DateRangepicker extends Component{
         }
         return <div>
             <Button sign={'text'} className={'text'} disabled={this.props.disabled}>
-                <span>{ text }</span>
+                <span ref={'text'}>{ text }</span>
                 { this.props.hasClear !== false &&  ( start || end ) && 
                     <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
                 }
                 <Icon type={'unfold'} />
             </Button>
-            <div sign={'list'} className={'list'}>
+            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
                 <Calendar {...this.getStartConfig()} ref={'start'}/>
                 <Calendar {...this.getEndConfig()} ref={'end'}/>
                 <p className={'control'}>

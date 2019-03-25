@@ -372,10 +372,30 @@ class Calendar extends Component{
         });
     }
 
+    compareDateFull = (date) => {
+        let { timerConfig } = this.props;
+        let type = '';
+        if(timerConfig === false){
+            type = 'date';
+        }else if(timerConfig){
+            let { hourHide, minuteHide, secondHide } = timerConfig;
+            if(secondHide !== true){
+                type = 'second';
+            }else if(minuteHide !== true){
+                type = 'minute';
+            }else if(hourHide!==true){
+                type = 'hour';
+            }
+        }else{
+            type = 'second';
+        }
+        return this.compareDate(date, type);
+    }
+
     getValid = (date) => {
         let valid = true;
         if(date){
-            if(this.compareDate(date) === 0){
+            if(this.compareDateFull(date) === 0){
                 if(this.props.disableDate && this.props.disableDate(moment(date))){
                     valid = false;
                 }
