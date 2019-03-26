@@ -88,6 +88,15 @@ class Datepicker extends Component{
         return { value, valid }
     }
 
+    keepFocus = (ev, oldValue, newValue) =>{
+        let textDom = this.refs['text'];
+        if(textDom){
+            textDom.parentElement.focus();
+        }
+        newValue['opened'] = oldValue['opened'];
+        return newValue;
+    }
+
     render(){
         let value = this.state.value;
         let text = '';
@@ -98,12 +107,12 @@ class Datepicker extends Component{
         }
         return <div>
             <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`}>
-                <span>{ text }</span>
+                <span ref={'text'}>{ text }</span>
                 { this.props.hasClear !== false &&
                     <Icon type={'guanbi1'} onClick={this.clear}/>
                 }
             </Button>
-            <div sign={'list'} className={'list'}>
+            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
                 <Calendar {...this.getCalendarConfig()} ref={'calendar'}/>
                 <p className={'control'}>
                     {this.props.hasClear !== false &&

@@ -145,7 +145,7 @@ class Select extends Component{
         if(textDom){
             textDom.parentElement.focus();
         }
-        newValue['opened'] = true;
+        newValue['opened'] = oldValue['opened'];
         return newValue;
     }
 
