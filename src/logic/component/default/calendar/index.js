@@ -46,7 +46,7 @@ class Calendar extends Component{
                 this.setMomentLocal(nextProps.lang);
             }
             this.setState({
-                ...this.initData(),
+                // ...this.initData(),
                 date: datetime,
                 valid: this.getValid(datetime)
             },() => {
@@ -438,7 +438,7 @@ class Calendar extends Component{
         let { timerConfig } = this.props;
         let showTimer = timerConfig !== false;
         if(showTimer){
-            timerConfig = this.genTimerConfig(this.state.date);
+            timerConfig = this.genTimerConfig(moment(this.state.date));
         }
         let { hour, minute, second } = this.state;
         timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });

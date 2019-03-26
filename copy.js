@@ -4,8 +4,8 @@ const path = require('path');
 console.log(__dirname,__filename,process.cwd());
 const jsReg = /^.+\.js$/;
 const sourcePath = path.resolve(__dirname,'src/logic');
-const libPath = path.resolve(__dirname,'lib');
-const targetPath = path.resolve(process.cwd(),'node_modules/logic-component/lib');
+const libPath = path.resolve(__dirname,'build');
+const targetPath = path.resolve(process.cwd(),'node_modules/logic-component/build');
 
 function copy(){
     if(!fs.existsSync(path.resolve(process.cwd(),'node_modules'))) return;
@@ -14,13 +14,13 @@ function copy(){
             if(!err){
                 console.log('创建logic成功');
                 copyLib();
-                copySource();
+                // copySource();
                 copyIndex();
             }
         });
     }else{
         copyLib();
-        copySource();
+        // copySource();
         copyIndex();
     }
 }

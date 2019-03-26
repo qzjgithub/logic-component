@@ -4,40 +4,52 @@ const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const Clean = require('clean-webpack-plugin');
 const Copy = require('copy-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 const comp = path.resolve(__dirname,'../src/logic/component/default');
 
 const entries = fs.readdirSync(comp)
     .filter(entry => entry!=='ASSETS' && fs.statSync(path.join(comp, entry)).isDirectory());
 
+const commonp = path.resolve(__dirname, '../src/logic/common');
+
+const commonEntries = fs.readdirSync(commonp).filter((entry) => entry.indexOf('calcStyle') < 0);
+
 let entry = {}, plugins = [];
 
-plugins.push(new Clean(['build'],{
-    root: path.resolve(__dirname, '../'),
-    verbose:  true,
-    dry:      false
-}));
+// plugins.push(new Clean(['build'],{
+//     root: path.resolve(__dirname, '../'),
+//     verbose:  true,
+//     dry:      false
+// }));
 
-plugins.push(new Copy([{
-    from: path.resolve(__dirname, '../src/logic/component/default/ASSETS') +'/**/*',
-    to: '[1][2]',
-    test: /^.*(ASSETS)(.*)$/
-}]));
+// plugins.push(new Copy([{
+//     from: path.resolve(__dirname, '../src/logic/component/default/ASSETS') +'/**/*',
+//     to: '[1][2]',
+//     test: /^.*(ASSETS)(.*)$/
+// }]));
 
 entries.forEach((item) => {
-    entry[item] = `${comp}/${item}/index.js`;
+    entry[`component/default/${item}/index`] = `${comp}/${item}/index.js`;
 });
+
+commonEntries.forEach((item) => {
+    entry[`common/${item.replace('.js','')}`] = `${commonp}/${item}`;
+});
+
+entry['index'] = path.resolve(__dirname,'../src/logic/index.js');
 
 let config = {
     mode: "production",
     entry: entry,
     output: {
         path: path.resolve(__dirname, '../build'),
-        filename: '[name]/genBaseStyle.js'
+        filename: '[name].js',
+        libraryTarget: 'commonjs2'
     },
-    resolve: {
+    /* resolve: {
         extensions: ['.js','.styl']
-    },
+    }, */
     module: {
         rules: [
             {
@@ -106,7 +118,7 @@ let config = {
             }
         }
     },*/
-    plugins: plugins
+    externals: [ nodeExternals() ]
 }
 
 module.exports = config;

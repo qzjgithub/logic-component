@@ -172,8 +172,8 @@ class DateRangepicker extends Component{
         if(textDom){
             textDom.parentElement.focus();
         }
-        newValue['opened'] = true;
-        return newValue;
+        /* newValue['opened'] = true;
+        return newValue; */
     }
 
     render(){

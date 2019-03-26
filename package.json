@@ -60,7 +60,8 @@
     "redux-thunk": "^2.3.0",
     "requirejs": "^2.3.5",
     "scroll-behavior": "^0.9.9",
-    "style-loader": "^0.21.0"
+    "style-loader": "^0.21.0",
+    "webpack-node-externals": "^1.7.2"
   },
   "deprecated": false,
   "description": "multile page application",

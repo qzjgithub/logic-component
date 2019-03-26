@@ -24,8 +24,7 @@ export default {
         "listHover": {
             "target": "list",
             "event": {
-                "mouseEnter": 1,
-                "mouseLeave": 0
+                "mouseEnter": 1
             }
         }
     },
