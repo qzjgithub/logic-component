@@ -45,8 +45,14 @@ class Calendar extends Component{
             if(nextProps.lang && nextProps.lang !== this.props.lang){
                 this.setMomentLocal(nextProps.lang);
             }
+            let compareFlag = this.minDate || this.maxDate;
+            let { year, month } = this.state;
+            let newDate = moment().year(year).month(month).date(1);
             this.setState({
                 // ...this.initData(),
+                yearArr: this.genYearArr(year,compareFlag && newDate),
+                monthArr: this.genMonthArr(month,compareFlag && newDate),
+                dateArr: this.genDateArr(newDate,newDate.daysInMonth()),
                 date: datetime,
                 valid: this.getValid(datetime)
             },() => {
@@ -119,7 +125,7 @@ class Calendar extends Component{
             yearArr: this.genYearArr(year,compareFlag && datetime),
             month,
             monthArr: this.genMonthArr(month,compareFlag && datetime),
-            dateArr: this.genDateArr(date,datetime,days),
+            dateArr: this.genDateArr(datetime,days),
             hour,
             minute,
             second
@@ -185,7 +191,7 @@ class Calendar extends Component{
         return arr;
     }
 
-    genDateArr = (date, datetime, days) => {
+    genDateArr = (datetime, days) => {
         datetime.date(1);
         let week = datetime.weekday();
         let arr = [];
