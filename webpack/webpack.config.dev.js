@@ -5,6 +5,7 @@ const autoprefixer = require('autoprefixer');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const Copy = require('copy-webpack-plugin');
+const UglifyJsPlugin=require('uglifyjs-webpack-plugin');
 
 const port = 9093;
 
@@ -42,7 +43,7 @@ entries.forEach((item) => {
     plugins.push(new HtmlWebpackPlugin({
         template : `${mpadir}/${item}/index.html`,
         filename: `${item}/index.html`,
-        chunks: ['common','iconfont',item],
+        chunks: ['vendor','common','iconfont',item],
         inject: true
     }));
 });
@@ -110,6 +111,33 @@ module.exports = {
                     },
                 ]
             }
+        ]
+    },
+    optimization: {
+        splitChunks: {
+            name: true,
+            cacheGroups: {
+                logicComponent: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: 'vendor',
+                    chunks: 'all'
+                }
+            }
+        },
+        minimizer: [
+            new UglifyJsPlugin({
+                uglifyOptions: {
+                    warnings: false,
+                    parse: {},
+                    compress: {},
+                    mangle: true,
+                    output: null,
+                    toplevel: false,
+                    nameCache: null,
+                    ie8: false,
+                    keep_fnames: false,
+                }
+            })
         ]
     },
     plugins: [

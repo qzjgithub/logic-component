@@ -5,6 +5,7 @@ const COLUMNS = [
     {
         name: "名字",
         key: "name",
+        editable: true,
         width: '100px',
     },
     {
@@ -63,6 +64,7 @@ class TimerShow extends Component{
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'multi'}
+                  serial={true}
                   data={DATA}/>
             </div>
     }

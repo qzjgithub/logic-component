@@ -15,11 +15,13 @@ class Grid extends Component{
     columnsMap = {};
     sortedData = [];
     displayIndex = [];
+    editor = {};
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
         this.state = Object.assign({
-            widthRecord: {}
+            widthRecord: {},
+            editor:{}
         },this.initParam(props));
     }
 
@@ -89,7 +91,8 @@ class Grid extends Component{
         this.displayIndex = [];
         switch(pageMode){
             case 'back':
-                data.forEach((d) => {
+                data.forEach((d,i) => {
+                    d['Grid_sort_index'] = i;
                     let ind = d['Grid_index'];
                     this.displayIndex.push(ind);
                 });
@@ -104,6 +107,7 @@ class Grid extends Component{
                 let newData = [];
                 for(;start < end;start++){
                     let d = data[start];
+                    d['Grid_sort_index'] = start;
                     let ind = d['Grid_index'];
                     if(d){
                         this.displayIndex.push(ind);
@@ -265,6 +269,25 @@ class Grid extends Component{
         e.target.previousSibling.scrollLeft = scrollLeft;
     }
 
+    editBlur = (e,record,key,validate) => {
+        let value = e.target.value;
+        let index = record['Grid_index'];
+        let editor = this.state.editor;
+        if(!validate || (validate && !validate(value,record,key,index))) {
+            if(!editor[index]){
+                editor[index] = {};
+            }
+            editor[index][key] = value;
+        }
+        this.setState({
+            editor
+        },() => {
+            if(this.props.onEditor){
+                this.props.onEditor(this.editor,this.props.data);
+            }
+        });
+    }
+
     triggerChange = () => {
         if(this.props.onChange){
             let data = this.props;
@@ -316,7 +339,7 @@ class Grid extends Component{
     }
 
     getHeaderDom = () => {
-        let { columns, selectMode } = this.props;
+        let { columns, selectMode, serial } = this.props;
         let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
             let dom = columns.map((column) => {
@@ -349,6 +372,9 @@ class Grid extends Component{
                 dom.unshift(<div className={'th select'}>
                     <Icon type={type} onClick={this.selectAll}/>
                 </div>)
+            }
+            if(serial === true){
+                dom.unshift(<div className={'th serial'}> </div>);
             }
             return dom;
         }else{
@@ -385,10 +411,11 @@ class Grid extends Component{
     }
 
     getTrDom = (d,gInd) => {
-        let { columns, selectMode } = this.props;
-        let { widthRecord } = this.state;
+        let { columns, selectMode, serial } = this.props;
+        let { widthRecord, editor } = this.state;
+        let trEditor = editor[gInd];
         let dom = columns.map((column) => {
-            let { hidden, width, render, key } = column;
+            let { hidden, width, render, key, editable, validate } = column;
             if(hidden){
                 return '';
             }
@@ -401,8 +428,9 @@ class Grid extends Component{
                 }
             }
             let value = d[key];
-            return <div className={'td'} style={style}>
-                { render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : '')}
+            return <div className={'td'} style={style} contentEditable={editable} onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                { trEditor && trEditor[key]!==undefined ? trEditor[key] : 
+                    ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
             </div>
         });
         if(selectMode === 'multi'){
@@ -413,6 +441,11 @@ class Grid extends Component{
             dom.unshift(<li className={'td select'}>
                 <Icon type={type}/>
             </li>);
+        }
+        if(serial === true){
+            let sortInd = d['Grid_sort_index'];
+            sortInd += 1;
+            dom.unshift(<li className={'td serial'}>{sortInd}</li>);
         }
         return dom;
     }
@@ -476,7 +509,18 @@ Grid.propTypes = {
     className: PropTypes.string,
     data: PropTypes.array,
     pagination: PropTypes.object,
-    columns: PropTypes.array,//[{name:'',key:'',render:func(value,record,key,index),sorter:func(a,b),width: '',hidden:false}]
+    /**
+     * [{
+     * name:'',key:'',
+     * render:func(value,record,key,index),
+     * sorter:func(a,b),
+     * width: '',
+     * hidden:false,
+     * editable: false,
+     * validte:func(value,record,key,index)
+     * }]
+     *  */
+    columns: PropTypes.array,
     selectMode: PropTypes.string,//'multi'
     onChange: PropTypes.func,
     pageMode: PropTypes.string,//'auto','back'
@@ -485,7 +529,8 @@ Grid.propTypes = {
     pageSizeOptions: PropTypes.array,
     pageText1: PropTypes.string,
     pageText2: PropTypes.string,
-    noDataText: PropTypes.string
+    noDataText: PropTypes.string,
+    serial: PropTypes.string
 }
 
 export default Grid;
