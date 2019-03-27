@@ -44,6 +44,10 @@ class TreeSelect extends Component{
         return this.state.value;
     }
 
+    getFormType = () => {
+        return this.props.mode === 'multi' ? 'multiTreeSelect': 'treeSelect';
+    }
+
     clear = () => {
         let value;
         switch(this.props.mode){

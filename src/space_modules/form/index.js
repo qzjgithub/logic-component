@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Form,Select,Button } from '../../logic';
-// import './index.styl';
-import 'moment/locale/zh-cn';
+import { Form,Select,Button , Input,Datepicker,DateRangepicker} from '../../logic';
 import moment from 'moment';
-import DatePicker from 'antd/lib/date-picker';
 
 const FormItem = Form.FormItem;
 const Option = Select.Option;
@@ -35,13 +32,14 @@ class FormShow extends Component{
                         <Option value={'3'}>test3</Option>
                     </Select>
                 </FormItem>
-                <FormItem label={'时间'} rules={[{require:true}]} name={'time'}>
-                    <DatePicker
-                        disabledDate={this.disabledDate}
-                        format={"YYYY-MM-DD HH:mm:00"}
-                        allowClear={true}
-                        showTime={{ defaultValue: moment('00:00', 'HH:mm') ,format: 'HH:mm'}}
-                    />
+                <FormItem label={'测试1'} rules={[{require:true}]} name={'number1'}>
+                    <Input />
+                </FormItem>
+                <FormItem label={'测试2'} rules={[{require:true}]} name={'number2'}>
+                    <Datepicker/>
+                </FormItem>
+                <FormItem label={'测试3'} rules={[{require:true}]} name={'number3'}>
+                    <DateRangepicker/>
                 </FormItem>
                 <FormItem noLabel={true}>
                     <Button onClick={this.saveData}>确定</Button>

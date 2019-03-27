@@ -152,6 +152,10 @@ class DateRangepicker extends Component{
         return { startDate , endDate , valid }
     }
 
+    getFormType = () => {
+        return 'dateRangepicker';
+    }
+
     getFormatValue = () => {
         let { startDate, endDate, valid} = this.getValue();
         let start = moment.isMoment(startDate) ? startDate.format(this.props.format || defaultFormat) :'';

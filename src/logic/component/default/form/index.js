@@ -92,24 +92,37 @@ class FormItem extends Component{
         let ele = this.refs[this.key];
         let value;
         if(!ele || !ele.getValue){
-            if(ele.picker){
-                value = ele.picker.state.value;
-            }else{
-                return {err: 'has no getValue method.',result: false, value: null}
-            }
+            return {err: 'has no getValue method.',result: false, value: null}
         }else{
             value = this.refs[this.key].getValue();
+        }
+        let formType = '';
+        if(ele.getFormType){
+            formType = this.refs[this.key].getFormType();
         }
         let rules = this.props.rules || [];
 
         let hasRequire = false;
         let isNull = false;
 
-        if(!value){
-            isNull = true;
-        }else if(value && value instanceof Array && !value.length){
-            isNull = true;
+        switch(formType){
+            case 'multiSelect':
+            case 'multiTreeSelect':
+                isNull = !value || !(value instanceof Array)|| !value.length;
+                break;
+            case 'datepicker':
+                isNull = !value.value;
+                break;
+            case 'dateRangepicker':
+                isNull = !value.startDate &&　!value.endDate;
+                break;
+            case 'input':
+            case 'select':
+            case 'treeSelect':
+            default: 
+                isNull = !value;
         }
+
         for(let rule of rules){
             if(rule.require){
                 hasRequire = true;
@@ -123,11 +136,18 @@ class FormItem extends Component{
             if(isNull && !hasRequire){
                 continue;
             }
-            result = rule.reg.test(value);
+            if(rule.reg){
+                result = rule.reg.test(value);
+            }else if(rule.validate){
+                result = rule.validate(value);
+            }
             if(!result){
                 err = rule.message || 'error';
                 break;
             }
+        }
+        if(result && !isNull && value.valid !== undefined){
+            result = value.valid && result;
         }
         return { result, err, value }
     }

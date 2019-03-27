@@ -445,20 +445,20 @@ class Grid extends Component{
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
                     <p> </p>
                     <PageElement type={'first'} event={'onClick'}>
-                        <Icon type={'zuo'} className={prevDisabled}/>
+                        <Icon type={'fast-backward'} className={prevDisabled}/>
                     </PageElement>
                     <PageElement type={'prev'} event={'onClick'}>
-                        <Icon type={'zuo'} className={prevDisabled}/>
+                        <Icon type={'step-backward'} className={prevDisabled}/>
                     </PageElement>
                     <PageElement type={'page'} event={'onKeyUp'} param={(e) => e.target.value}>
                         <input onKeyUp={(e) => e.code === 13} onInput={this.pageInputChange} value={this.state.pageInput}/>
                     </PageElement>
                     <PageElement type={'text'} text={this.getPageText1}/>
                     <PageElement type={'next'} event={'onClick'}>
-                        <Icon type={'gengduo'} className={nextDisabled}/>
+                        <Icon type={'step-forward'} className={nextDisabled}/>
                     </PageElement>
                     <PageElement type={'last'} event={'onClick'}>
-                        <Icon type={'gengduo'} className={nextDisabled}/>
+                        <Icon type={'fast-forward'} className={nextDisabled}/>
                     </PageElement>
                     <PageElement type={'pageSize'} event={'onSelected'} param={(value) => value}>
                         <Select value={this.state.pagination.pageSize} orient={'up'}>

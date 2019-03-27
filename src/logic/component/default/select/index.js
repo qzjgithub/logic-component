@@ -122,6 +122,10 @@ class Select extends Component{
         return this.state.value;
     }
 
+    getFormType = () => {
+        return this.props.mode === 'multi' ?'multiSelect': 'select';
+    }
+
     clear = () => {
         let value;
         switch(this.props.mode){

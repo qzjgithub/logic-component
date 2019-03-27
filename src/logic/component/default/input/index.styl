@@ -1,4 +1,70 @@
 .Input{
-  background-color: #00ff00;
-  border:0;
+  background-color: transparent;
+  border:1px solid #28c6de;
+  border-radius: 4px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 10px;
+  color: #ffffff;
+  font-size: 14px;
+  box-sizing: border-box;
+
+  &>.Loading{
+    vertical-align: sub;
+    margin: 0 5px;
+  }
+
+  &.medium{
+    padding: 0 15px;
+  }
+
+  &.big{
+    padding: 0 25px;
+  }
+
+  &.fixed{
+    width: 70px;
+  }
+
+  &.fixed-medium{
+    width: 100px;
+  }
+
+  &.fixed-big{
+    width: 150px;
+  }
+
+  &.left{
+    text-align: left;
+  }
+
+  &.right{
+    text-align: right;
+  }
+
+  &:hover{
+    opacity : 0.9;
+  }
+
+  &:focus{
+    outline : 0;
+  }
+
+  &.down{
+    opacity : 0.7;
+  }
+
+  &.disabled{
+    opacity : 0.4;
+    cursor: default;
+    pointer-events : none;
+  }
+  
+  &.with-icon{
+    &>svg{
+      position: relative;
+      top: 3px;
+      margin-right: 5px;
+    }
+  }
 }

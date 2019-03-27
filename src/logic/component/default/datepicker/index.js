@@ -88,6 +88,10 @@ class Datepicker extends Component{
         return { value, valid }
     }
 
+    getFormType = () => {
+        return 'datepicker';
+    }
+
     keepFocus = (ev, oldValue, newValue) =>{
         let textDom = this.refs['text'];
         if(textDom){
