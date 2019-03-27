@@ -6,6 +6,9 @@ const COLUMNS = [
         name: "名字",
         key: "name",
         editable: true,
+        validate: (value,record,key,index) => {
+            return !!value;
+        },
         width: '100px',
     },
     {
@@ -58,13 +61,19 @@ class TimerShow extends Component{
         }, 3000); */
     }
 
+    onEditor = (editor,data) => {
+        console.log(editor,data);
+    }
+
     render(){
         return <div className={'Show'}>
             <Grid columns={COLUMNS}
+                    ref="grid"
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'multi'}
                   serial={true}
+                  onEditor={this.onEditor}
                   data={DATA}/>
             </div>
     }

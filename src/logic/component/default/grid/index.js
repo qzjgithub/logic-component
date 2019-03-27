@@ -137,7 +137,12 @@ class Grid extends Component{
     }
 
     pageChange = (param) => {
+        let editor = this.state.editor;
+        if(this.props.pageMode === 'back'){
+            editor = {}
+        }
         this.setState({
+            editor,
             pagination: param,
             pageInput: param.curPage
         },() => {
@@ -270,14 +275,19 @@ class Grid extends Component{
     }
 
     editBlur = (e,record,key,validate) => {
-        let value = e.target.value;
+        let value = e.target.innerHTML;
         let index = record['Grid_index'];
         let editor = this.state.editor;
-        if(!validate || (validate && !validate(value,record,key,index))) {
+        if(!validate || (validate && validate(value,record,key,index))) {
             if(!editor[index]){
                 editor[index] = {};
             }
             editor[index][key] = value;
+        }else{
+            if(editor[index] && editor[index][key] !== undefined){
+                editor[index][key] = undefined;
+            }
+            e.target.innerHTML = record[key];
         }
         this.setState({
             editor
@@ -286,6 +296,18 @@ class Grid extends Component{
                 this.props.onEditor(this.editor,this.props.data);
             }
         });
+    }
+
+    clearEditor = () => {
+        this.setState({
+            editor : {}
+        });
+    }
+
+    editClick = (e,editable) => {
+        if(editable){
+            e.stopPropagation();
+        }
     }
 
     triggerChange = () => {
@@ -428,7 +450,11 @@ class Grid extends Component{
                 }
             }
             let value = d[key];
-            return <div className={'td'} style={style} contentEditable={editable} onBlur={(e) => this.editBlur(e,d,key,validate)}>
+            return <div className={`td ${editable ? 'editable':''}`} 
+                style={style} 
+                contentEditable={editable} 
+                onClick={(e)=> this.editClick(e,editable)}
+                onBlur={(e) => this.editBlur(e,d,key,validate)}>
                 { trEditor && trEditor[key]!==undefined ? trEditor[key] : 
                     ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
             </div>
@@ -451,6 +477,7 @@ class Grid extends Component{
     }
 
     render(){
+        console.log(this.state.editor);
         let data = this.getDisplayData();
         let { curPage, pages } = this.state.pagination;
         let prevDisabled = curPage <= 1 ? 'disabled':'';

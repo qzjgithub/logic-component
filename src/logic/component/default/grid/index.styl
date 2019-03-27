@@ -79,7 +79,7 @@
     }
   }
   &>.th:hover{
-    background-color: rgba(255,255,255,0.2);
+    background-color: rgba(0,0,0,0.8);
   }
   &>.th.select{
     flex: none;
@@ -122,6 +122,14 @@
       flext: none;
       width: 30px;
       cursor: default;
+    }
+    &>.td.editable{
+      cursor: text; 
+    }
+    &>.td.editable:focus{
+      outline: none;
+      color: #666666;
+      background-color: #ffffff;
     }
   }
   &>.tr:hover{

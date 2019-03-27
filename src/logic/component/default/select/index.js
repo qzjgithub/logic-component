@@ -122,10 +122,6 @@ class Select extends Component{
         return this.state.value;
     }
 
-    getFormType = () => {
-        return this.props.mode === 'multi' ?'multiSelect': 'select';
-    }
-
     clear = () => {
         let value;
         switch(this.props.mode){
@@ -149,7 +145,7 @@ class Select extends Component{
         if(textDom){
             textDom.parentElement.focus();
         }
-        newValue['opened'] = oldValue['opened'];
+        newValue['opened'] = true;
         return newValue;
     }
 
