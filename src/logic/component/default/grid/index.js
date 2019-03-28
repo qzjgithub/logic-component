@@ -14,14 +14,16 @@ const PageElement = Pagination.PageElement;
 class Grid extends Component{
     columnsMap = {};
     sortedData = [];
+    searchedIndex = null;
     displayIndex = [];
-    editor = {};
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
         this.state = Object.assign({
             widthRecord: {},
-            editor:{}
+            editor:{},
+            search: {},
+            searched: false
         },this.initParam(props));
     }
 
@@ -86,13 +88,21 @@ class Grid extends Component{
         if(!data || !data.length){
             return data;
         }
+        let sd = [];
+        if(this.searchedIndex !== null){
+            this.searchedIndex.forEach((ind)=>{
+                sd.push(data[ind]);
+            });
+        }else{
+            sd = data;
+        }
         let { curPage, pageSize, total } = this.state.pagination;
-        data = this.sortData(data);
+        data = this.sortData(sd);
         this.displayIndex = [];
         switch(pageMode){
             case 'back':
                 data.forEach((d,i) => {
-                    d['Grid_sort_index'] = i;
+                    d['Grid_show_index'] = i;
                     let ind = d['Grid_index'];
                     this.displayIndex.push(ind);
                 });
@@ -107,7 +117,7 @@ class Grid extends Component{
                 let newData = [];
                 for(;start < end;start++){
                     let d = data[start];
-                    d['Grid_sort_index'] = start;
+                    d['Grid_show_index'] = start;
                     let ind = d['Grid_index'];
                     if(d){
                         this.displayIndex.push(ind);
@@ -134,6 +144,74 @@ class Grid extends Component{
         }
         this.sortedData = data;
         return data;
+    }
+
+    searchData = (data,search) => {
+        let { columns } = this.props;
+        let searcher = {};
+        let searchedIndex = [];
+        let searchKeys = Object.keys(search);
+        if(!searchKeys.length){
+            this.searchedIndex = null;
+            return;
+        }
+        Object.keys(searchKeys).forEach((ck)=>{
+            let colInd = this.columnsMap[ck];
+            let col = isRealOrZero(colInd) ? (columns[colInd]||{}) : {};
+            if(typeof col['searcher'] === 'function'){
+                searcher[ck] = col['searcher'];
+            }
+        });
+        data.forEach((d) => {
+            let valid = true;
+            Object.keys(search).forEach((ck)=>{
+                let val = search[ck];
+                if(searcher[ck]){
+                    valid = searcher[ck](val,d,ck);
+                }else{
+                    let dv = d[ck];
+                    if(dv && !(dv instanceof Object)){
+                        valid = dv.toString().indexOf(val) > -1;
+                    }
+                }
+            });
+            valid && searchedIndex.push(d['Grid_index']);
+        });
+        this.searchedIndex = searchedIndex;
+    }
+
+    searchChange = (key, value) => {
+        let { pageMode, onSearch, data } = this.props;
+        let { search ,pagination } = this.state;
+        search[key] = value;
+        if(value === '' || value === undefined){
+            delete search[key];
+        }
+        if(pageMode === 'back'){
+            this.setState({
+                search
+            },() => {
+                onSearch && onSearch(search);
+            });
+        }else{
+            this.searchData(data, search);
+            pagination.total = this.searchedIndex === null ? data.length : this.searchedIndex.length;
+            pagination.curPage = 1;
+            this.setState({
+                pagination,
+                search
+            },() => {
+                onSearch && onSearch(this.sortedData,search);
+            });
+        }
+    }
+
+    onSearch = (e,key) => {
+        console.log(e);
+        if(e.keyCode !== 13){
+            return;
+        }
+        this.searchChange(key,e.target.value);
     }
 
     pageChange = (param) => {
@@ -375,12 +453,12 @@ class Grid extends Component{
                         flex: 'none'
                     }
                 }
-                return <div className={'th'} style={ style } onClick={() => this.setSort(key)}>
+                return <li className={'th'} style={ style } onClick={() => this.setSort(key)}>
                     <span>{name}</span>
                     {this.getSortIcon(key,sort,order)}
                     <a className={'rewidth'} 
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
-                </div>
+                </li>
             });
             if(selectMode === 'multi'){
                 let selectAll = !!this.displayIndex.length;
@@ -391,12 +469,12 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<div className={'th select'}>
+                dom.unshift(<li className={'th select'}>
                     <Icon type={type} onClick={this.selectAll}/>
-                </div>)
+                </li>)
             }
             if(serial === true){
-                dom.unshift(<div className={'th serial'}> </div>);
+                dom.unshift(<li className={'th serial'}> </li>);
             }
             return dom;
         }else{
@@ -410,6 +488,42 @@ class Grid extends Component{
             dom.push(<Icon type={'triangleupfill'} className={`sort ${order!=='desc'?'active':''}`}/>);
             dom.push(<Icon type={'triangledownfill'} className={`sort desc ${order==='desc'?'active':''}`}/>);
             return dom;
+        }else{
+            return '';
+        }
+    }
+
+    getSearchDom = () => {
+        let { columns, selectMode, serial } = this.props;
+        let { widthRecord } = this.state;
+        if(isArray(columns)){
+            let hasSearch = false;
+            let dom = columns.map((column) => {
+                let { key, hidden ,width,searcher} = column;
+                if(hidden) return '';
+                width = widthRecord[key] || width;
+                let style = {};
+                if(width){
+                    style = {
+                        width,
+                        flex: 'none'
+                    }
+                }
+                hasSearch = hasSearch || !!searcher;
+                return <li className={'th gsearch'} style={ style }>
+                    {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
+                </li>
+            });
+            if(!hasSearch){
+                return '';
+            }
+            if(selectMode === 'multi'){
+                dom.unshift(<li className={'th gsearch select'}> </li>)
+            }
+            if(serial === true){
+                dom.unshift(<li className={'th gsearch serial'}> </li>);
+            }
+            return <ul>{dom}</ul>;
         }else{
             return '';
         }
@@ -469,7 +583,7 @@ class Grid extends Component{
             </li>);
         }
         if(serial === true){
-            let sortInd = d['Grid_sort_index'];
+            let sortInd = d['Grid_show_index'];
             sortInd += 1;
             dom.unshift(<li className={'td serial'}>{sortInd}</li>);
         }
@@ -477,7 +591,6 @@ class Grid extends Component{
     }
 
     render(){
-        console.log(this.state.editor);
         let data = this.getDisplayData();
         let { curPage, pages } = this.state.pagination;
         let prevDisabled = curPage <= 1 ? 'disabled':'';
@@ -494,7 +607,8 @@ class Grid extends Component{
                 className={'Grid-rewidth'} 
                 ref={'rewidth'}> </div>
                 <header className={'Grid-header'}>
-                    { this.getHeaderDom() }
+                    <ul>{ this.getHeaderDom() }</ul>
+                    { this.getSearchDom() }
                 </header>
                 <div className={'scroll-y'} onScroll={this.bodyScroll}>
                     <ul className={'Grid-body'}>
@@ -545,6 +659,7 @@ Grid.propTypes = {
      * hidden:false,
      * editable: false,
      * validte:func(value,record,key,index)
+     * searcher: true/function(inputValue,record,key){}
      * }]
      *  */
     columns: PropTypes.array,
@@ -557,7 +672,9 @@ Grid.propTypes = {
     pageText1: PropTypes.string,
     pageText2: PropTypes.string,
     noDataText: PropTypes.string,
-    serial: PropTypes.string
+    serial: PropTypes.string,
+    onEditor: PropTypes.func,
+    onSearch: PropTypes.func
 }
 
 export default Grid;

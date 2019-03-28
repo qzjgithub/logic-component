@@ -23,6 +23,7 @@ const COLUMNS = [
         name: "年龄",
         key: "age",
         width: '100px',
+        searcher: true,
         sorter: (a,b) => {
             return a.age > b.age;
         }

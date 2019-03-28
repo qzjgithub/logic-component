@@ -38,13 +38,16 @@
   }
 }
 .Grid-header{
-  display: flex;
-  flex-direction: row;
   overflow : hidden;
   overflow-y: hidden;
   flex: none;
   margin-right: 8px;
-  &>.th{
+  &>ul{
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+  }
+  .th{
     background: rgba(0,0,0,0.4);
     flex: auto;
     text-align: center;
@@ -78,10 +81,10 @@
       background-color: #ffffff;
     }
   }
-  &>.th:hover{
+  .th:hover{
     background-color: rgba(0,0,0,0.8);
   }
-  &>.th.select{
+  .th.select{
     flex: none;
     width: 30px;
     &>svg{
@@ -91,10 +94,20 @@
       top: 4px;
     }
   }
-  &>.th.serial{
+  .th.serial{
     flex: none;
     width: 30px;
     cursor: default;
+  }
+  .th.gsearch{
+    cursor: default;
+    &>input{
+      width: 90%;
+      margin: 2px 0;
+    }
+  }
+  .th.select,.th.serial,.th.gsearch:hover{
+    background: rgba(0,0,0,0.4);
   }
 }
 .Grid-body{
