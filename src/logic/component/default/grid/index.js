@@ -207,7 +207,6 @@ class Grid extends Component{
     }
 
     onSearch = (e,key) => {
-        console.log(e);
         if(e.keyCode !== 13){
             return;
         }
