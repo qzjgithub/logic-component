@@ -8,6 +8,15 @@ class Form extends Component{
         super(props, context);
     }
 
+    clear = () => {
+        this.names.forEach((name) => {
+            let ele = this.refs[name];
+            if(ele && ele.clear){
+                ele.clear();
+            }
+         });
+    }
+
     validate = () => {
         let result = true;
         let err = {};
@@ -78,10 +87,14 @@ class FormItem extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps.name !== this.props.name){
-            let dom = this.refs[this.key];
-            if(dom && dom.clear){
-                dom.clear();
-            }
+            this.clear();
+        }
+    }
+
+    clear = () => {
+        let dom = this.refs[this.key];
+        if(dom && dom.clear){
+            dom.clear();
         }
     }
 

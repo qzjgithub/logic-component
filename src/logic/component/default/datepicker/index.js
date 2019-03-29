@@ -93,6 +93,12 @@ class Datepicker extends Component{
         return 'datepicker';
     }
 
+    clear = () => {
+        this.setState({
+            value: null
+        });
+    }
+
     keepFocus = (ev, oldValue, newValue) =>{
         let textDom = this.refs['text'];
         if(textDom){

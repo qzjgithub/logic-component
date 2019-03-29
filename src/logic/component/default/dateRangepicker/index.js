@@ -116,7 +116,7 @@ class DateRangepicker extends Component{
         return config;
     }
     clear = (e) => {
-        e.stopPropagation();
+        e && e.stopPropagation();
         this.setState({
             start: null,
             end: null
