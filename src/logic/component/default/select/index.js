@@ -195,6 +195,8 @@ Select.propTypes = {
     value: PropTypes.any,
     onSelected: PropTypes.func,
     orient: PropTypes.string,//up,down
+    defaultText: PropTypess.string,
+    noDataText: PropTypes.string
 }
 
 class Option extends Component{

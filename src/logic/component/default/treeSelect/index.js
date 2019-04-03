@@ -85,7 +85,7 @@ class TreeSelect extends Component{
     getText = () => {
         let { getText ,treeConfig, mode } = this.props;
         if(getText){
-            return text(this.state.value, (treeConfig||{}).data||[]);
+            return getText(this.state.value, (treeConfig||{}).data||[]);
         }else{
             switch(mode){
                 case 'multi':
@@ -93,7 +93,7 @@ class TreeSelect extends Component{
                 case 'single':
                 case 'auto':
                 default:
-                    return this.state.text;
+                    return this.state.text || this.props.text;
             }
 
         }
