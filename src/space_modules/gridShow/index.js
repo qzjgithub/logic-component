@@ -70,6 +70,9 @@ class TimerShow extends Component{
         return <div className={'Show'}>
             <Grid columns={COLUMNS}
                     ref="grid"
+                    topable={(record) => { return record.age !== 43 }}
+                    validateTop={(record) => { return record.age === 12 }}
+                    onTopped={(toppedData)=>{ console.log(toppedData) }}
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'multi'}

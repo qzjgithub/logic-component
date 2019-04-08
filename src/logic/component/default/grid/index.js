@@ -16,6 +16,7 @@ class Grid extends Component{
     sortedData = [];
     searchedIndex = null;
     displayIndex = [];
+    topped = [];
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
@@ -107,6 +108,8 @@ class Grid extends Component{
                     this.displayIndex.push(ind);
                 });
                 return data;
+            case 'tree':
+                this.treeData = {};
             case 'auto':
             default:
                 let start = ((curPage||1) - 1) * pageSize;
@@ -387,6 +390,26 @@ class Grid extends Component{
         }
     }
 
+    setTop = (e, gInd) => {
+        e.stopPropagation();
+        let i = this.topped.indexOf(gInd);
+        if(i > -1){
+            this.topped.splice(i, 1);
+        }else{
+            this.topped.push(gInd);
+        }
+        let topped = this.topped.map(v => v);
+        this.setState(this.state, () => {
+            if(this.props.onTopped){
+                let { data } = this.props;
+                let toppedData = topped.map((ind) => {
+                    return data[ind];
+                });
+                this.props.onTopped(JSON.parse(JSON.stringify(toppedData)));
+            }
+        });
+    }
+
     triggerChange = () => {
         if(this.props.onChange){
             let data = this.props;
@@ -438,7 +461,7 @@ class Grid extends Component{
     }
 
     getHeaderDom = () => {
-        let { columns, selectMode, serial } = this.props;
+        let { columns, selectMode, serial, topable } = this.props;
         let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
             let dom = columns.map((column) => {
@@ -459,6 +482,9 @@ class Grid extends Component{
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
                 </li>
             });
+            if(topable){
+                dom.unshift(<div className={'th topsign'}> </div>);
+            }
             if(selectMode === 'multi'){
                 let selectAll = !!this.displayIndex.length;
                 for(let ind of this.displayIndex){
@@ -468,12 +494,12 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<li className={'th select'}>
+                dom.unshift(<div className={'th select'}>
                     <Icon type={type} onClick={this.selectAll}/>
-                </li>)
+                </div>)
             }
             if(serial === true){
-                dom.unshift(<li className={'th serial'}> </li>);
+                dom.unshift(<div className={'th serial'}> </div>);
             }
             return dom;
         }else{
@@ -493,7 +519,7 @@ class Grid extends Component{
     }
 
     getSearchDom = () => {
-        let { columns, selectMode, serial } = this.props;
+        let { columns, selectMode, serial, topable } = this.props;
         let { widthRecord } = this.state;
         if(isArray(columns)){
             let hasSearch = false;
@@ -509,31 +535,45 @@ class Grid extends Component{
                     }
                 }
                 hasSearch = hasSearch || !!searcher;
-                return <li className={'th gsearch'} style={ style }>
+                return <div className={'th gsearch'} style={ style }>
                     {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
-                </li>
+                </div>
             });
             if(!hasSearch){
                 return '';
             }
+            if(topable){
+                dom.unshift(<div className={'th gsearch topsign'}> </div>);
+            }
             if(selectMode === 'multi'){
-                dom.unshift(<li className={'th gsearch select'}> </li>)
+                dom.unshift(<div className={'th gsearch select'}> </div>);
             }
             if(serial === true){
-                dom.unshift(<li className={'th gsearch serial'}> </li>);
+                dom.unshift(<div className={'th gsearch serial'}> </div>);
             }
-            return <ul>{dom}</ul>;
+            return <ul className={'search-head'}>{dom}</ul>;
         }else{
             return '';
         }
     }
 
     getBodyDom = (data) => {
-        let { columns } = this.props;
+        let { columns, validateTop } = this.props;
+        if(validateTop && typeof validateTop === 'function'){
+            this.topped = [];
+        }
         if(isArray(columns)){
             return data.map((d) => {
                 let gInd = d['Grid_index'];
                 let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+                if(validateTop && typeof validateTop === 'function'){
+                    if(validateTop(d)){
+                        cls += ' topped';
+                        this.topped.push(gInd);
+                    }
+                }else if(this.topped.indexOf(gInd) > -1){
+                    cls += 'topped';
+                }
                 return <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
                     {
                         this.getTrDom(d,gInd)
@@ -546,7 +586,7 @@ class Grid extends Component{
     }
 
     getTrDom = (d,gInd) => {
-        let { columns, selectMode, serial } = this.props;
+        let { columns, selectMode, serial, topable } = this.props;
         let { widthRecord, editor } = this.state;
         let trEditor = editor[gInd];
         let dom = columns.map((column) => {
@@ -572,21 +612,37 @@ class Grid extends Component{
                     ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
             </div>
         });
+        if(topable){
+            if(typeof topable === 'function'){
+                dom.unshift(<div className={'td topsign'}>{ topable(d) ? <Icon type={'circle'} onClick={(e) => this.setTop(e, gInd)}/> : '' }</div>);
+            }else{
+                dom.unshift(<div className={'td topsign'}><Icon type={'circle'} onClick={(e) => this.setTop(e,gInd)}/></div>);
+            }
+        }
         if(selectMode === 'multi'){
             let type = 'fangxingweixuanzhong';
             if(this.state.selected.indexOf(gInd) > -1){
                 type = 'fangxingxuanzhong';
             }
-            dom.unshift(<li className={'td select'}>
+            dom.unshift(<div className={'td select'}>
                 <Icon type={type}/>
-            </li>);
+            </div>);
         }
         if(serial === true){
             let sortInd = d['Grid_show_index'];
             sortInd += 1;
-            dom.unshift(<li className={'td serial'}>{sortInd}</li>);
+            dom.unshift(<div className={'td serial'}>{sortInd}</div>);
         }
         return dom;
+    }
+
+    getParentTreeObj = (pId, parentKey) => {
+        let pd = this.treeData[pId];
+        if(pId && pd){
+            return this.getParentTreeObj(pd[parentKey], parentKey)[pId];
+        }else{
+            return this.tree[pId];
+        }
     }
 
     render(){
@@ -618,20 +674,20 @@ class Grid extends Component{
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
                     <p> </p>
                     <PageElement type={'first'} event={'onClick'}>
-                        <Icon type={'fast-backward'} className={prevDisabled}/>
+                        <Icon type={'step-backward'} className={prevDisabled}/>
                     </PageElement>
                     <PageElement type={'prev'} event={'onClick'}>
-                        <Icon type={'step-backward'} className={prevDisabled}/>
+                        <Icon type={'fast-backward'} className={prevDisabled}/>
                     </PageElement>
                     <PageElement type={'page'} event={'onKeyUp'} param={(e) => e.target.value}>
                         <input onKeyUp={(e) => e.code === 13} onInput={this.pageInputChange} value={this.state.pageInput}/>
                     </PageElement>
                     <PageElement type={'text'} text={this.getPageText1}/>
                     <PageElement type={'next'} event={'onClick'}>
-                        <Icon type={'step-forward'} className={nextDisabled}/>
+                        <Icon type={'fast-forward'} className={nextDisabled}/>
                     </PageElement>
                     <PageElement type={'last'} event={'onClick'}>
-                        <Icon type={'fast-forward'} className={nextDisabled}/>
+                        <Icon type={'step-forward'} className={nextDisabled}/>
                     </PageElement>
                     <PageElement type={'pageSize'} event={'onSelected'} param={(value) => value}>
                         <Select value={this.state.pagination.pageSize} orient={'up'}>
@@ -663,7 +719,7 @@ Grid.propTypes = {
      *  */
     columns: PropTypes.array,
     selectMode: PropTypes.string,//'multi'
-    onChange: PropTypes.func,
+    onChange: PropTypes.func,//function(pagination, selectData){}
     pageMode: PropTypes.string,//'auto','back'
     sort: PropTypes.string,
     order: PropTypes.string,//asc,desc
@@ -673,7 +729,11 @@ Grid.propTypes = {
     noDataText: PropTypes.string,
     serial: PropTypes.string,
     onEditor: PropTypes.func,
-    onSearch: PropTypes.func
+    onSearch: PropTypes.func,
+    topable: PropTypes.any,//true/false/function(record){}可以筛选出哪条数据是可以被置顶的
+    validateTop: PropTypes.func,//function(record){}判断哪些是被置顶的
+    onTopped: PropTypes.func,//function(toppedData){}
+    treeConfig: PropTypes.any//true/{ column: ''//默认第一个,parentKey: 'parentId', key: 'id'}
 }
 
 export default Grid;

@@ -47,6 +47,9 @@
     flex-direction: row;
     width: fit-content;
   }
+  .search-head{
+    border-top: 1px solid #3d718f;
+  }
   .th{
     background: rgba(0,0,0,0.4);
     flex: auto;
@@ -94,7 +97,7 @@
       top: 4px;
     }
   }
-  .th.serial{
+  .th.serial,.th.topsign{
     flex: none;
     width: 30px;
     cursor: default;
@@ -128,13 +131,22 @@
       &>svg{
         fill: #85c0d0;
         position: relative;
-        top: 3px;
+        vertical-align: sub;
       }
     }
-    &>.td.serial{
+    &>.td.serial,&>.td.topsign{
       flext: none;
       width: 30px;
       cursor: default;
+    }
+    &>.td.topsign{
+      &>svg{
+        vertical-align: sub;
+        fill: #85c0d0;
+        height: 14px;
+        width: 14px;
+        cursor: pointer;
+      }
     }
     &>.td.editable{
       cursor: text; 
@@ -145,23 +157,31 @@
       background-color: #ffffff;
     }
   }
-  &>.tr:hover{
-    background-color: rgba(255,255,255,0.2);
-  }
-  &>.tr.selected{
-    background-color: rgba(255,255,255,0.2);
-  }
   &>.tr:last-child{
     border-bottom: 1px solid #3d718f;
   }
   &>.tr:nth-child(2n){
     background: rgba(255,255,255,.1);
   }
-  &>.tr:nth-child(2n):hover{
+  /* &>.tr:nth-child(2n):hover{
     background-color: rgba(255,255,255,0.2);
   }
   &>.tr:nth-child(2n).selected{
     background-color: rgba(255,255,255,0.2);
+  } */
+  &>.tr:hover{
+    background-color: rgba(255,255,255,0.2);
+  }
+  &>.tr.selected{
+    background-color: rgba(255,255,255,0.2);
+  }
+  &>.tr.topped{
+    background-color: rgba(53, 211, 234, 0.5);
+    &>.td.topsign{
+      &>svg{
+        fill: #ffffff;
+      }
+    }
   }
 }
 .Grid-footer{

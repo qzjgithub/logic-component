@@ -195,7 +195,7 @@ Select.propTypes = {
     value: PropTypes.any,
     onSelected: PropTypes.func,
     orient: PropTypes.string,//up,down
-    defaultText: PropTypess.string,
+    defaultText: PropTypes.string,
     noDataText: PropTypes.string
 }
 
