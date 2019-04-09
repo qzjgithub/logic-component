@@ -154,7 +154,7 @@ class Grid extends Component{
         if(sorter){
             data.sort(sorter);
         }else{
-            data.sort();
+            data.sort((a,b) => {return (a[sort]||'').localeCompare(b[sort]||'')});
         }
         if(order === 'desc'){
             data.reverse();
@@ -360,6 +360,10 @@ class Grid extends Component{
         widthRecord[this.key] = newW + 'px';
         this.setState({
             widthRecord
+        },() => {
+            if(this.props.onRewidth){
+                this.props.onRewidth(widthRecord);
+            }
         });
     }
 
@@ -723,7 +727,7 @@ class Grid extends Component{
                 onClick={(e)=> this.editClick(e,editable)}
                 onBlur={(e) => this.editBlur(e,d,key,validate)}>
                 { treeColumn && treeColumn === key && 
-                (d['Grid_leaf'] ? <Icon type={'file-unknown'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                (d['Grid_leaf'] ? <Icon type={'item'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
                 { trEditor && trEditor[key]!==undefined ? trEditor[key] : 
                     ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
             </div>
@@ -777,7 +781,7 @@ class Grid extends Component{
                     { this.getSearchDom() }
                 </header>
                 <div className={'scroll-y'} onScroll={this.bodyScroll}>
-                    <ul className={'Grid-body'}>
+                    <ul className={`Grid-body ${pageMode === 'tree'?'treesign':''}`}>
                         { pageMode === 'tree' ? this.getTreeBodyDom(data) : this.getBodyDom(data) }
                     </ul>
                 </div>
@@ -844,6 +848,7 @@ Grid.propTypes = {
     topable: PropTypes.any,//true/false/function(record){}可以筛选出哪条数据是可以被置顶的
     validateTop: PropTypes.func,//function(record){}判断哪些是被置顶的
     onTopped: PropTypes.func,//function(toppedData){}
+    onRewidth: PropTypes.func,
     treeConfig: PropTypes.any//true/{ column: ''//默认第一个,parentKey: 'parentId', key: 'id'}
 }
 

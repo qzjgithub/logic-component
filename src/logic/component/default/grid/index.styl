@@ -23,8 +23,10 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
   .scroll-y{
     flex: auto;
-    overflow-y: auto;
-    overflow-x: auto;
+    overflow: hidden;
+  }
+  .scroll-y:hover{
+    overflow: auto;
   }
 }
 .Grid-rewidth{
@@ -205,7 +207,21 @@ normalActive = rgba(sc,sc,sc,0.2);
       }
     }
   }
-  &>.tr:nth-child(2n).topped{
+}
+.Grid-body.treesign{
+  &>.tr{
+    border-top: 1px solid #3d718f;
+  }
+  &>.tr:nth-child(2n){
+    background: none;
+  }
+  &>.tr:nth-child(2n):hover{
+    background-color: normalActive;
+  }
+  &>.tr:nth-child(2n).selected{
+    background-color: normalActive;
+  }
+  &>.tr.topped{
     background-color: rgba(53, 211, 234, 0.5);
   }
 }

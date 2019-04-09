@@ -67,6 +67,10 @@ class TimerShow extends Component{
         console.log(editor,data);
     }
 
+    onRewidth = (widthRecord) => {
+        console.log(widthRecord);
+    }
+
     render(){
         return <div className={'Show'}>
             <Grid columns={COLUMNS}
@@ -80,6 +84,7 @@ class TimerShow extends Component{
                   selectMode={'multi'}
                   serial={true}
                   onEditor={this.onEditor}
+                  onRewidth={this.onRewidth}
                   data={DATA}/>
             </div>
     }
