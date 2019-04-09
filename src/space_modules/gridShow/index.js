@@ -5,10 +5,7 @@ const COLUMNS = [
     {
         name: "名字",
         key: "name",
-        editable: true,
-        validate: (value,record,key,index) => {
-            return !!value;
-        },
+        
         width: '100px',
     },
     {
@@ -24,6 +21,10 @@ const COLUMNS = [
         key: "age",
         width: '100px',
         searcher: true,
+        editable: true,
+        validate: (value,record,key,index) => {
+            return !!value;
+        },
         sorter: (a,b) => {
             return a.age > b.age;
         }
@@ -31,19 +32,19 @@ const COLUMNS = [
 ]
 
 const DATA = [
-    { name: "aaa",sex: 0,age:54 },
-    { name: "bbb",sex: 1,age:12 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
-    { name: "ccc",sex: 1,age:43 },
+    { name: "aaa",sex: 0,age:54 ,id : 1, parentId: ''},
+    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1},
+    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2},
+    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2},
+    { name: "ccc",sex: 1,age:43 ,id : 5, parentId: 3},
+    { name: "ccc",sex: 1,age:43 ,id : 6, parentId: 3},
+    { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3},
+    { name: "ccc",sex: 1,age:43 ,id : 8, parentId: 2},
+    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: ''},
+    { name: "ccc",sex: 1,age:43 ,id : 10, parentId: 9},
+    { name: "ccc",sex: 1,age:43 ,id : 11, parentId: 9},
+    { name: "ccc",sex: 1,age:43 ,id : 12, parentId: 11},
+    { name: "ccc",sex: 1,age:43 ,id : 13, parentId: 11},
 ]
 
 class TimerShow extends Component{
@@ -73,6 +74,7 @@ class TimerShow extends Component{
                     topable={(record) => { return record.age !== 43 }}
                     validateTop={(record) => { return record.age === 12 }}
                     onTopped={(toppedData)=>{ console.log(toppedData) }}
+                    pageMode={'tree'}
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'multi'}

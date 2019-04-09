@@ -11,12 +11,16 @@ import { isKVObject,isArray,isNumber,isRealOrZero } from '../../../common/Util';
 const Option = Select.Option;
 const PageElement = Pagination.PageElement;
 
+const TREE_PAD = 10;
+
 class Grid extends Component{
     columnsMap = {};
     sortedData = [];
     searchedIndex = null;
     displayIndex = [];
     topped = [];
+    tree = {};
+    showIndex = 0;//tree模式下用到
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
@@ -24,7 +28,8 @@ class Grid extends Component{
             widthRecord: {},
             editor:{},
             search: {},
-            searched: false
+            searched: false,
+            treeState: {}
         },this.initParam(props));
     }
 
@@ -109,7 +114,16 @@ class Grid extends Component{
                 });
                 return data;
             case 'tree':
-                this.treeData = {};
+                let treeConfig = this.props.treeConfig || {};
+                let { key } = treeConfig;
+                key = key || 'id';
+                let treeData = {};
+                data.forEach((d) => {
+                    let ind = d['Grid_index'];
+                    this.displayIndex.push(ind);
+                    treeData[d[key]] = d;
+                });
+                return treeData;
             case 'auto':
             default:
                 let start = ((curPage||1) - 1) * pageSize;
@@ -410,6 +424,19 @@ class Grid extends Component{
         });
     }
 
+    setTreeState = (e, key) => {
+        e.stopPropagation();
+        let { treeState } = this.state;
+        if(treeState[key] === false){
+            treeState[key] = true;
+        }else{
+            treeState[key] = false;
+        }
+        this.setState({
+            treeState
+        });
+    }
+
     triggerChange = () => {
         if(this.props.onChange){
             let data = this.props;
@@ -585,9 +612,88 @@ class Grid extends Component{
         }
     }
 
+    getTreeBodyDom = (data) => {
+        let { columns, validateTop } = this.props;
+        if(validateTop && typeof validateTop === 'function'){
+            this.topped = [];
+        }
+        if(!isArray(columns)) return '';
+        let treeConfig = this.props.treeConfig || {};
+        let { parentKey } = treeConfig;
+        parentKey = parentKey || 'parentId';
+        this.tree = {};
+        Object.keys(data).forEach((key) => {
+            let d = data[key];
+            let pt = this.getParentTreeObj(d[parentKey],parentKey, data);
+            if(!pt[key]){
+                pt[key] = {};
+            }
+        });
+        let dom = [];
+        this.showIndex = 0;
+        dom = this.getTreeTrDom(this.tree, data, 0);
+        return dom;
+    }
+
+    getParentTreeObj = (pId, parentKey, treeData) => {
+        let pd = treeData[pId];
+        if(pId && pd){
+            let pt = this.getParentTreeObj(pd[parentKey], parentKey, treeData);
+            if(!pt[pId]){
+                pt[pId] = {};
+            }
+            return pt[pId];
+        }else{
+            return this.tree;
+        }
+    }
+
+    getTreeTrDom = (tree, treeData, level) => {
+        let { treeState } = this.state;
+        let { validateTop } = this.props;
+        let dom = [];
+        Object.keys(tree).forEach((key) => {
+            let d = treeData[key];
+            d['Grid_show_index'] = this.showIndex;
+            this.showIndex++;
+            let t = tree[key];
+            let len = Object.keys(t).length;
+            d['Grid_level'] = level;
+            d['Grid_leaf'] = len ? false : true;
+
+            let gInd = d['Grid_index'];
+            let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+            if(validateTop && typeof validateTop === 'function'){
+                if(validateTop(d)){
+                    cls += ' topped';
+                    this.topped.push(gInd);
+                }
+            }else if(this.topped.indexOf(gInd) > -1){
+                cls += 'topped';
+            }
+            dom.push(<li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+                {this.getTrDom(d,gInd)}
+            </li>);
+            if(len){
+                if(treeState[key] !== false){
+                    dom = [...dom, this.getTreeTrDom(t, treeData, level + 1)];
+                }else{
+                    this.showIndex += len;
+                }
+            }
+        });
+        return dom;
+    }
+
     getTrDom = (d,gInd) => {
-        let { columns, selectMode, serial, topable } = this.props;
-        let { widthRecord, editor } = this.state;
+        let { columns, selectMode, serial, topable, pageMode, treeConfig } = this.props;
+        let treeColumn = '';
+        let treeKey = '';
+        if(pageMode === 'tree'){
+            treeColumn = (treeConfig || {})['column'] || columns[0]['key'];
+            treeKey = (treeConfig||{})['key'] || 'id';
+        }
+        let { widthRecord, editor, treeState } = this.state;
         let trEditor = editor[gInd];
         let dom = columns.map((column) => {
             let { hidden, width, render, key, editable, validate } = column;
@@ -602,12 +708,22 @@ class Grid extends Component{
                     flex: 'none'
                 }
             }
+            if(treeColumn && treeColumn === key){
+                style['textAlign'] = 'left';
+                style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
+            }
+            let cls = 'td';
+            cls += editable ? ' editable':'';
+            cls += treeColumn && treeColumn === key?' treesign':'';
+            cls += treeColumn && treeColumn === key && treeState[d[treeKey]] === false ? ' treehide' : '';
             let value = d[key];
-            return <div className={`td ${editable ? 'editable':''}`} 
+            return <div className={cls} 
                 style={style} 
                 contentEditable={editable} 
                 onClick={(e)=> this.editClick(e,editable)}
                 onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                { treeColumn && treeColumn === key && 
+                (d['Grid_leaf'] ? <Icon type={'file-unknown'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
                 { trEditor && trEditor[key]!==undefined ? trEditor[key] : 
                     ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
             </div>
@@ -636,22 +752,17 @@ class Grid extends Component{
         return dom;
     }
 
-    getParentTreeObj = (pId, parentKey) => {
-        let pd = this.treeData[pId];
-        if(pId && pd){
-            return this.getParentTreeObj(pd[parentKey], parentKey)[pId];
-        }else{
-            return this.tree[pId];
-        }
-    }
-
     render(){
         let data = this.getDisplayData();
         let { curPage, pages } = this.state.pagination;
+
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
-        let cls = this.props.className || '';
-        return <section className={`Grid ${cls}`} onDragOver={this.allCursor}>
+
+        let { pageMode, className } = this.props;
+        className = className || '';
+
+        return <section className={`Grid ${className}`} onDragOver={this.allCursor}>
             {/* <div className={'scroll-x'}>
             </div> */}
             <div draggable={true}
@@ -667,10 +778,10 @@ class Grid extends Component{
                 </header>
                 <div className={'scroll-y'} onScroll={this.bodyScroll}>
                     <ul className={'Grid-body'}>
-                        { this.getBodyDom(data) }
+                        { pageMode === 'tree' ? this.getTreeBodyDom(data) : this.getBodyDom(data) }
                     </ul>
                 </div>
-            <footer className={'Grid-footer'}>
+            {pageMode !== 'tree' && <footer className={'Grid-footer'}>
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
                     <p> </p>
                     <PageElement type={'first'} event={'onClick'}>
@@ -696,7 +807,7 @@ class Grid extends Component{
                     </PageElement>
                     <PageElement type={'text'} text={this.getPageText2}/>
                 </Pagination>
-            </footer>
+            </footer>}
         </section>
     }
 }
