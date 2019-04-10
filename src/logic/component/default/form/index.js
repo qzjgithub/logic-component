@@ -105,7 +105,11 @@ class FormItem extends Component{
         let ele = this.refs[this.key];
         let value;
         if(!ele || !ele.getValue){
-            return {err: 'has no getValue method.',result: false, value: null}
+            if(ele.picker){
+                value = ele.picker.state.value;
+            }else{
+                return {err: 'has no getValue method.',result: false, value: null}
+            }
         }else{
             value = this.refs[this.key].getValue();
         }

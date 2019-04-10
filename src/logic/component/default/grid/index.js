@@ -154,7 +154,7 @@ class Grid extends Component{
         if(sorter){
             data.sort(sorter);
         }else{
-            data.sort((a,b) => {return (a[sort]||'').localeCompare(b[sort]||'')});
+            data.sort((a,b) => {return (a[sort]||'').toString().localeCompare(b[sort]||'').toString()});
         }
         if(order === 'desc'){
             data.reverse();
@@ -372,6 +372,10 @@ class Grid extends Component{
         e.target.previousSibling.scrollLeft = scrollLeft;
     }
 
+    editFocus = (e,record,key) => {
+        e.target.innerHTHML = record[key];
+    }
+
     editBlur = (e,record,key,validate) => {
         let value = e.target.innerHTML;
         let index = record['Grid_index'];
@@ -495,10 +499,14 @@ class Grid extends Component{
         let { columns, selectMode, serial, topable } = this.props;
         let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
+            let comFixed = true;
+            let hasFixed = false;
+            let fixedDom = [];
             let dom = columns.map((column) => {
-                let { name, key, hidden ,width} = column;
+                let { name, key, hidden ,width, fixed } = column;
                 if(hidden) return '';
                 width = widthRecord[key] || width;
+
                 let style = {};
                 if(width){
                     style = {
@@ -506,7 +514,18 @@ class Grid extends Component{
                         flex: 'none'
                     }
                 }
-                return <li className={'th'} style={ style } onClick={() => this.setSort(key)}>
+                comFixed = comFixed && !!fixed;
+                hasFixed = hasFixed || !!fixed;
+                if(comFixed){
+                    fixedDom.push(<li className={'th fixed'} style={ style } onClick={() => this.setSort(key)}>
+                    <span>{name}</span>
+                    {this.getSortIcon(key,sort,order)}
+                    <a className={'rewidth'} 
+                        onMouseDown={(e) => this.startRewidth(e,key)}> </a>
+                </li>);
+                }
+                let cls = `th${comFixed?' fixed-hide':''}`;
+                return <li className={cls} style={ style } onClick={() => this.setSort(key)}>
                     <span>{name}</span>
                     {this.getSortIcon(key,sort,order)}
                     <a className={'rewidth'} 
@@ -514,7 +533,10 @@ class Grid extends Component{
                 </li>
             });
             if(topable){
-                dom.unshift(<div className={'th topsign'}> </div>);
+                dom.unshift(<div className={`th topsign${ hasFixed ? ' fixed-hide': ''}`}> </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={'th topsign fixed'}> </div>);
+                }
             }
             if(selectMode === 'multi'){
                 let selectAll = !!this.displayIndex.length;
@@ -525,14 +547,22 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<div className={'th select'}>
+                dom.unshift(<div className={`th select${ hasFixed ? ' fixed-hide': ''}`}>
                     <Icon type={type} onClick={this.selectAll}/>
-                </div>)
+                </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={'th select fixed'}>
+                    <Icon type={type} onClick={this.selectAll}/>
+                </div>);
+                }
             }
             if(serial === true){
-                dom.unshift(<div className={'th serial'}> </div>);
+                dom.unshift(<div className={`th serial${ hasFixed ? ' fixed-hide': ''}`}> </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={'th serial fixed'}> </div>);
+                }
             }
-            return dom;
+            return [<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom];
         }else{
             return '';
         }
@@ -554,8 +584,11 @@ class Grid extends Component{
         let { widthRecord } = this.state;
         if(isArray(columns)){
             let hasSearch = false;
+            let comFixed = true;
+            let hasFixed = false;
+            let fixedDom = [];
             let dom = columns.map((column) => {
-                let { key, hidden ,width,searcher} = column;
+                let { key, hidden ,width,searcher, fixed} = column;
                 if(hidden) return '';
                 width = widthRecord[key] || width;
                 let style = {};
@@ -566,7 +599,15 @@ class Grid extends Component{
                     }
                 }
                 hasSearch = hasSearch || !!searcher;
-                return <div className={'th gsearch'} style={ style }>
+
+                comFixed = comFixed && !!fixed;
+                hasFixed = hasFixed || !!fixed;
+                if(comFixed){
+                    fixedDom.push(<div className={`th gsearch fixed`} style={ style }>
+                        {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
+                    </div>);
+                }
+                return <div className={`th gsearch${comFixed ? ' fixed-hide':''}`} style={ style }>
                     {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
                 </div>
             });
@@ -574,15 +615,25 @@ class Grid extends Component{
                 return '';
             }
             if(topable){
-                dom.unshift(<div className={'th gsearch topsign'}> </div>);
+                dom.unshift(<div className={`th gsearch topsign${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={`th gsearch topsign fixed`}> </div>);
+                }
             }
             if(selectMode === 'multi'){
-                dom.unshift(<div className={'th gsearch select'}> </div>);
+                dom.unshift(<div className={`th gsearch select${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={`th gsearch select fixed`}> </div>);
+                }
             }
             if(serial === true){
-                dom.unshift(<div className={'th gsearch serial'}> </div>);
+                dom.unshift(<div className={`th gsearch serial${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                if(hasFixed){
+                    fixedDom.unshift(<div className={`th gsearch serial fixed`}> </div>);
+                }
             }
-            return <ul className={'search-head'}>{dom}</ul>;
+            console.log(fixedDom);
+            return <ul className={'search-head'}>{[<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom]}</ul>;
         }else{
             return '';
         }
@@ -699,8 +750,11 @@ class Grid extends Component{
         }
         let { widthRecord, editor, treeState } = this.state;
         let trEditor = editor[gInd];
+        let comFixed = true;
+        let hasFixed = false;
+        let fixedDom = [];
         let dom = columns.map((column) => {
-            let { hidden, width, render, key, editable, validate } = column;
+            let { hidden, width, render, key, editable, validate, fixed } = column;
             if(hidden){
                 return '';
             }
@@ -712,6 +766,8 @@ class Grid extends Component{
                     flex: 'none'
                 }
             }
+            
+
             if(treeColumn && treeColumn === key){
                 style['textAlign'] = 'left';
                 style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
@@ -721,22 +777,51 @@ class Grid extends Component{
             cls += treeColumn && treeColumn === key?' treesign':'';
             cls += treeColumn && treeColumn === key && treeState[d[treeKey]] === false ? ' treehide' : '';
             let value = d[key];
-            return <div className={cls} 
-                style={style} 
-                contentEditable={editable} 
-                onClick={(e)=> this.editClick(e,editable)}
-                onBlur={(e) => this.editBlur(e,d,key,validate)}>
-                { treeColumn && treeColumn === key && 
-                (d['Grid_leaf'] ? <Icon type={'item'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
-                { trEditor && trEditor[key]!==undefined ? trEditor[key] : 
-                    ( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
-            </div>
+            if(trEditor && trEditor[key] !== undefined ){
+                value = trEditor[key];
+            }
+
+            comFixed = comFixed && !!fixed;
+            hasFixed = hasFixed || !!fixed;
+
+            let getDiv = (isFixed , isHide, clz) => {
+                if(isFixed && isHide){
+                    clz += ' fixed-hide';
+                }else if(isFixed && !isHide){
+                    clz += ' fixed';
+                }
+                return <div className={clz} 
+                    style={style} 
+                    contentEditable={editable} 
+                    onClick={(e)=> this.editClick(e,editable)}
+                    onFocus={(e)=> this.editFocus(e,d,key)}
+                    onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                    { treeColumn && treeColumn === key && 
+                    (d['Grid_leaf'] ? <Icon type={'item'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                    {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
+                </div>
+            }
+
+            if(comFixed){
+                fixedDom.push(getDiv(comFixed, false, cls));
+            }
+            return getDiv(comFixed, true, cls);
         });
         if(topable){
-            if(typeof topable === 'function'){
-                dom.unshift(<div className={'td topsign'}>{ topable(d) ? <Icon type={'circle'} onClick={(e) => this.setTop(e, gInd)}/> : '' }</div>);
-            }else{
-                dom.unshift(<div className={'td topsign'}><Icon type={'circle'} onClick={(e) => this.setTop(e,gInd)}/></div>);
+            let cls = 'td topsign';
+            let getDiv = (isFixed, isHide, clz) => {
+                if(isFixed && isHide){
+                    clz += ' fixed-hide';
+                }else if(isFixed && !isHide){
+                    clz += ' fixed';
+                }
+                let icon = <Icon type={'circle'} onClick={(e) => this.setTop(e, gInd)}/>;
+                return <div className={clz}>{ 
+                    (typeof topable === 'function') ? (topable(d) ? icon : '') : icon}</div>
+            }
+            dom.unshift(getDiv(hasFixed, true, cls));
+            if(hasFixed){
+                fixedDom.unshift(getDiv(hasFixed, false, cls));
             }
         }
         if(selectMode === 'multi'){
@@ -744,16 +829,24 @@ class Grid extends Component{
             if(this.state.selected.indexOf(gInd) > -1){
                 type = 'fangxingxuanzhong';
             }
-            dom.unshift(<div className={'td select'}>
+            dom.unshift(<div className={`td select${hasFixed ? ' fixed-hide':''}`}>
                 <Icon type={type}/>
             </div>);
+            if(hasFixed){
+                fixedDom.unshift(<div className={'td select fixed'}>
+                    <Icon type={type}/>
+                </div>);
+            }
         }
         if(serial === true){
             let sortInd = d['Grid_show_index'];
             sortInd += 1;
-            dom.unshift(<div className={'td serial'}>{sortInd}</div>);
+            dom.unshift(<div className={`td serial${hasFixed ? ' fixed-hide' : ''}`}>{sortInd}</div>);
+            if(hasFixed){
+                fixedDom.unshift(<div className={`td serial fixed`}>{sortInd}</div>);
+            }
         }
-        return dom;
+        return [<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom];
     }
 
     render(){
@@ -829,7 +922,8 @@ Grid.propTypes = {
      * hidden:false,
      * editable: false,
      * validte:func(value,record,key,index)
-     * searcher: true/function(inputValue,record,key){}
+     * searcher: true/function(inputValue,record,key){},
+     * fixed: true
      * }]
      *  */
     columns: PropTypes.array,

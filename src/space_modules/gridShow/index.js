@@ -5,7 +5,7 @@ const COLUMNS = [
     {
         name: "名字",
         key: "name",
-        
+        fixed: true,
         width: '100px',
     },
     {
@@ -76,13 +76,13 @@ class TimerShow extends Component{
             <Grid columns={COLUMNS}
                     ref="grid"
                     topable={(record) => { return record.age !== 43 }}
-                    validateTop={(record) => { return record.age === 12 }}
+                    // validateTop={(record) => { return record.age === 12 }}
                     onTopped={(toppedData)=>{ console.log(toppedData) }}
                     pageMode={'tree'}
                   sort={'sex'}
                   order={'desc'}
-                  selectMode={'multi'}
-                  serial={true}
+                  selectMode={'auto'}
+                  serial={false}
                   onEditor={this.onEditor}
                   onRewidth={this.onRewidth}
                   data={DATA}/>

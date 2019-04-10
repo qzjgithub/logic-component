@@ -143,7 +143,7 @@ TreeSelect.propTypes = {
     defaultText: PropTypes.string,
     noDataText: PropTypes.string,
     text: PropTypes.string,
-    getText: PropTypes.func
+    getText: PropTypes.func//function(value, data){}
 }
 
 
