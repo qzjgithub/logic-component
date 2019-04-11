@@ -29,7 +29,8 @@ class Grid extends Component{
             editor:{},
             search: {},
             searched: false,
-            treeState: {}
+            treeState: {},
+            hover: null
         },this.initParam(props));
     }
 
@@ -656,7 +657,11 @@ class Grid extends Component{
                 }else if(this.topped.indexOf(gInd) > -1){
                     cls += 'topped';
                 }
-                return <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+                return <li className={`tr ${cls}`} key={gInd} 
+                    onClick={() => this.selectOne(gInd)} 
+                    // onMouseLeave={() => {this.setState({hover:null});}}
+                    // onMouseEnter={() => {this.setState({hover:gInd})}}
+                >
                     {
                         this.getTrDom(d,gInd)
                     }
@@ -874,6 +879,13 @@ class Grid extends Component{
                     { this.getSearchDom() }
                 </header>
                 <div className={'scroll-y'} onScroll={this.bodyScroll}>
+                    {/* <ul className={`Grid-body fixed ${pageMode === 'tree'?'treesign':''}`}>
+                        { data.map((d)=>{
+                            return <li className={'tr'}>
+                                <div className={'td'} style={{'width':'100px'}}>test</div>
+                            </li>
+                        })}
+                    </ul> */}
                     <ul className={`Grid-body ${pageMode === 'tree'?'treesign':''}`}>
                         { pageMode === 'tree' ? this.getTreeBodyDom(data) : this.getBodyDom(data) }
                     </ul>

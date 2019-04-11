@@ -24,10 +24,12 @@ normalActive = rgba(sc,sc,sc,0.2);
   .scroll-y{
     flex: auto;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
   }
-  .scroll-y:hover{
+  /* .scroll-y:hover{
     overflow: auto;
-  }
+  } */
 }
 .Grid-rewidth{
   position: absolute;
@@ -116,7 +118,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     // position: absolute;
   }
   .th.fixed-hide{
-    opacity: 0;
+    visibility: hidden;
     pointer-events: none;
   }
   .th:hover{
@@ -149,6 +151,8 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
 }
 .Grid-body{
+  // overflow: auto;
+  // flex: auto;
   width: fit-content;
   &>.tr{
     display: flex;
@@ -156,6 +160,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     line-height: 34px;
     cursor: pointer;
     height: 34px;
+    width: fit-content;
     .td{
       flex: auto;
       text-align: center;
@@ -167,6 +172,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     .td.fixed-hide{
       opacity: 0;
       pointer-events: none;
+      // display: none;
     }
     .td.treesign{
       &>svg{
@@ -223,6 +229,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     height: 34px;
     background-color: #023750;
     z-index: 2;
+    // display: none;
   }
   &>.tr:last-child{
     border-bottom: 1px solid #3d718f;
@@ -297,6 +304,10 @@ normalActive = rgba(sc,sc,sc,0.2);
       background-color: rgba(53, 211, 234, 0.5);
     }
   }
+}
+.Grid-body.fixed{
+  flex: none;  
+  overflow: hidden;
 }
 .Grid-footer{
   flex: none;
