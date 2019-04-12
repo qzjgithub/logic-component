@@ -21,6 +21,7 @@ class Grid extends Component{
     topped = [];
     tree = {};
     showIndex = 0;//tree模式下用到
+    scrollLeft = 0;
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
@@ -29,7 +30,8 @@ class Grid extends Component{
             editor:{},
             search: {},
             searched: false,
-            treeState: {}
+            treeState: {},
+            scrollTop: 0
         },this.initParam(props));
     }
 
@@ -320,9 +322,11 @@ class Grid extends Component{
     }
 
     startRewidth = (e,key) => {
+        let offsetParent = e.target.offsetParent;
+        let scrollLeft = offsetParent.className.indexOf('Grid') > -1 ? this.scrollLeft : 0;
         let old = e.target.offsetLeft;
         let rewidthDom = this.refs['rewidth'];
-        rewidthDom.style.cssText = `;left:${old-10}px;z-index:1;opacity:1`;
+        rewidthDom.style.cssText = `;left:${old-(scrollLeft||0)-10}px;z-index:3;opacity:1`;
         this.key = key;
         this.oldW = e.target.parentElement.clientWidth;
         this.oldL = old - 10;
@@ -369,7 +373,14 @@ class Grid extends Component{
 
     bodyScroll = (e) => {
         let scrollLeft = e.target.scrollLeft;
+        this.scrollLeft = scrollLeft;
         e.target.previousSibling.scrollLeft = scrollLeft;
+        let scrollTop = e.target.scrollTop;
+        if(scrollTop !== this.state.scrollTop){
+            this.setState({
+                scrollTop: e.target.scrollTop
+            });
+        }
     }
 
     editFocus = (e,record,key) => {
@@ -518,18 +529,18 @@ class Grid extends Component{
                 hasFixed = hasFixed || !!fixed;
                 if(comFixed){
                     fixedDom.push(<li className={'th fixed'} style={ style } onClick={() => this.setSort(key)}>
-                    <span>{name}</span>
-                    {this.getSortIcon(key,sort,order)}
                     <a className={'rewidth'} 
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
+                    <span>{name}</span>
+                    {this.getSortIcon(key,sort,order)}
                 </li>);
                 }
                 let cls = `th${comFixed?' fixed-hide':''}`;
                 return <li className={cls} style={ style } onClick={() => this.setSort(key)}>
-                    <span>{name}</span>
-                    {this.getSortIcon(key,sort,order)}
                     <a className={'rewidth'} 
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
+                    <span>{name}</span>
+                    {this.getSortIcon(key,sort,order)}
                 </li>
             });
             if(topable){
@@ -632,7 +643,6 @@ class Grid extends Component{
                     fixedDom.unshift(<div className={`th gsearch serial fixed`}> </div>);
                 }
             }
-            console.log(fixedDom);
             return <ul className={'search-head'}>{[<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom]}</ul>;
         }else{
             return '';
@@ -846,7 +856,7 @@ class Grid extends Component{
                 fixedDom.unshift(<div className={`td serial fixed`}>{sortInd}</div>);
             }
         }
-        return [<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom];
+        return [<div className={'gfixed-panel'} style={{'marginTop': - this.state.scrollTop}}>{fixedDom}</div>, ...dom];
     }
 
     render(){

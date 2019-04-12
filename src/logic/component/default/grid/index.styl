@@ -24,6 +24,7 @@ normalActive = rgba(sc,sc,sc,0.2);
   .scroll-y{
     flex: auto;
     overflow: hidden;
+    z-index: 1;
   }
   .scroll-y:hover{
     overflow: auto;
@@ -49,11 +50,11 @@ normalActive = rgba(sc,sc,sc,0.2);
   overflow : hidden;
   overflow-y: hidden;
   flex: none;
+  z-index: 2;
   &>ul{
     display: flex;
     flex-direction: row;
     width: fit-content;
-    margin-right: 8px;
   }
   .gfixed-panel{
     position: absolute;
@@ -68,8 +69,10 @@ normalActive = rgba(sc,sc,sc,0.2);
     height: 34px;
   }
   .search-head{
-    border-top: 1px solid #3d718f;
     height: 34px;
+    .th{
+      border-top: 1px solid #3d718f;
+    }
   }
   .search-head .th{
     height: 34px;
@@ -111,6 +114,9 @@ normalActive = rgba(sc,sc,sc,0.2);
     &>a.rewidth:focus{
       background-color: #ffffff;
     }
+  }
+  ul>.th:last-child{
+    margin-right: 8px;  
   }
   .th.fixed{
     // position: absolute;
