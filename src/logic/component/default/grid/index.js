@@ -160,7 +160,10 @@ class Grid extends Component{
     }
 
     sortData = (data) => {
-        let { columns} = this.props;
+        let { columns, customSort } = this.props;
+        if(customSort){
+            return data;
+        }
         let { sort, order } = this.state;
         let columnInd = this.columnsMap[sort];
         let column = isRealOrZero(columnInd) ? (columns[columnInd]||{}) : {};
@@ -168,10 +171,12 @@ class Grid extends Component{
         if(sorter){
             data.sort(sorter);
         }else{
-            data.sort((a,b) => {return (a[sort]||'').toString().localeCompare(b[sort]||'').toString()});
+            data.sort((a,b) => {
+                return (a[sort]||'').toString().localeCompare(b[sort]||'').toString();
+            });
         }
         if(order === 'desc'){
-            data.reverse();
+           data.reverse();
         }
         this.sortedData = data;
         return data;
@@ -476,7 +481,8 @@ class Grid extends Component{
                 return data[ind];
             });
             sld = JSON.parse(JSON.stringify(sld));
-            this.props.onChange(pageInfo,sld);
+            let { sort, order } = this.state;
+            this.props.onChange(pageInfo,sld, { key: sort, order, sortData: this.sortedData});
         }
     }
 
@@ -986,7 +992,8 @@ Grid.propTypes = {
     validateTop: PropTypes.func,//function(record){}判断哪些是被置顶的
     onTopped: PropTypes.func,//function(toppedData){}
     onRewidth: PropTypes.func,
-    treeConfig: PropTypes.any//true/{ column: ''//默认第一个,parentKey: 'parentId', key: 'id'}
+    treeConfig: PropTypes.any,//true/{ column: ''//默认第一个,parentKey: 'parentId', key: 'id'}
+    customSort: true
 }
 
 export default Grid;

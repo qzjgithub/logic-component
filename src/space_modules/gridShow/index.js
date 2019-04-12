@@ -26,7 +26,13 @@ const COLUMNS = [
             return !!value;
         },
         sorter: (a,b) => {
-            return a.age > b.age;
+            if(a.age > b.age){
+                return 1;
+            }else if(a.age < b.age){
+                return -1;
+            }else{
+                return 0;
+            }
         }
     }
 ]
@@ -71,6 +77,10 @@ class TimerShow extends Component{
         console.log(widthRecord);
     }
 
+    onChange = (pagination, selectData, sorter) => {
+        console.log(pagination,selectData,sorter);
+    }
+
     render(){
         return <div className={'Show'}>
             <Grid columns={COLUMNS}
@@ -78,13 +88,15 @@ class TimerShow extends Component{
                     topable={(record) => { return record.age > 40 }}
                     // validateTop={(record) => { return record.age === 12 }}
                     onTopped={(toppedData)=>{ console.log(toppedData) }}
-                    pageMode={'tree'}
+                    pageMode={'auto'}
                   sort={'sex'}
                   order={'desc'}
                   selectMode={'auto'}
                   serial={false}
                   onEditor={this.onEditor}
                   onRewidth={this.onRewidth}
+                  customSort={false}
+                  onChange={this.onChange}
                   data={DATA}/>
             </div>
     }
