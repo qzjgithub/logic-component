@@ -237,15 +237,24 @@ normalActive = rgba(sc,sc,sc,0.2);
     .td{
       background-color: nth2;
     }
+    .td.editable:focus{
+      background-color: #ffffff;
+    }
   }
   &>.tr:nth-child(2n):hover{
     .td{
       background-color: nth2Active;
     }
+    .td.editable:focus{
+      background-color: #ffffff;
+    }
   }
   &>.tr:nth-child(2n).selected{
     .td{
       background-color: nth2Active;
+    }
+    .td.editable:focus{
+      background-color: #ffffff;
     }
   }
   &>.tr:nth-child(2n).topped{
@@ -306,6 +315,8 @@ normalActive = rgba(sc,sc,sc,0.2);
 }
 .Grid-footer{
   flex: none;
+  z-index: 2;
+  background: #023750;
   &>div{
     line-height: 26px;
     margin: 5px auto;

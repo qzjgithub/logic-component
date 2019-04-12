@@ -96,13 +96,25 @@ class Grid extends Component{
         if(!data || !data.length){
             return data;
         }
+        let { editor } = this.state;
         let sd = [];
         if(this.searchedIndex !== null){
             this.searchedIndex.forEach((ind)=>{
-                sd.push(data[ind]);
+                let d = data[ind];
+                let gInd = d['Grid_index'];
+                if(editor[gInd]){
+                    d = Object.assign(d,editor[gInd]);
+                }
+                sd.push(d);
             });
         }else{
-            sd = data;
+            sd = data.map((d)=>{
+                let gInd = d['Grid_index'];
+                if(editor[gInd]){
+                    d = Object.assign(d,editor[gInd]);
+                }
+                return d;
+            });
         }
         let { curPage, pageSize, total } = this.state.pagination;
         data = this.sortData(sd);
@@ -384,7 +396,7 @@ class Grid extends Component{
     }
 
     editFocus = (e,record,key) => {
-        e.target.innerHTHML = record[key];
+        e.target.innerHTML = record[key];
     }
 
     editBlur = (e,record,key,validate) => {
@@ -406,7 +418,7 @@ class Grid extends Component{
             editor
         },() => {
             if(this.props.onEditor){
-                this.props.onEditor(this.editor,this.props.data);
+                this.props.onEditor(this.state.editor,this.props.data);
             }
         });
     }
@@ -655,23 +667,34 @@ class Grid extends Component{
             this.topped = [];
         }
         if(isArray(columns)){
-            return data.map((d) => {
+            let topDom = [];
+            let dom = [];
+            data.forEach((d) => {
                 let gInd = d['Grid_index'];
                 let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+                let topFlag = false;
                 if(validateTop && typeof validateTop === 'function'){
                     if(validateTop(d)){
                         cls += ' topped';
                         this.topped.push(gInd);
+                        topFlag = true;
                     }
                 }else if(this.topped.indexOf(gInd) > -1){
                     cls += 'topped';
+                    topFlag = true;
                 }
-                return <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+                let li = <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
                     {
                         this.getTrDom(d,gInd)
                     }
-                </li>
+                </li>;
+                if(topFlag){
+                    topDom.push(li);
+                }else{
+                    dom.push(li);
+                }
             });
+            return [...topDom, dom];
         }else{
             return '';
         }
@@ -717,6 +740,7 @@ class Grid extends Component{
         let { treeState } = this.state;
         let { validateTop } = this.props;
         let dom = [];
+        let fixedDom = [];
         Object.keys(tree).forEach((key) => {
             let d = treeData[key];
             d['Grid_show_index'] = this.showIndex;
@@ -728,26 +752,39 @@ class Grid extends Component{
 
             let gInd = d['Grid_index'];
             let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+            let fixedFlag = false;
             if(validateTop && typeof validateTop === 'function'){
                 if(validateTop(d)){
                     cls += ' topped';
                     this.topped.push(gInd);
+                    fixedFlag = true;
                 }
             }else if(this.topped.indexOf(gInd) > -1){
                 cls += 'topped';
+                fixedFlag = true;
             }
-            dom.push(<li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+            let li = <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
                 {this.getTrDom(d,gInd)}
-            </li>);
+            </li>;
+            if(fixedFlag){
+                fixedDom.push(li);
+            }else{
+                dom.push(li);
+            }
             if(len){
                 if(treeState[key] !== false){
-                    dom = [...dom, this.getTreeTrDom(t, treeData, level + 1)];
+                    let clis = this.getTreeTrDom(t, treeData, level + 1);
+                    if(fixedFlag){
+                        fixedDom = [...fixedDom,...clis];
+                    }else{
+                        dom = [...dom, ...clis];
+                    }
                 }else{
                     this.showIndex += len;
                 }
             }
         });
-        return dom;
+        return [...fixedDom, ...dom];
     }
 
     getTrDom = (d,gInd) => {
@@ -777,7 +814,6 @@ class Grid extends Component{
                 }
             }
             
-
             if(treeColumn && treeColumn === key){
                 style['textAlign'] = 'left';
                 style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
@@ -787,9 +823,6 @@ class Grid extends Component{
             cls += treeColumn && treeColumn === key?' treesign':'';
             cls += treeColumn && treeColumn === key && treeState[d[treeKey]] === false ? ' treehide' : '';
             let value = d[key];
-            if(trEditor && trEditor[key] !== undefined ){
-                value = trEditor[key];
-            }
 
             comFixed = comFixed && !!fixed;
             hasFixed = hasFixed || !!fixed;
