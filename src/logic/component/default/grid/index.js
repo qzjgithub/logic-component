@@ -383,7 +383,7 @@ class Grid extends Component{
             widthRecord
         },() => {
             if(this.props.onRewidth){
-                this.props.onRewidth(widthRecord);
+                this.props.onRewidth(widthRecord, this.props.columns);
             }
         });
     }
@@ -546,7 +546,10 @@ class Grid extends Component{
                 comFixed = comFixed && !!fixed;
                 hasFixed = hasFixed || !!fixed;
                 if(comFixed){
-                    fixedDom.push(<li className={'th fixed'} style={ style } onClick={() => this.setSort(key)}>
+                    fixedDom.push(<li className={'th fixed'} 
+                        style={ style } 
+                        onClick={() => this.setSort(key)} 
+                        title={name}>
                     <a className={'rewidth'} 
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
                     <span>{name}</span>
@@ -554,7 +557,7 @@ class Grid extends Component{
                 </li>);
                 }
                 let cls = `th${comFixed?' fixed-hide':''}`;
-                return <li className={cls} style={ style } onClick={() => this.setSort(key)}>
+                return <li className={cls} style={ style } onClick={() => this.setSort(key)} title={name}>
                     <a className={'rewidth'} 
                         onMouseDown={(e) => this.startRewidth(e,key)}> </a>
                     <span>{name}</span>
@@ -562,9 +565,9 @@ class Grid extends Component{
                 </li>
             });
             if(topable){
-                dom.unshift(<div className={`th topsign${ hasFixed ? ' fixed-hide': ''}`}> </div>);
+                dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`}> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<div className={'th topsign fixed'}> </div>);
+                    fixedDom.unshift(<li className={'th topsign fixed'}> </li>);
                 }
             }
             if(selectMode === 'multi'){
@@ -576,22 +579,22 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<div className={`th select${ hasFixed ? ' fixed-hide': ''}`}>
+                dom.unshift(<li className={`th select${ hasFixed ? ' fixed-hide': ''}`}>
                     <Icon type={type} onClick={this.selectAll}/>
-                </div>);
+                </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<div className={'th select fixed'}>
+                    fixedDom.unshift(<li className={'th select fixed'}>
                     <Icon type={type} onClick={this.selectAll}/>
-                </div>);
+                </li>);
                 }
             }
             if(serial === true){
-                dom.unshift(<div className={`th serial${ hasFixed ? ' fixed-hide': ''}`}> </div>);
+                dom.unshift(<li className={`th serial${ hasFixed ? ' fixed-hide': ''}`}> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<div className={'th serial fixed'}> </div>);
+                    fixedDom.unshift(<li className={'th serial fixed'}> </li>);
                 }
             }
-            return [<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom];
+            return [<li className={'gfixed-panel'}>{fixedDom}</li>, ...dom];
         }else{
             return '';
         }
@@ -840,14 +843,16 @@ class Grid extends Component{
                     clz += ' fixed';
                 }
                 return <div className={clz} 
+                    title={value}
                     style={style} 
                     contentEditable={editable} 
                     onClick={(e)=> this.editClick(e,editable)}
                     onFocus={(e)=> this.editFocus(e,d,key)}
                     onBlur={(e) => this.editBlur(e,d,key,validate)}>
-                    { treeColumn && treeColumn === key && 
-                    (d['Grid_leaf'] ? <Icon type={'item'}/> : <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
-                    {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
+                        { treeColumn && treeColumn === key && 
+                            (d['Grid_leaf'] ? <Icon type={'item'}/> : 
+                            <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                        {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
                 </div>
             }
 
