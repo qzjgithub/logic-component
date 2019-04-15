@@ -22,12 +22,15 @@ class SelectShow extends Component{
         return <div className={"Show"}>
             <Select defaultText={'请选择数据'} noDataText={'没有数据'}>
                 <Option value={'1'}>apple</Option>
-                {/*<Option value={'2'}>orange</Option>*/}
+                <Option value={'2'}>orange</Option>
+                <Option value={'3'}>potato</Option>
             </Select>
 
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'}>
-                {[<Option value={'1'}>apple</Option>]}
-                {/*<Option value={'2'}>orange</Option>*/}
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'}>
+                <Option value={'1'}>apple</Option>
+                <Option value={'2'}>orange</Option>
+                <Option value={'3'}>banana</Option>
+                <Option value={'4'}>tomato</Option>
             </Select>
         </div>
     }

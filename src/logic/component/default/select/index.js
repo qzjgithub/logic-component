@@ -26,8 +26,15 @@ class Select extends Component{
                     value = undefined;
             }
         }
+        let children = this.props.children;
+        if(children && !children.length){
+            children = [ children ];
+        }else if(!children){
+            children = [];
+        }
         this.state = {
-            value: value
+            value: value,
+            all: mode === 'multi' && value.length === children.length
         }
     }
 
@@ -43,6 +50,13 @@ class Select extends Component{
     itemClick = (value,text)=>{
         let status = this.state.status;
         let values = this.state.value;
+        let children = this.props.children;
+        if(children && !children.length){
+            children = [ children ];
+        }else if(!children){
+            children = [];
+        }
+        let all = false;
         switch(this.props.mode){
             case 'multi':
                 let ind = values.indexOf(value);
@@ -53,6 +67,7 @@ class Select extends Component{
                     values.push(value);
                     this.text.push(text);
                 }
+                all = values.length === children.length;
                 break;
             case 'single':
             default:
@@ -62,7 +77,8 @@ class Select extends Component{
         }
         this.setState({
             value: values,
-            status: status
+            status: status,
+            all
         });
         if(this.props.onSelected){
             this.props.onSelected(values,this.text);
@@ -149,6 +165,26 @@ class Select extends Component{
         return newValue;
     }
 
+    setAll = (ev) => {
+        let all = this.state.all;
+        let value = [];
+        if(!all){
+            let children = this.props.children;
+            if(children && !children.length){
+                children = [ children ];
+            }else if(!children){
+                children = [];
+            }
+            for(let c of children){
+                value.push(c.props.value);
+            }
+        }
+        this.setState({
+            all: !all,
+            value
+        });
+    }
+
     render(){
         let displayKey = '', value = this.state['value'];
         if(Util.isUndefined(value)){
@@ -174,7 +210,7 @@ class Select extends Component{
         if(displayKey){
             text = this.props[displayKey] || this[displayKey];
         }
-        let { mode, orient } = this.props;
+        let { mode, orient, hasAll } = this.props;
         let cls = mode || 'single ';
         cls += orient ||'';
         return <div className={cls}>
@@ -182,7 +218,13 @@ class Select extends Component{
                 <Icon type={'unfold'}/>
                 <span ref={'text'}>{ text || value}</span>
             </Button>
-            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>{ list.dom }</ul>
+            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>
+                { !!hasAll && <li onClick={this.setAll}>
+                    { hasAll!==true ? hasAll:'选择全部'}
+                    { this.state.all && <Icon type={'xuanze'} className={'mutli-sign'}/>}
+                </li>}
+                { list.dom }
+            </ul>
         </div>;
     }
 }
@@ -196,7 +238,8 @@ Select.propTypes = {
     onSelected: PropTypes.func,
     orient: PropTypes.string,//up,down
     defaultText: PropTypes.string,
-    noDataText: PropTypes.string
+    noDataText: PropTypes.string,
+    hasAll: PropTypes.any//true/'选择全部'
 }
 
 class Option extends Component{
