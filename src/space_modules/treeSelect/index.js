@@ -35,12 +35,13 @@ class TreeSelectShow extends Component {
                 // initAll={true}
                 // value={value}
                 text={text}
+                getText={(value)=>{return '共'+(value||[]).length+'项'}}
                 treeConfig={
                     {
                         data: d,
                         initAll: true,
                         onTextClick : this.onTextClick,
-                        selectable: (d) => {return d.node_type === 'FACTORY'},
+                        // selectable: (d) => {return d.node_type === 'FACTORY'},
                         search: true,
                         iconEnable:true,
                         textKey:'display_name',

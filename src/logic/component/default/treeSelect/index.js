@@ -34,6 +34,13 @@ class TreeSelect extends Component{
         return this.state.value;
     }
 
+    /**
+     * keys可以不传
+     * keys代表value的值
+     * 如果keys是数组，就数组内对应值的对象
+     * 如果keys是值，则直接返回对象
+     * keys不存在，返回整个对象
+     */
     getValueObj = (keys) => {
         if(keys instanceof Array){
             let obj = {};
@@ -94,9 +101,9 @@ class TreeSelect extends Component{
     }
 
     getText = () => {
-        let { getText ,treeConfig, mode } = this.props;
+        let { getText , mode } = this.props;
         if(getText){
-            return getText(this.state.value, (treeConfig||{}).data||[]);
+            return getText(this.state.value, this.dataObj);
         }else{
             switch(mode){
                 case 'multi':
