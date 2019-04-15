@@ -13,17 +13,26 @@ import Tree from '../tree';
 class TreeSelect extends Component{
     constructor(props, context) {
         super(props, context);
-        let {value , initValue, mode } = this.props;
+        let {value , initValue, mode, initAll, treeConfig } = this.props;
         value = isRealOrZero(value) ? value : initValue;
         if(!isRealOrZero(value)){
             switch(mode){
                 case 'multi':
                     value = [];
+                    if(initAll){
+                        let { data, valueKey } = treeConfig||{};
+                        data = data || [];
+                        valueKey = valueKey || 'value';
+                        value = this.getNestValue(data, [], valueKey);
+                    }
                     break;
                 case 'single':
                 default:
                     value = undefined;
             }
+        }
+        if(mode === 'multi' && value && !(value instanceof Array)){
+            value = [ value ];
         }
         this.state = {
             value: value,
@@ -38,6 +47,17 @@ class TreeSelect extends Component{
                 value: nextProps.value
             });
         }
+    }
+
+    getNestValue = (arr, value = [], valueKey) => {
+        (arr||[]).forEach((item)=>{
+            value.push(item[valueKey]);
+            let children = item.children;
+            if(children && children.length){
+                value = this.getNestValue(children,value, valueKey);
+            }
+        });
+        return value;
     }
 
     getValue = () => {
@@ -139,6 +159,8 @@ TreeSelect.propTypes = {
     mode: PropTypes.string, //multi,single
     initValue: PropTypes.any,
     value: PropTypes.any,
+    initValue: PropTypes.any,
+    initAll: PropTypes.any,//true/false
     treeConfig: PropTypes.object,
     defaultText: PropTypes.string,
     noDataText: PropTypes.string,

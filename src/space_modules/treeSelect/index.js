@@ -27,9 +27,10 @@ class TreeSelectShow extends Component {
         console.log(d);
         return <div className={"Show"}>
             <TreeSelect
-                mode={'auto'}
+                mode={'multi'}
                 defaultText={'请选择节点'}
-                value={value}
+                initAll={true}
+                // value={value}
                 text={text}
                 treeConfig={
                     {
