@@ -16,7 +16,7 @@ class DateRangepickerShow extends Component{
 
     render(){
         return <div>
-            <DateRangepicker/>
+            <DateRangepicker initStart={moment().subtract(5,'d')} initEnd={moment().add(4,'d')}/>
         </div>
     }
 }

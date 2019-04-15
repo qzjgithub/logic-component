@@ -29,7 +29,9 @@ class DateRangepicker extends Component{
     }
 
     initData = (props) => {
-        let { start, end } = props;
+        let { start, end , initStart, initEnd} = props;
+        start = start || initStart;
+        end = end || initEnd;
         if(moment.isMoment(start) && moment.isMoment(end)){
             if(start.isAfter(end,'second')){
                 console.log('start is after end');
@@ -225,6 +227,8 @@ class DateRangepicker extends Component{
 DateRangepicker.propTypes = {
     start : PropTypes.object,
     end: PropTypes.object,
+    initStart: PropTypes.object,
+    initEnd: PropTypes.object,
     disableDate: PropTypes.func,//(start,end,current)
     disabled: PropTypes.bool,
     defaultText: PropTypes.string,
