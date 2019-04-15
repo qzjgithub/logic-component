@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import logical from '../../../common/logical';
+import { isRealOrZero } from '../../../common/Util';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -11,18 +12,79 @@ import TreeItem from '../treeItem';
 const animateTime = 300;
 
 class Tree extends Component{
+    dataObj = {};
     constructor(props, context) {
         super(props, context);
+        let {value , selectMode, initAll, valueKey, data } = this.props;
+        // value = isRealOrZero(value) ? value : initValue;
+        if(!isRealOrZero(value)){
+            switch(selectMode){
+                case 'multi':
+                    value = [];
+                    if(initAll){
+                        data = data || [];
+                        valueKey = valueKey || 'value';
+                        value = this.getNestValue(data, [], valueKey);
+                    }
+                    break;
+                case 'single':
+                default:
+                    value = undefined;
+            }
+        }
+        if(selectMode === 'multi' && value && !(value instanceof Array)){
+            value = [ value ];
+        }
         this.state = {
             openeds: {},
             searchValue: '',
             searched: false,
-            searcheds : {}
+            searcheds : {},
+            value
         }
+        this.initData();
     }
 
     componentWillReceiveProps(nextProps){
         this.setState({value: nextProps.value});
+    }
+
+    componentDidMount(){
+        if(this.props.onDidMount){
+            this.props.onDidMount(this.state.value,this.dataObj);
+        }
+    }
+
+    getNestValue = (arr, value = [], valueKey) => {
+        let { selectable } = this.props;
+        (arr||[]).forEach((item)=>{
+            if(!selectable || selectable(item)){
+                value.push(item[valueKey]);
+            }
+            let children = item.children;
+            if(children && children.length){
+                value = this.getNestValue(children,value, valueKey);
+            }
+        });
+        return value;
+    }
+
+    initData = () => {
+        let { data, valueKey } = this.props;
+        data = data || [];
+        valueKey = valueKey || 'value';
+        this.dataObj = this.getNestData(data, {}, valueKey);
+    }
+
+    getNestData = (arr, obj = {}, valueKey) => {
+        (arr||[]).forEach((item)=>{
+            obj[item[valueKey]] = item;
+            let children = item.children;
+            if(children && children.length){
+                obj = this.getNestData(children,obj, valueKey);
+            }
+        });
+        return obj;
     }
 
     getTreeItem = (data,first,last,order) => {
@@ -176,8 +238,10 @@ Tree.propTypes = {
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
     value: PropTypes.any,
+    initAll: PropTypes.bool,//true/false
     className: PropTypes.string,
-    cable: PropTypes.bool
+    cable: PropTypes.bool,//是否无连接线
+    onDidMount: PropTypes.func//function(values,obj){}
 }
 
 

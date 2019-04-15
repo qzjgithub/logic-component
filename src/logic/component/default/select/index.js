@@ -79,10 +79,11 @@ class Select extends Component{
             value: values,
             status: status,
             all
+        },() => {
+            if(this.props.onSelected){
+                this.props.onSelected(values,this.text);
+            }
         });
-        if(this.props.onSelected){
-            this.props.onSelected(values,this.text);
-        }
     }
 
     getList = (value) => {
@@ -109,8 +110,7 @@ class Select extends Component{
         if(!value){
             value = [];
         }
-        let mode = this.props.mode;
-        let children = this.props.children;
+        let { mode, children, getText } = this.props;
         if(children && !(children instanceof Array)){
             children = [ children ];
         }
@@ -118,7 +118,7 @@ class Select extends Component{
             let checked = false;
             if(value.indexOf(item.props.value) > -1){
                 this.text.push(item.props.children);
-                text.push(
+                !getText && text.push(
                     <span className={'multi-text'}>
                         {item.props.children}
                         <Icon type={'guanbi1'} onClick={(e) => {
@@ -131,6 +131,9 @@ class Select extends Component{
             }
             return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked, mode: mode});
         });
+        if(getText){
+            text = getText(this.state.value, this.text);
+        }
         return { dom, text }
     }
 
@@ -182,6 +185,10 @@ class Select extends Component{
         this.setState({
             all: !all,
             value
+        },() => {
+            if(this.props.onSelected){
+                this.props.onSelected(values,this.text);
+            }
         });
     }
 
@@ -239,7 +246,8 @@ Select.propTypes = {
     orient: PropTypes.string,//up,down
     defaultText: PropTypes.string,
     noDataText: PropTypes.string,
-    hasAll: PropTypes.any//true/'选择全部'
+    hasAll: PropTypes.any,//true/'选择全部'
+    getText: PropTypes.func//function(value, data){}
 }
 
 class Option extends Component{

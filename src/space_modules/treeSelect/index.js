@@ -10,12 +10,15 @@ class TreeSelectShow extends Component {
 
     }
 
+    componentDidMount(){
+    }
+
     onChanged = (o, n, s, st) => {
         // console.log(o,n,s,st);
     }
 
     onTextClick = (value, id, text, data) => {
-        console.log(value, id, text, data);
+        // console.log(value, id, text, data);
         return true;
     }
 
@@ -24,18 +27,20 @@ class TreeSelectShow extends Component {
         // d[0]['children'][0]['children'] = null;
         let value = d[0]['id'];
         let text = d[0]['display_name'];
-        console.log(d);
         return <div className={"Show"}>
             <TreeSelect
                 mode={'multi'}
                 defaultText={'请选择节点'}
-                initAll={true}
+                ref={'tree'}
+                // initAll={true}
                 // value={value}
                 text={text}
                 treeConfig={
                     {
                         data: d,
+                        initAll: true,
                         onTextClick : this.onTextClick,
+                        selectable: (d) => {return d.node_type === 'FACTORY'},
                         search: true,
                         iconEnable:true,
                         textKey:'display_name',

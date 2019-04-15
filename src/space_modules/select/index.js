@@ -18,6 +18,11 @@ class SelectShow extends Component{
         });
     }
 
+    getText = (values, texts) => {
+        console.log(values,texts);
+        return texts.join(',');
+    }
+
     render(){
         return <div className={"Show"}>
             <Select defaultText={'请选择数据'} noDataText={'没有数据'}>
@@ -26,7 +31,7 @@ class SelectShow extends Component{
                 <Option value={'3'}>potato</Option>
             </Select>
 
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'}>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'} getText={this.getText}>
                 <Option value={'1'}>apple</Option>
                 <Option value={'2'}>orange</Option>
                 <Option value={'3'}>banana</Option>

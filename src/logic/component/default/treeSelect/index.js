@@ -13,27 +13,8 @@ import Tree from '../tree';
 class TreeSelect extends Component{
     constructor(props, context) {
         super(props, context);
-        let {value , initValue, mode, initAll, treeConfig } = this.props;
+        let {value , initValue } = this.props;
         value = isRealOrZero(value) ? value : initValue;
-        if(!isRealOrZero(value)){
-            switch(mode){
-                case 'multi':
-                    value = [];
-                    if(initAll){
-                        let { data, valueKey } = treeConfig||{};
-                        data = data || [];
-                        valueKey = valueKey || 'value';
-                        value = this.getNestValue(data, [], valueKey);
-                    }
-                    break;
-                case 'single':
-                default:
-                    value = undefined;
-            }
-        }
-        if(mode === 'multi' && value && !(value instanceof Array)){
-            value = [ value ];
-        }
         this.state = {
             value: value,
             text: props.text
@@ -49,19 +30,22 @@ class TreeSelect extends Component{
         }
     }
 
-    getNestValue = (arr, value = [], valueKey) => {
-        (arr||[]).forEach((item)=>{
-            value.push(item[valueKey]);
-            let children = item.children;
-            if(children && children.length){
-                value = this.getNestValue(children,value, valueKey);
-            }
-        });
-        return value;
-    }
-
     getValue = () => {
         return this.state.value;
+    }
+
+    getValueObj = (keys) => {
+        if(keys instanceof Array){
+            let obj = {};
+            keys.map((key)=>{
+                obj[key] = this.dataObj[key];
+            });
+            return obj;
+        }else if(keys){
+            return this.dataObj[keys];
+        }else{
+            return this.dataObj;
+        }
     }
 
     getFormType = () => {
@@ -78,6 +62,13 @@ class TreeSelect extends Component{
             default:
                 value = '';
         }
+        this.setState({
+            value: value
+        });
+    }
+
+    treeDidMount = (value, dataObj) => {
+        this.dataObj = dataObj;
         this.setState({
             value: value
         });
@@ -147,7 +138,7 @@ class TreeSelect extends Component{
                 <span ref={'text'}>{ text || value}</span>
             </Button>
             <div className={'treeList'} sign={'treeList'} onMouseLeave={this.keepFocus}>
-                <Tree {...this.getTreeConfig()}/>
+                <Tree {...this.getTreeConfig()} onDidMount={this.treeDidMount}/>
             </div>
         </div>;
     }
@@ -157,7 +148,6 @@ TreeSelect.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
     mode: PropTypes.string, //multi,single
-    initValue: PropTypes.any,
     value: PropTypes.any,
     initValue: PropTypes.any,
     initAll: PropTypes.any,//true/false
