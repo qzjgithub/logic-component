@@ -475,7 +475,7 @@ class Grid extends Component{
 
     triggerChange = () => {
         if(this.props.onChange){
-            let data = this.props;
+            let data = this.props.data;
             let pageInfo = JSON.parse(JSON.stringify(this.state.pagination));
             let sld = this.state.selected.map((ind) => {
                 return data[ind];
@@ -966,6 +966,14 @@ class Grid extends Component{
 Grid.propTypes = {
     className: PropTypes.string,
     data: PropTypes.array,
+    /**
+     * {
+     *  curPage: 1,
+     *  pageSize: 10,
+     *  total: 100,
+     *  onChange: function(pagination){}
+     * }
+     */
     pagination: PropTypes.object,
     /**
      * [{
@@ -976,7 +984,7 @@ Grid.propTypes = {
      * hidden:false,
      * editable: false,
      * validte:func(value,record,key,index)
-     * searcher: true/function(inputValue,record,key){},
+     * searcher: true/function(inputValue,record,key){},//某一列可搜索时设置
      * fixed: true
      * }]
      *  */
@@ -984,15 +992,15 @@ Grid.propTypes = {
     selectMode: PropTypes.string,//'multi'
     onChange: PropTypes.func,//function(pagination, selectData){}
     pageMode: PropTypes.string,//'auto','back'
-    sort: PropTypes.string,
+    sort: PropTypes.string,//当前以哪一列排序
     order: PropTypes.string,//asc,desc
     pageSizeOptions: PropTypes.array,
-    pageText1: PropTypes.string,
-    pageText2: PropTypes.string,
-    noDataText: PropTypes.string,
-    serial: PropTypes.string,
-    onEditor: PropTypes.func,
-    onSearch: PropTypes.func,
+    pageText1: PropTypes.string,//底部分页第一条文字
+    pageText2: PropTypes.string,//底部分页第二条文字
+    noDataText: PropTypes.string,//无数据的展示文字
+    serial: PropTypes.bool,//设置为true会在列表最开始展示序号
+    onEditor: PropTypes.func,//某一列格设置为可编辑时，编辑后会调用的方法function(editor, data)
+    onSearch: PropTypes.func,//设置某一列可搜索时，搜索后调用的方法function(searchData,searchInfo)
     topable: PropTypes.any,//true/false/function(record){}可以筛选出哪条数据是可以被置顶的
     validateTop: PropTypes.func,//function(record){}判断哪些是被置顶的
     onTopped: PropTypes.func,//function(toppedData){}

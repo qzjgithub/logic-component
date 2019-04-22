@@ -221,7 +221,11 @@ class Select extends Component{
         let cls = mode || 'single ';
         cls += orient ||'';
         return <div className={cls}>
-            <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
+            <Button styleType={'left'} 
+                className={'text'} 
+                sign={'text'} 
+                disabled={this.props.disabled}
+                style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
                 <span ref={'text'}>{ text || value}</span>
             </Button>
@@ -240,6 +244,7 @@ Select.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
     mode: PropTypes.string, //multi,single
+    disabled: PropTypes.bool,
     initValue: PropTypes.any,
     value: PropTypes.any,
     onSelected: PropTypes.func,

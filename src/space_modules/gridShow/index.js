@@ -91,7 +91,7 @@ class TimerShow extends Component{
                     pageMode={'auto'}
                   sort={'sex'}
                   order={'desc'}
-                  selectMode={'auto'}
+                  selectMode={'multi'}
                   serial={false}
                   onEditor={this.onEditor}
                   onRewidth={this.onRewidth}

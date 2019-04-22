@@ -1,8 +1,5 @@
 export default {
     "status": {
-        "disabled":{
-            "classTrue":"disabled"
-        },
         "opened":{
             "classTrue":"opened",
             "motivation":{

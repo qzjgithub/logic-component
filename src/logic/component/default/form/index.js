@@ -202,10 +202,10 @@ class FormItem extends Component{
 }
 
 FormItem.propTypes = {
-    label: PropTypes.any,
-    name: PropTypes.string,
-    rules: PropTypes.array,
-    noLabel: PropTypes.bool
+    label: PropTypes.any,//标签
+    name: PropTypes.string,//表单属性key,
+    rules: PropTypes.array,//[{ require: true, message: ''},{reg:/\d+/,message:''},{validate:function(value){},message: ''}]
+    noLabel: PropTypes.bool//是否不展示标签
 }
 
 Form.FormItem = FormItem;

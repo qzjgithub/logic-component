@@ -157,6 +157,7 @@ TreeSelect.propTypes = {
     mode: PropTypes.string, //multi,single
     value: PropTypes.any,
     initValue: PropTypes.any,
+    disabled: PropTypes.bool,
     initAll: PropTypes.any,//true/false
     treeConfig: PropTypes.object,
     defaultText: PropTypes.string,

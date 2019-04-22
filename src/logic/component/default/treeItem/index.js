@@ -127,7 +127,7 @@ class TreeItem extends Component{
                 type = checked ? 'fangxingxuanzhong' : 'fangxingweixuanzhong';
                 break;
             case 'single':
-                type = checked ? 'yuanxingxuanzhong': 'yuanxingweixuanzhong';
+                type = checked ? 'xuanzhong': 'yuanxingweixuanzhong';
                 break;
             case 'auto':
             default:
