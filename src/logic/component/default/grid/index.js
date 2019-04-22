@@ -52,7 +52,7 @@ class Grid extends Component{
     }
 
     initParam = (props) => {
-        let { pagination, data, sort, order, pageMode, pageSizeOptions } = props;
+        let { pagination, data, sort, order, pageMode, pageSizeOptions, selected } = props;
         if(!isArray(data)){
             data = [];
         }
@@ -86,7 +86,7 @@ class Grid extends Component{
         }
         return {
             pagination, pageSizeOptions, pageInput: pagination.curPage,
-            selected: [], sort, order
+            selected: selected || this.state.selected, sort, order
         }
     }
 
