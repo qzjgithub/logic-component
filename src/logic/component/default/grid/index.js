@@ -86,7 +86,7 @@ class Grid extends Component{
         }
         return {
             pagination, pageSizeOptions, pageInput: pagination.curPage,
-            selected: selected || this.state.selected, sort, order
+            selected: selected || (this.state||{}).selected || [], sort, order
         }
     }
 
