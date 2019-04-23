@@ -203,11 +203,11 @@ class Grid extends Component{
             Object.keys(search).forEach((ck)=>{
                 let val = search[ck];
                 if(searcher[ck]){
-                    valid = searcher[ck](val,d,ck);
+                    valid = valid && searcher[ck](val,d,ck);
                 }else{
                     let dv = d[ck];
                     if(dv && !(dv instanceof Object)){
-                        valid = dv.toString().indexOf(val) > -1;
+                        valid = valid && dv.toString().indexOf(val) > -1;
                     }
                 }
             });

@@ -6,12 +6,14 @@ const COLUMNS = [
         name: "名字",
         key: "name",
         fixed: true,
+        searcher: true,
         width: '100px',
     },
     {
         name: "性别",
         key: "sex",
         width: "400px",
+        searcher: true,
         render: (value,record,key,index) => {
             return value === 0 ? '女':'男';
         }
