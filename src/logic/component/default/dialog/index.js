@@ -59,7 +59,11 @@ Dialog.propTypes = {
     width: PropTypes.any,
     id: PropTypes.string,
     className: PropTypes.string,
-    show: PropTypes.bool
+    show: PropTypes.bool,
+    onChanged: PropTypes.func,
+    mode: PropTypes.string,//'confirm',
+    onConfirm: PropTypes.func,//'confirm'模式下存在
+    confirmText: PropTypes.string
 }
 
 

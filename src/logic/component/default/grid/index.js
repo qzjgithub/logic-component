@@ -53,6 +53,7 @@ class Grid extends Component{
 
     initParam = (props) => {
         let { pagination, data, sort, order, pageMode, pageSizeOptions, selected } = props;
+        let state = this.state||{};
         if(!isArray(data)){
             data = [];
         }
@@ -75,7 +76,8 @@ class Grid extends Component{
         }
         pagination.pageSize = pageSize;
         if(!pageMode || pageMode === 'auto'){
-            pagination.total = data.length;
+            console.log(state,pagination);
+            pagination.total = this.searchedIndex ? this.searchedIndex.length : data.length;
         }
         if(!isNumber(pagination.total)){
             pagination.total = Number(pagination.total) || 0 ;
@@ -86,7 +88,7 @@ class Grid extends Component{
         }
         return {
             pagination, pageSizeOptions, pageInput: pagination.curPage,
-            selected: selected || (this.state||{}).selected || [], sort, order
+            selected: selected || state.selected || [], sort, order
         }
     }
 
@@ -217,8 +219,8 @@ class Grid extends Component{
     }
 
     searchChange = (key, value) => {
-        let { pageMode, onSearch, data } = this.props;
-        let { search ,pagination } = this.state;
+        let { pageMode, onSearch, data, onChange } = this.props;
+        let { search ,pagination, pageInput } = this.state;
         search[key] = value;
         if(value === '' || value === undefined){
             delete search[key];
@@ -233,9 +235,11 @@ class Grid extends Component{
             this.searchData(data, search);
             pagination.total = this.searchedIndex === null ? data.length : this.searchedIndex.length;
             pagination.curPage = 1;
+            pageInput = 1;
             this.setState({
                 pagination,
-                search
+                search,
+                pageInput
             },() => {
                 onSearch && onSearch(this.sortedData,search);
             });
