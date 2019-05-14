@@ -8,6 +8,14 @@ const COLUMNS = [
         fixed: true,
         searcher: true,
         width: '100px',
+        sorter: false,
+        colspan: (value, record) => {
+            if(value === 'bbb'){
+                return 2;
+            }else{
+                return 1;
+            }
+        }
     },
     {
         name: "性别",
@@ -114,8 +122,8 @@ class TimerShow extends Component{
                         curPage: this.state.curPage,
                         pageSize: this.state.pageSize
                     }}
-                  sort={'sex'}
-                  order={'desc'}
+                //   sort={'sex'}
+                //   order={'desc'}
                   selectMode={'multi'}
                   serial={false}
                   onEditor={this.onEditor}
