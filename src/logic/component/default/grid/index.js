@@ -305,7 +305,8 @@ class Grid extends Component{
         });
     }
 
-    selectOne = (gInd) => {
+    selectOne = (gInd,selForbid) => {
+        if(selForbid) return;
         let { selectMode } = this.props;
         let { selected } = this.state;
         let ind = selected.indexOf(gInd);
@@ -696,7 +697,7 @@ class Grid extends Component{
     }
 
     getBodyDom = (data) => {
-        let { columns, validateTop } = this.props;
+        let { columns, validateTop, selectable } = this.props;
         if(validateTop && typeof validateTop === 'function'){
             this.topped = [];
         }
@@ -705,19 +706,24 @@ class Grid extends Component{
             let dom = [];
             data.forEach((d) => {
                 let gInd = d['Grid_index'];
-                let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+                let cls = this.state.selected.indexOf(gInd) > -1? ['selected']: [];
                 let topFlag = false;
                 if(validateTop && typeof validateTop === 'function'){
                     if(validateTop(d)){
-                        cls += ' topped';
+                        cls.push('topped');
                         this.topped.push(gInd);
                         topFlag = true;
                     }
                 }else if(this.topped.indexOf(gInd) > -1){
-                    cls += 'topped';
+                    cls.push('topped');
                     topFlag = true;
                 }
-                let li = <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+                let selForbid = false;
+                if(typeof selectable === 'function' && !selectable(d)){
+                    cls.push('sel-forbid');
+                    selForbid = true;
+                }
+                let li = <li className={`tr ${cls.join(' ')}`} key={gInd} onClick={() => this.selectOne(gInd,selForbid)}>
                     {
                         this.getTrDom(d,gInd)
                     }
@@ -772,7 +778,7 @@ class Grid extends Component{
 
     getTreeTrDom = (tree, treeData, level) => {
         let { treeState } = this.state;
-        let { validateTop } = this.props;
+        let { validateTop, selectable } = this.props;
         let dom = [];
         let fixedDom = [];
         Object.keys(tree).forEach((key) => {
@@ -785,19 +791,24 @@ class Grid extends Component{
             d['Grid_leaf'] = len ? false : true;
 
             let gInd = d['Grid_index'];
-            let cls = this.state.selected.indexOf(gInd) > -1? 'selected': '';
+            let cls = this.state.selected.indexOf(gInd) > -1? ['selected']: [];
             let fixedFlag = false;
             if(validateTop && typeof validateTop === 'function'){
                 if(validateTop(d)){
-                    cls += ' topped';
+                    cls.push('topped');
                     this.topped.push(gInd);
                     fixedFlag = true;
                 }
             }else if(this.topped.indexOf(gInd) > -1){
-                cls += 'topped';
+                cls.push('topped');
                 fixedFlag = true;
             }
-            let li = <li className={`tr ${cls}`} key={gInd} onClick={() => this.selectOne(gInd)}>
+            let selForbid = false;
+            if(typeof selectable === 'function' && !selectable(d)){
+                cls.push('sel-forbid');
+                selForbid = true;
+            }
+            let li = <li className={`tr ${cls.join(' ')}`} key={gInd} onClick={() => this.selectOne(gInd, selForbid)}>
                 {this.getTrDom(d,gInd)}
             </li>;
             if(fixedFlag){
@@ -953,7 +964,11 @@ class Grid extends Component{
                 fixedDom.unshift(<div className={`td serial fixed`} style={style}>{sortIndDom}</div>);
             }
         }
-        return [<div className={'gfixed-panel'} style={{'marginTop': - this.state.scrollTop}}>{fixedDom}</div>, ...dom];
+        if(fixedDom.length){
+            return [ <div className={'gfixed-panel'} style={{'marginTop': - this.state.scrollTop}}>{fixedDom}</div>, ...dom];
+        }else{
+            return dom;
+        }
     }
 
     render(){
@@ -1045,6 +1060,7 @@ Grid.propTypes = {
      *  */
     columns: PropTypes.array,
     selectMode: PropTypes.string,//'multi'
+    selectable: PropTypes.func,//function(record){}
     onChange: PropTypes.func,//function(pagination, selectData){}
     pageMode: PropTypes.string,//'auto','back','tree','none'//none表示不分页
     sort: PropTypes.string,//当前以哪一列排序

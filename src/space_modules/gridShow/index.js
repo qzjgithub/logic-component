@@ -125,6 +125,7 @@ class TimerShow extends Component{
                 //   sort={'sex'}
                 //   order={'desc'}
                   selectMode={'multi'}
+                  selectable={(record) => { return record['name']!=='bbb'}}
                   serial={false}
                   onEditor={this.onEditor}
                   onRewidth={this.onRewidth}
