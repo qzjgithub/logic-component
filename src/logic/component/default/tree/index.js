@@ -115,6 +115,10 @@ class Tree extends Component{
         openeds[order.join('-')] = loading ? 2 : ( opened ? 1 : 0 );
         this.setState({
             openeds : openeds
+        },() => {
+            if(this.props.onVisibleChange){
+                this.props.onVisibleChange(opened, roder);
+            }
         });
         if(loading){
             setTimeout(() => {

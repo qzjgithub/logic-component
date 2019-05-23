@@ -202,7 +202,7 @@ class TreeItem extends Component{
         if(children.length){
             treeItemClass += ' nonLeaf';
         }
-        let { selectMode, first, last, cable } = this.props;
+        let { selectMode, first, last, cable, customDom } = this.props;
         if(data['root']){
             treeItemClass += ' rootNode';
         }else if(first){
@@ -246,6 +246,7 @@ class TreeItem extends Component{
                 <span className={`text ${selectMode!=='multi' && checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
                     { data[this.props.textKey||this.textKey] }
                 </span>
+                { customDom && typeof customDom === 'function' ? customDom(data) : customDom }
             </p>
             <div className={'list'} ref={"list"} style={style}>{ this.props.children }</div>
         </section>
@@ -263,6 +264,7 @@ TreeItem.propTypes = {
     selectMode: PropTypes.string,//multi,single,auto
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
+    customDom: PropTypes.string,
     value: PropTypes.any,
     cable: PropTypes.bool//是否无连接
 }

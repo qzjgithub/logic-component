@@ -69,7 +69,7 @@ class Form extends Component{
     }
 
     render(){
-        return <section className={'Form'}>
+        return <section className={`Form ${this.props.className||''}`}>
             { this.getChildren() }
         </section>
     }
