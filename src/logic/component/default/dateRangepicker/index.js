@@ -151,7 +151,7 @@ class DateRangepicker extends Component{
         if(start && end && valid){
             valid = start.getValid(startDate) && end.getValid(endDate);
         }
-        return { startDate , endDate , valid }
+        return { startDate: moment(startDate) , endDate: moment(endDate) , valid }
     }
 
     getFormType = () => {
