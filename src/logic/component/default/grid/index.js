@@ -301,6 +301,9 @@ class Grid extends Component{
         this.setState({
             selected
         },() => {
+            if(this.props.onAllClick){
+                this.props.onAllClick(selected.map((gi) => this.props.data[gi]),!!selected.length);
+            }
             this.triggerChange();
         });
     }
@@ -320,6 +323,9 @@ class Grid extends Component{
         this.setState({
             selected
         },() => {
+            if(this.props.onItemClick){
+                this.props.onItemClick(this.props.data[gInd],ind < 0, gInd);
+            }
             this.triggerChange();
         })
     }
@@ -778,12 +784,17 @@ class Grid extends Component{
 
     getTreeTrDom = (tree, treeData, level) => {
         let { treeState } = this.state;
-        let { validateTop, selectable } = this.props;
+        let { validateTop, selectable, pageMode, pagination } = this.props;
+        let { curPage, pageSize } = pagination;
         let dom = [];
         let fixedDom = [];
         Object.keys(tree).forEach((key) => {
             let d = treeData[key];
-            d['Grid_show_index'] = this.showIndex;
+            let gsi = this.showIndex;
+            if(pageMode === 'back'){
+                gsi += (curPage - 1) * pageSize;
+            }
+            d['Grid_show_index'] = gsi;
             this.showIndex++;
             let t = tree[key];
             let len = Object.keys(t).length;
@@ -1061,7 +1072,10 @@ Grid.propTypes = {
     columns: PropTypes.array,
     selectMode: PropTypes.string,//'multi'
     selectable: PropTypes.func,//function(record){}
+    selected: PropTypes.array,//被选中的数据编号
     onChange: PropTypes.func,//function(pagination, selectData){}
+    onItemClick: PropTypes.func,//当某条数据被点击时，不可选中的数据不能被点击
+    onAllClick: PropTypes.func,//全选被点击时
     pageMode: PropTypes.string,//'auto','back','tree','none'//none表示不分页
     sort: PropTypes.string,//当前以哪一列排序
     order: PropTypes.string,//asc,desc
