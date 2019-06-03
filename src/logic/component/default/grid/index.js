@@ -123,8 +123,9 @@ class Grid extends Component{
         switch(pageMode){
             case 'none':
             case 'back':
+                let begin = ((curPage||1) - 1) * pageSize;
                 data.forEach((d,i) => {
-                    d['Grid_show_index'] = i;
+                    d['Grid_show_index'] = begin + i;
                     let ind = d['Grid_index'];
                     this.displayIndex.push(ind);
                 });
@@ -790,11 +791,7 @@ class Grid extends Component{
         let fixedDom = [];
         Object.keys(tree).forEach((key) => {
             let d = treeData[key];
-            let gsi = this.showIndex;
-            if(pageMode === 'back'){
-                gsi += (curPage - 1) * pageSize;
-            }
-            d['Grid_show_index'] = gsi;
+            d['Grid_show_index'] = this.showIndex;
             this.showIndex++;
             let t = tree[key];
             let len = Object.keys(t).length;
