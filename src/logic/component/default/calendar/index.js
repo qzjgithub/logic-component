@@ -485,7 +485,7 @@ class Calendar extends Component{
 
 Calendar.propTypes = {
     format: PropTypes.string,//YYYY-MM-DD HH:mm:ss
-    disableDate: PropTypes.func,
+    disableDate: PropTypes.func,//(current) => { return true;}
     initDate: PropTypes.object,//没有默认当前时间
     timerConfig: PropTypes.any,//false表示不展示，配置则读取
     lang: PropTypes.string,
