@@ -23,6 +23,7 @@ module.exports.Datepicker = require('./component/default/datepicker').default;
 module.exports.DateRangepicker = require('./component/default/dateRangepicker').default;
 module.exports.TreeSelect = require('./component/default/treeSelect').default;
 module.exports.Pagination = require('./component/default/pagination').default;
+module.exports.Dragger = require('./component/default/dragger').default;
 
 const Status = require('./common/Status').default;
 const Motivation = require('./common/Motivation').default;

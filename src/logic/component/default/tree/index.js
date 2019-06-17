@@ -239,7 +239,7 @@ Tree.propTypes = {
     search: PropTypes.bool,
     onTextClick: PropTypes.func,
     selectMode: PropTypes.string,//multi,single,auto
-    selectable: PropTypes.func,
+    selectable: PropTypes.func,//function(item){}
     valueKey: PropTypes.string,
     value: PropTypes.any,
     initAll: PropTypes.bool,//true/false
