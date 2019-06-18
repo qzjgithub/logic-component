@@ -53,7 +53,7 @@ class Dragger extends Component{
         let { children } = this.props;
         if(!children){
             children = [];
-        }else if(!children.length){
+        }else if(typeof children.length !== 'number'){
             children = [ children ];
         }
         let len = children.length;
@@ -126,7 +126,7 @@ class DragItem extends Component{
             onDragStart={this.dragStart}
             onDragOver={this.dragOver}
             onDrop={this.drop}
-            onDragEnd={this.dranEnd}
+            onDragEnd={this.dragEnd}
         >
             {this.props.children}
         </li>
