@@ -58,7 +58,7 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
   .gfixed-panel{
     position: absolute;
-    height: 26px;
+    // height: 26px;
     left: 0;
     display: flex;
     flex-direction: row;
@@ -85,7 +85,6 @@ normalActive = rgba(sc,sc,sc,0.2);
     cursor: pointer;
     box-sizing: border-box;
     line-height: 26px;
-    height: 26px;
     word-break: keep-all;
     overflow: hidden;
     white-space: nowrap;
@@ -116,6 +115,11 @@ normalActive = rgba(sc,sc,sc,0.2);
     }
     &>a.rewidth:focus{
       background-color: #ffffff;
+    }
+    &>span{
+      display: inline-flex;
+      height: 100%;
+      align-items: center;
     }
   }
   ul>.th:last-child{
@@ -155,6 +159,22 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
   .th.select,.th.serial,.th.gsearch:hover{
     background: rgba(0,0,0,0.4);
+  }
+  .th.with-child{
+    &>p{
+      margin: 0;
+    }
+    &>ul{
+      display: flex;
+      flex-direction: row;
+      &>li{
+        flex: auto;
+      }
+    }
+    &>ul>.th:last-child{
+      margin-right: 0;
+      border-right: 0;
+    }
   }
 }
 .Grid-body{

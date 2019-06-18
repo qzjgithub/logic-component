@@ -30,7 +30,7 @@ const COLUMNS = [
         name: "年龄",
         key: "age",
         width: '100px',
-        searcher: true,
+        searcher: false,
         editable: true,
         validate: (value,record,key,index) => {
             return !!value;
@@ -44,36 +44,52 @@ const COLUMNS = [
                 return 0;
             }
         }
+    },
+    {
+        name: "成绩",
+        key: "grade",
+        children: [
+            {
+                name: "语文",
+                key: "lang",
+                width: "100px"
+            },
+            {
+                name: "数学",
+                key: "math",
+                width: "100px"
+            }
+        ],
     }
 ]
 
 const DATA = [
-    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: ''},
-    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1},
-    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2},
-    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2},
-    { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3},
-    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3},
-    { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3},
-    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2},
-    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: ''},
-    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9},
-    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9},
-    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11},
-    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11},
-    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: ''},
-    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1},
-    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2},
-    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2},
-    { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3},
-    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3},
-    { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3},
-    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2},
-    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: ''},
-    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9},
-    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9},
-    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11},
-    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11},
+    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80},
+    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: '',lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80},
+    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80},
+    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: '',lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80},
 ]
 
 class TimerShow extends Component{

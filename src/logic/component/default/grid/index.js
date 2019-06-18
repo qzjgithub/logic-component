@@ -552,11 +552,11 @@ class Grid extends Component{
             let comFixed = true;
             let hasFixed = false;
             let fixedDom = [];
-            let dom = columns.map((column) => {
-                let { name, key, hidden ,width, fixed } = column;
+            let getCol = (col, isChild) => {
+                let { name, key, hidden ,width, fixed, children } = col;
                 if(hidden) return '';
-                width = widthRecord[key] || width;
 
+                width = widthRecord[key] || width;
                 let style = {};
                 if(width){
                     style = {
@@ -564,26 +564,44 @@ class Grid extends Component{
                         flex: 'none'
                     }
                 }
-                comFixed = comFixed && !!fixed;
+                comFixed = comFixed && (isChild || !!fixed);
                 hasFixed = hasFixed || !!fixed;
-                if(comFixed){
-                    fixedDom.push(<li className={'th fixed'} 
+
+                let getMultiLi = (cls) => {
+                    return <li className={`with-child ${cls}`}>
+                        <p title={name}>
+                            {name}
+                        </p>
+                        <ul>{children.map((c)=>{
+                            return getCol(c,true);
+                        })}</ul>
+                    </li>
+                }
+
+                if(children && children.length){
+                    if(comFixed && !isChild){
+                        fixedDom.push(getMultiLi('th fixed'));
+                    }
+                    return getMultiLi(`th${comFixed?' fixed-hide':''}`);
+                }
+                let getNormalLi = (cls) => {
+                    return <li className={cls} 
                         style={ style } 
                         onClick={() => this.setSort(key)} 
                         title={name}>
-                    <a className={'rewidth'} 
-                        onMouseDown={(e) => this.startRewidth(e,key)}> </a>
-                    <span>{name}</span>
-                    {this.getSortIcon(key,sort,order)}
-                </li>);
+                        <a className={'rewidth'} 
+                            onMouseDown={(e) => this.startRewidth(e,key)}> </a>
+                        <span>{name}</span>
+                        {this.getSortIcon(key,sort,order)}
+                    </li>
                 }
-                let cls = `th${comFixed?' fixed-hide':''}`;
-                return <li className={cls} style={ style } onClick={() => this.setSort(key)} title={name}>
-                    <a className={'rewidth'} 
-                        onMouseDown={(e) => this.startRewidth(e,key)}> </a>
-                    <span>{name}</span>
-                    {this.getSortIcon(key,sort,order)}
-                </li>
+                if(comFixed){
+                    fixedDom.push(getNormalLi('th fixed'));
+                }
+                return getNormalLi(`th${comFixed?' fixed-hide':''}`);
+            }
+            let dom = columns.map((column) => {
+                return getCol(column);
             });
             if(topable){
                 dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`}> </li>);
@@ -646,8 +664,8 @@ class Grid extends Component{
             let comFixed = true;
             let hasFixed = false;
             let fixedDom = [];
-            let dom = columns.map((column) => {
-                let { key, hidden ,width,searcher, fixed} = column;
+            let getCol = (column,pfixed) => {
+                let { key, hidden ,width,searcher, fixed, children } = column;
                 if(hidden) return '';
                 width = widthRecord[key] || width;
                 let style = {};
@@ -659,16 +677,28 @@ class Grid extends Component{
                 }
                 hasSearch = hasSearch || !!searcher;
 
+                fixed = pfixed === undefined ? fixed : pfixed;
                 comFixed = comFixed && !!fixed;
                 hasFixed = hasFixed || !!fixed;
-                if(comFixed){
-                    fixedDom.push(<div className={`th gsearch fixed`} style={ style }>
-                        {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
-                    </div>);
+                if(children && children.length){
+                    return <React.Fragment>
+                        {children.map((c)=>{
+                            return getCol(c,fixed);
+                        })}
+                    </React.Fragment>;
                 }
-                return <div className={`th gsearch${comFixed ? ' fixed-hide':''}`} style={ style }>
-                    {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
-                </div>
+                let getNormalDom = (cls) => {
+                    return <div className={cls} style={ style }>
+                        {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
+                    </div>
+                }
+                if(comFixed){
+                    fixedDom.push(getNormalDom('th gsearch fixed'));
+                }
+                return getNormalDom(`th gsearch${comFixed ? ' fixed-hide':''}`);
+            }
+            let dom = columns.map((column) => {
+                return getCol(column);
             });
             if(!hasSearch){
                 return '';
@@ -854,77 +884,85 @@ class Grid extends Component{
         let hasFixed = false;
         let fixedDom = [];
         let dom = [];
-        for(let i = 0; i < columns.length; ){
-            let column = columns[i];
-            let { hidden, width, render, key, editable, validate, fixed, colspan } = column;
-            if(hidden){
-                return '';
-            }
-            let value = d[key];
-            let style = {};
-            width = widthRecord[key] || width;
-            if(typeof colspan === 'function'){
-                colspan = colspan(value,d,key,gInd);
-            }
-            if(isNaN(colspan)){
-                colspan = 1;
-            }
-            if(colspan > 1){
-                let widthArr = [];
-                while(colspan > 0){
-                    let col = columns[i];
-                    widthArr.push(widthRecord[col['key']] || col['width']);
+        let getColTr = (cols, pfixed) => {
+            for(let i = 0; i < cols.length; ){
+                let column = cols[i];
+                let { hidden, width, render, key, editable, validate, fixed, colspan, children } = column;
+                if(hidden){
+                    return '';
+                }
+                let value = d[key];
+                let style = {};
+                width = widthRecord[key] || width;
+                if(typeof colspan === 'function'){
+                    colspan = colspan(value,d,key,gInd);
+                }
+                if(isNaN(colspan)){
+                    colspan = 1;
+                }
+                if(colspan > 1){
+                    let widthArr = [];
+                    while(colspan > 0){
+                        let col = columns[i];
+                        widthArr.push(widthRecord[col['key']] || col['width']);
+                        i++;
+                        colspan--;
+                    }
+                    width = `calc(${widthArr.join(' + ')})`;
+                }else{
                     i++;
-                    colspan--;
                 }
-                width = `calc(${widthArr.join(' + ')})`;
-            }else{
-                i++;
-            }
-            if(width){
-                style = {
-                    width,
-                    flex: 'none'
+                if(width){
+                    style = {
+                        width,
+                        flex: 'none'
+                    }
                 }
-            }
-            if(treeColumn && treeColumn === key){
-                style['textAlign'] = 'left';
-                style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
-            }
-            let cls = 'td';
-            cls += editable ? ' editable':'';
-            cls += treeColumn && treeColumn === key?' treesign':'';
-            cls += treeColumn && treeColumn === key && treeState[d[treeKey]] === false ? ' treehide' : '';
-
-            comFixed = comFixed && !!fixed;
-            hasFixed = hasFixed || !!fixed;
-
-
-            let getDiv = (isFixed , isHide, clz) => {
-                if(isFixed && isHide){
-                    clz += ' fixed-hide';
-                }else if(isFixed && !isHide){
-                    clz += ' fixed';
+                if(treeColumn && treeColumn === key){
+                    style['textAlign'] = 'left';
+                    style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
                 }
-                return <div className={clz} 
-                    title={value}
-                    style={style} 
-                    contentEditable={editable} 
-                    onClick={(e)=> this.editClick(e,editable)}
-                    onFocus={(e)=> this.editFocus(e,d,key)}
-                    onBlur={(e) => this.editBlur(e,d,key,validate)}>
-                        { treeColumn && treeColumn === key && 
-                            (d['Grid_leaf'] ? <Icon type={'item'}/> : 
-                            <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
-                        {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
-                </div>
-            }
+                let cls = 'td';
+                cls += editable ? ' editable':'';
+                cls += treeColumn && treeColumn === key?' treesign':'';
+                cls += treeColumn && treeColumn === key && treeState[d[treeKey]] === false ? ' treehide' : '';
+    
+                fixed = pfixed === undefined ? fixed : pfixed;
+                comFixed = comFixed && !!fixed;
+                hasFixed = hasFixed || !!fixed;
 
-            if(comFixed){
-                fixedDom.push(getDiv(comFixed, false, cls));
+                if(children && children.length){
+                    getColTr(children);
+                    break;
+                }
+    
+                let getDiv = (isFixed , isHide, clz) => {
+                    if(isFixed && isHide){
+                        clz += ' fixed-hide';
+                    }else if(isFixed && !isHide){
+                        clz += ' fixed';
+                    }
+                    return <div className={clz} 
+                        title={value}
+                        style={style} 
+                        contentEditable={editable} 
+                        onClick={(e)=> this.editClick(e,editable)}
+                        onFocus={(e)=> this.editFocus(e,d,key)}
+                        onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                            { treeColumn && treeColumn === key && 
+                                (d['Grid_leaf'] ? <Icon type={'item'}/> : 
+                                <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                            {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
+                    </div>
+                }
+    
+                if(comFixed){
+                    fixedDom.push(getDiv(comFixed, false, cls));
+                }
+                dom.push(getDiv(comFixed, true, cls));
             }
-            dom.push(getDiv(comFixed, true, cls));
         }
+        getColTr(columns);
         if(topable){
             let cls = 'td topsign';
             let getDiv = (isFixed, isHide, clz) => {
@@ -1064,6 +1102,7 @@ Grid.propTypes = {
      * searcher: true/function(inputValue,record,key){},//某一列可搜索时设置
      * fixed: true,
      * colspan: 1/function(value,record,key,index),//数字或者方法返回的数字，默认是1
+     * children: []//数组内为对象，每个对象参数和columns一级参数一致。当一次参数存在children时，值对一级的name,key,fixed,hidden生效。children的fixed无效
      * }]
      *  */
     columns: PropTypes.array,
