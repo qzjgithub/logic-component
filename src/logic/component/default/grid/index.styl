@@ -83,7 +83,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     text-align: center;
     border-right: 1px solid #3d718f;
     cursor: pointer;
-    box-sizing: border-box;
+    box-sizing: content-box;
     line-height: 26px;
     word-break: keep-all;
     overflow: hidden;
@@ -169,6 +169,7 @@ normalActive = rgba(sc,sc,sc,0.2);
       flex-direction: row;
       &>li{
         flex: auto;
+        background: none;
       }
     }
     &>ul>.th:last-child{
@@ -189,7 +190,7 @@ normalActive = rgba(sc,sc,sc,0.2);
       flex: auto;
       text-align: center;
       border-right: 1px solid #3d718f;
-      box-sizing: border-box;
+      box-sizing: content-box;
       // word-break: keep-all;
       // overflow: hidden;
       // white-space: nowrap;

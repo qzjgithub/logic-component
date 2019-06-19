@@ -60,11 +60,27 @@ const COLUMNS = [
                 width: "100px"
             }
         ],
+    },
+    {
+        name: "家人",
+        key: "family",
+        children: [
+            {
+                name: "母亲",
+                key: "mathor",
+                width: "100px"
+            },
+            {
+                name: "父亲",
+                key: "fathor",
+                width: "100px"
+            }
+        ],
     }
 ]
 
 const DATA = [
-    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80},
+    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80,mathor:'mathor1',fathor:'fathor1'},
     { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80},

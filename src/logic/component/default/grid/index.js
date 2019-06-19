@@ -87,7 +87,9 @@ class Grid extends Component{
         }
         return {
             pagination, pageSizeOptions, pageInput: pagination.curPage,
-            selected: selected || state.selected || [], sort, order
+            selected: selected || state.selected || [], 
+            sort: sort===undefined ? state.sort : sort, 
+            order: order===undefined ? state.order : order
         }
     }
 
@@ -930,36 +932,35 @@ class Grid extends Component{
                 fixed = pfixed === undefined ? fixed : pfixed;
                 comFixed = comFixed && !!fixed;
                 hasFixed = hasFixed || !!fixed;
-
                 if(children && children.length){
                     getColTr(children);
-                    break;
-                }
-    
-                let getDiv = (isFixed , isHide, clz) => {
-                    if(isFixed && isHide){
-                        clz += ' fixed-hide';
-                    }else if(isFixed && !isHide){
-                        clz += ' fixed';
+                }else{
+                    let getDiv = (isFixed , isHide, clz) => {
+                        if(isFixed && isHide){
+                            clz += ' fixed-hide';
+                        }else if(isFixed && !isHide){
+                            clz += ' fixed';
+                        }
+                        return <div className={clz} 
+                            title={value}
+                            style={style} 
+                            contentEditable={editable} 
+                            onClick={(e)=> this.editClick(e,editable)}
+                            onFocus={(e)=> this.editFocus(e,d,key)}
+                            onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                                { treeColumn && treeColumn === key && 
+                                    (d['Grid_leaf'] ? <Icon type={'item'}/> : 
+                                    <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                                {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
+                        </div>
                     }
-                    return <div className={clz} 
-                        title={value}
-                        style={style} 
-                        contentEditable={editable} 
-                        onClick={(e)=> this.editClick(e,editable)}
-                        onFocus={(e)=> this.editFocus(e,d,key)}
-                        onBlur={(e) => this.editBlur(e,d,key,validate)}>
-                            { treeColumn && treeColumn === key && 
-                                (d['Grid_leaf'] ? <Icon type={'item'}/> : 
-                                <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
-                            {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
-                    </div>
+        
+                    if(comFixed){
+                        fixedDom.push(getDiv(comFixed, false, cls));
+                    }
+                    dom.push(getDiv(comFixed, true, cls));
                 }
     
-                if(comFixed){
-                    fixedDom.push(getDiv(comFixed, false, cls));
-                }
-                dom.push(getDiv(comFixed, true, cls));
             }
         }
         getColTr(columns);
