@@ -21,6 +21,7 @@ const COLUMNS = [
         name: "性别",
         key: "sex",
         width: "400px",
+        hidden: true,
         searcher: true,
         render: (value,record,key,index) => {
             return value === 0 ? '女':'男';

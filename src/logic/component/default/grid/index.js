@@ -887,11 +887,13 @@ class Grid extends Component{
         let fixedDom = [];
         let dom = [];
         let getColTr = (cols, pfixed) => {
-            for(let i = 0; i < cols.length; ){
+            let i = 0;
+            for(; i < cols.length; ){
                 let column = cols[i];
                 let { hidden, width, render, key, editable, validate, fixed, colspan, children } = column;
                 if(hidden){
-                    return '';
+                    i++;
+                    continue;
                 }
                 let value = d[key];
                 let style = {};
