@@ -447,7 +447,7 @@ class Calendar extends Component{
             timerConfig = this.genTimerConfig(moment(this.state.date));
         }
         let { hour, minute, second } = this.state;
-        timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });
+        timerConfig = Object.assign({ orient: 'up' },timerConfig || {},{ hour, minute, second });
         let leftDisabled = false;
         let cur = moment().year(this.state.year).month(this.state.month);
         if(this.minDate && this.minDate.isSameOrAfter(cur,'month')){
