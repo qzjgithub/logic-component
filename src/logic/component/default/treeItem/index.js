@@ -243,7 +243,7 @@ class TreeItem extends Component{
                 <i> </i>
                 { this.getSelectOperate() }
                 { (this.props.iconEnable||this.iconEnable) && this.getIconDom(data)}
-                <span className={`text ${selectMode!=='multi' && checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
+                <span className={`text ${checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
                     { data[this.props.textKey||this.textKey] }
                 </span>
                 { customDom && typeof customDom === 'function' ? customDom(data) : customDom }
