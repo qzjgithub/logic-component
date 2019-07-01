@@ -31,7 +31,7 @@ class SelectShow extends Component{
                 <Option value={'3'}>potato</Option>
             </Select>
 
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'} getText={this.getText}>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'}>
                 <Option value={'1'}>apple</Option>
                 <Option value={'2'}>orange</Option>
                 <Option value={'3'}>banana</Option>

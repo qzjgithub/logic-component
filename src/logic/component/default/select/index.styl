@@ -57,9 +57,24 @@
   }
 
   &.multi{
-    min-width: 200px;
+    width: 200px;
     .Button:hover{
       opacity : 1;
+    }
+    & > .text > span{
+      width: 100%;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    & > .text:hover{
+      overflow: visible;
+      &>span{
+        white-space: pre-line;
+        box-shadow: 0 0 6px rgba(0,0,0,0.4);
+        padding: 0 5px;
+        box-sizing: border-box;
+      }
     }
     &>.list>li{
       &.checked{
