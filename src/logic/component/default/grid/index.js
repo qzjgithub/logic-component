@@ -924,6 +924,7 @@ class Grid extends Component{
                 }
                 if(treeColumn && treeColumn === key){
                     style['textAlign'] = 'left';
+                    style['justifyContent'] = 'start';
                     style['paddingLeft'] = TREE_PAD * d['Grid_level'] + 'px';
                 }
                 let cls = 'td';
