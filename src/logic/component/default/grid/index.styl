@@ -90,6 +90,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    box-sizing: border-box;
     &>svg.sort{
       width: 10px;
       fill: #32878a;
@@ -161,8 +162,10 @@ normalActive = rgba(sc,sc,sc,0.2);
     background: rgba(0,0,0,0.4);
   }
   .th.with-child{
+    border-right: 0;
     &>p{
       margin: 0;
+      border-right: 1px solid #3d718f;
     }
     &>ul{
       display: flex;
@@ -174,7 +177,6 @@ normalActive = rgba(sc,sc,sc,0.2);
     }
     &>ul>.th:last-child{
       margin-right: 0;
-      border-right: 0;
     }
   }
 }
@@ -200,6 +202,7 @@ normalActive = rgba(sc,sc,sc,0.2);
       align-items: center;
       padding: 6px 0;
       word-break: break-word;
+      box-sizing: border-box;
     }
     &>.td.fixed{
     }
