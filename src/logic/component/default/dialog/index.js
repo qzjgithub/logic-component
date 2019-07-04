@@ -8,9 +8,12 @@ import './index.styl';
 import Icon from '../icon';
 
 class Dialog extends Component{
+    startPosition = {};
     constructor(props, context) {
         super(props, context);
         this.state = {
+            top: 0,
+            left: 0
         }
     }
 
@@ -38,10 +41,35 @@ class Dialog extends Component{
         });
     }
 
+    dragStart = (e) => {
+        this.startPosition = {x: e.pageX, y: e.pageY };
+    }
+
+    dragEnd = (e) => {
+        let { top, left } = this.state;
+        let { x, y } = this.startPosition;
+        top += e.pageY - y;
+        left += e.pageX - x;
+        this.setState({
+            top,
+            left
+        });
+    }
+
     render(){
-        return <section id={this.props.id || `dialog_${new Date().getTime()}`} className={this.props.className||''}>
+        let { className, penetrate, draggable } = this.props;
+        let { top, left } = this.state;
+        let cls = [];
+        className && cls.push(className);
+        penetrate && cls.push('penetrate');
+        draggable && cls.push('draggable');
+        return <section id={this.props.id || `dialog_${new Date().getTime()}`} className={cls.join(' ')}>
             <div>
-                <article style={{ height: this.props.height||'',width: this.props.width||''}}>
+                <article style={{ height: this.props.height||'',width: this.props.width||'', top: top, left: left}}
+                    draggable={!!draggable}
+                    onDragStart={this.dragStart}
+                    onDragEnd={this.dragEnd}
+                >
                     <header className={'title'}>
                         <span>{this.props.title}</span>
                         <span className={"cross-close"} sign="close"><Icon type={'guanbi1'}/></span>
@@ -61,9 +89,11 @@ Dialog.propTypes = {
     className: PropTypes.string,
     show: PropTypes.bool,
     onChanged: PropTypes.func,
-    mode: PropTypes.string,//'confirm',
+    mode: PropTypes.string,//'confirm',//暂未实现
     onConfirm: PropTypes.func,//'confirm'模式下存在
-    confirmText: PropTypes.string
+    confirmText: PropTypes.string,
+    penetrate: PropTypes.bool,//是否允许弹框下的元素事件响应
+    draggable: PropTypes.bool,//弹框是否可拖拽
 }
 
 

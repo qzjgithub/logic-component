@@ -49,6 +49,21 @@ lineColor = #116d75;
     opacity: 0.6;
   }
 }
+.Dialog.penetrate{
+  pointer-events: none;
+  background-color: transparent;
+  &>div>article{
+    pointer-events: all;
+  }
+}
+.Dialog.draggable{
+  header.title{
+    cursor: all-scroll;
+  }
+  &>div>article{
+    position: relative;
+  }
+}
 .Dialog.hide{
   display: none;
 }
