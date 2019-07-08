@@ -474,6 +474,12 @@ class Grid extends Component{
         }
     }
 
+    clearSelected = () => {
+        this.setState({
+            selected: []
+        });
+    }
+
     setTop = (e, gInd) => {
         e.stopPropagation();
         let i = this.topped.indexOf(gInd);
