@@ -358,6 +358,17 @@ class Grid extends Component{
             pageInput: e.target.value
         });
     }
+    
+    pageInputConfirm = (e) => {
+        console.log(e);
+        if(e === 13){
+            let { pagination } = this.state;
+            pagination.curPage = e.target.value;
+            this.setState({
+                pagination
+            });
+        }
+    }
 
     startRewidth = (e,key) => {
         let offsetParent = e.target.offsetParent;
@@ -1022,6 +1033,7 @@ class Grid extends Component{
     }
 
     render(){
+        console.log(this.state.pagination);
         let data = this.getDisplayData();
         let { curPage, pages } = this.state.pagination;
 
@@ -1060,7 +1072,7 @@ class Grid extends Component{
                         <Icon type={'fast-backward'} className={prevDisabled}/>
                     </PageElement>
                     <PageElement type={'page'} event={'onKeyUp'} param={(e) => e.target.value}>
-                        <input onKeyUp={(e) => e.code === 13} onInput={this.pageInputChange} value={this.state.pageInput}/>
+                        <input onKeyUp={(e) => e.keyCode === 13 } onInput={this.pageInputChange} value={this.state.pageInput}/>
                     </PageElement>
                     <PageElement type={'text'} text={this.getPageText1}/>
                     <PageElement type={'next'} event={'onClick'}>
