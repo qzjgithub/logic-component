@@ -1033,7 +1033,6 @@ class Grid extends Component{
     }
 
     render(){
-        console.log(this.state.pagination);
         let data = this.getDisplayData();
         let { curPage, pages } = this.state.pagination;
 
