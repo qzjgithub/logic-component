@@ -187,7 +187,7 @@ class Select extends Component{
             value
         },() => {
             if(this.props.onSelected){
-                this.props.onSelected(values,this.text);
+                this.props.onSelected(value,this.text);
             }
         });
     }
