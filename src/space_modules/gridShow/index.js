@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Grid } from '../../logic';
+import { Grid, Button } from '../../logic';
 
 const COLUMNS = [
     {
@@ -9,6 +9,7 @@ const COLUMNS = [
         searcher: true,
         width: '100px',
         sorter: false,
+        editable: true,
         colspan: (value, record) => {
             if(value === 'bbb'){
                 return 2;
@@ -109,7 +110,7 @@ const DATA = [
     { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80},
 ]
 
-class TimerShow extends Component{
+class GridShow extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
@@ -143,8 +144,14 @@ class TimerShow extends Component{
         });
     }
 
+    clearEditor = () => {
+        let grid = this.refs['grid'];
+        grid.clearEditor();
+    }
+
     render(){
         return <div className={'Show'}>
+            <Button onClick={this.clearEditor}>清空修改</Button>
             <Grid columns={COLUMNS}
                     ref="grid"
                     topable={(record) => { return record.age > 40 }}
@@ -170,4 +177,4 @@ class TimerShow extends Component{
 }
 
 
-export default TimerShow;
+export default GridShow;

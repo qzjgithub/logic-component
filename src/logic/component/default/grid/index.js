@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Button from '../button';
 import Input from '../input';
 import Icon from '../icon';
 import Pagination from '../pagination';
@@ -31,7 +30,8 @@ class Grid extends Component{
             search: {},
             searched: false,
             treeState: {},
-            scrollTop: 0
+            scrollTop: 0,
+            hideBody: false,//可编辑某单元格时，清空已编辑数据所用
         },this.initParam(props));
     }
 
@@ -462,9 +462,28 @@ class Grid extends Component{
         });
     }
 
-    clearEditor = () => {
+    clearEditor = (index, key) => {
+        let editor = this.state.editor;
+        let indf = isRealOrZero(index);
+        let keyf = isRealOrZero(key);
+        if(indf && keyf && editor[index]){
+            delete editor[index][key];
+        }else if(indf && !keyf){
+            delete editor[index];
+        }else if(!indf && keyf){
+            Object.keys(editor).forEach((k)=>{
+                delete editor[k][key];
+            });
+        }else{
+            editor = {};
+        }
         this.setState({
-            editor : {}
+            editor : editor,
+            hideBody: true
+        },() => {
+            this.setState({
+                hideBody: false
+            });
         });
     }
 
@@ -1062,11 +1081,11 @@ class Grid extends Component{
                     <ul>{ this.getHeaderDom() }</ul>
                     { this.getSearchDom() }
                 </header>
-                <div className={'scroll-y'} onScroll={this.bodyScroll}>
-                    <ul className={`Grid-body ${pageMode === 'tree'?'treesign':''}`}>
+                {!this.state.hideBody && <div className={'scroll-y'} onScroll={this.bodyScroll}>
+                    <ul className={`Grid-body ${pageMode === 'tree'?'treesign':''}`} ref={'body'}>
                         { pageMode === 'tree' ? this.getTreeBodyDom(data) : this.getBodyDom(data) }
                     </ul>
-                </div>
+                </div>}
             {pageMode !== 'tree' && pageMode !== 'none' && <footer className={'Grid-footer'}>
                 <Pagination {...this.state.pagination} onChange={this.pageChange}>
                     <p> </p>
