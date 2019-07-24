@@ -1,7 +1,35 @@
-// import 'antd/lib/date-picker/style/index.css';
-// import 'antd/lib/input/style/index.css';
-// import './component/default/ASSETS/font/iconfont.css';
 import './component/default/ASSETS/common.styl';
+
+const COMP = ['button','grid','input','checkbox','select',
+            'topSlip','tree','treeItem','cutover','dialog',
+            'icon','loading','menu','form','timer','calendar',
+            'datepicker','dateRangepicker','treeSelect','dragger'];
+const Status = require('./common/Status').default;
+const Motivation = require('./common/Motivation').default;
+const GenLogic = require('./common/GenLogic').default;
+const logical = require('./common/logical').default;
+const Util = require('./common/Util');
+const NestedEvent = require('./common/NestedEvent');
+const SequenceEvent = require('./common/SequenceEvent');
+const Logic = {
+    Status,
+    Motivation,
+    GenLogic,
+    logical,
+    NestedEvent,
+    SequenceEvent,
+    Util
+};
+
+module.exports.Logic = Logic;
+
+/* function exportType(type){
+    COMP.forEach((item)=>{
+        module.exports[Util.upFirstWord(item)] = require(`./component/${type}/${item}`).default;
+    });
+}
+
+exportType('default'); */
 
 module.exports.Button = require('./component/default/button').default;
 module.exports.Grid = require('./component/default/grid').default;
@@ -24,22 +52,3 @@ module.exports.DateRangepicker = require('./component/default/dateRangepicker').
 module.exports.TreeSelect = require('./component/default/treeSelect').default;
 module.exports.Pagination = require('./component/default/pagination').default;
 module.exports.Dragger = require('./component/default/dragger').default;
-
-const Status = require('./common/Status').default;
-const Motivation = require('./common/Motivation').default;
-const GenLogic = require('./common/GenLogic').default;
-const logical = require('./common/logical').default;
-const Util = require('./common/Util');
-const NestedEvent = require('./common/NestedEvent');
-const SequenceEvent = require('./common/SequenceEvent');
-const Logic = {
-    Status,
-    Motivation,
-    GenLogic,
-    logical,
-    NestedEvent,
-    SequenceEvent,
-    Util
-};
-
-module.exports.Logic = Logic;
