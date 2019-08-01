@@ -19,7 +19,7 @@ class DateRangepickerShow extends Component{
             <DateRangepicker 
                 initStart={moment()}
                 initEnd={moment()}
-                hasClear={false}
+                hasClear={true}
                 format={'YYYY-MM-DD'}
                 startConfig={{
                     minDate: moment(),

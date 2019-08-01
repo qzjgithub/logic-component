@@ -200,6 +200,7 @@ class DateRangepicker extends Component{
         if(!text){
             text = this.props.defaultText || '请选择时间段';
         }
+        let hasClear = this.props.hasClear;
         return <div>
             <Button sign={'text'} className={'text'} disabled={this.props.disabled}>
                 <span ref={'text'}>{ text }</span>
@@ -212,9 +213,9 @@ class DateRangepicker extends Component{
                 <Calendar {...this.getStartConfig()} ref={'start'}/>
                 <Calendar {...this.getEndConfig()} ref={'end'}/>
                 <p className={'control'}>
-                    {this.props.hasClear !== false && ( start || end ) && 
+                    {hasClear !== false && ( !!start || !!end ) && 
                         <a onClick={this.clear} className={'cleard'}>
-                            {this.props.hasClear || '清除'}
+                            {hasClear === true ? '清除' : hasClear}
                         </a>
                     }
                     <Button onClick={this.setValue}>
