@@ -17,7 +17,12 @@ class DialogShow extends Component{
     render(){
         return <div className={"Show"}>
             <button onClick={this.show}>展示</button>
-            <Dialog ref={'dialog'} title={'弹框测试'} height={'40%'} width={'40%'}>
+            <Dialog ref={'dialog'} 
+                penetrate={true}
+                draggable={true}
+                title={'弹框测试'} 
+                height={'40%'} 
+                width={'40%'}>
                 <p>弹框撒点击十六点拍摄地九分PDF就怕是大家拉开圣诞节历史阿三是大盘经过；萨拉；啊的发我披肩发爱上对方就；埃里克大家发票四点九分萨拉</p>
             </Dialog>
         </div>

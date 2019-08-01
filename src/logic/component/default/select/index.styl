@@ -36,6 +36,7 @@
     line-height: 30px;
     max-height: 200px;
     overflow: auto;
+    background-color: #001920;
     &>li{
       cursor: pointer;
       padding-left: 10px;
@@ -56,9 +57,15 @@
   }
 
   &.multi{
-    min-width: 200px;
+    width: 200px;
     .Button:hover{
       opacity : 1;
+    }
+    & > .text > span{
+      width: 100%;
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     &>.list>li{
       &.checked{
@@ -75,6 +82,7 @@
       border-radius: 3px;
       vertical-align: top;
       margin-right: 5px;
+      white-space: nowrap;
       box-shadow: 0 0 2px rgba(255,255,255,0.5);
       &>svg{
         vertical-align: middle;

@@ -53,7 +53,8 @@ class Datepicker extends Component{
         return config;
     }
 
-    clear = () => {
+    clear = (e) => {
+        e.stopPropagation();
         this.setState({
             value: null
         });
@@ -88,6 +89,16 @@ class Datepicker extends Component{
         return { value, valid }
     }
 
+    getFormType = () => {
+        return 'datepicker';
+    }
+
+    clear = () => {
+        this.setState({
+            value: null
+        });
+    }
+
     keepFocus = (ev, oldValue, newValue) =>{
         let textDom = this.refs['text'];
         if(textDom){
@@ -108,9 +119,10 @@ class Datepicker extends Component{
         return <div>
             <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`}>
                 <span ref={'text'}>{ text }</span>
-                { this.props.hasClear !== false &&
-                    <Icon type={'guanbi1'} onClick={this.clear}/>
+                { this.props.hasClear !== false && value && 
+                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
                 }
+                <Icon type={'unfold'} />
             </Button>
             <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
                 <Calendar {...this.getCalendarConfig()} ref={'calendar'}/>

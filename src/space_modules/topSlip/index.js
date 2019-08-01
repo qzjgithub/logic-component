@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { TopSlip }  from '../../../build';
+import { TopSlip }  from '../../logic';
 import './index.styl';
-
-console.log(TopSlip);
 
 class TopSlipShow extends Component{
     constructor(props, context) {

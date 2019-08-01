@@ -29,7 +29,9 @@ class DateRangepicker extends Component{
     }
 
     initData = (props) => {
-        let { start, end } = props;
+        let { start, end , initStart, initEnd} = props;
+        start = start || initStart;
+        end = end || initEnd;
         if(moment.isMoment(start) && moment.isMoment(end)){
             if(start.isAfter(end,'second')){
                 console.log('start is after end');
@@ -48,13 +50,12 @@ class DateRangepicker extends Component{
 
     getStartConfig = () => {
         let config = this.props.startConfig || {};
-        let { start, end } = this.state;
-        let maxDate = end || config.maxDate;
+        let maxDate = this.state.end || config.maxDate;
         if(moment.isMoment(maxDate)){
             maxDate = moment(maxDate);
         }
         config = Object.assign({},config,{
-            date: start ,
+            date: this.state.start ,
             maxDate: maxDate
         });
 
@@ -72,10 +73,12 @@ class DateRangepicker extends Component{
         if(disableDateRange){
             let disableDate = config.disableDate;
             config.disableDate = (current) => {
-                disableDateRange(current, moment(start), moment(end));
-                if(disableDate){
-                    disableDate(current);
+                let { start, end } = this.state;
+                let flag = disableDateRange(current, start ? moment(start) : start, end ? moment(end) : end);
+                if(!flag && disableDate){
+                    flag = disableDate(current);
                 }
+                return flag;
             }
         }
         return config;
@@ -83,13 +86,12 @@ class DateRangepicker extends Component{
 
     getEndConfig = () => {
         let config = this.props.endConfig || {};
-        let { start, end } = this.state;
         let minDate = this.state.start || config.minDate;
         if(moment.isMoment(minDate)){
             minDate = moment(minDate);
         }
         config = Object.assign({},config,{
-            date: end ,
+            date: this.state.end ,
             minDate: minDate
         });
 
@@ -107,16 +109,18 @@ class DateRangepicker extends Component{
         if(disableDateRange){
             let disableDate = config.disableDate;
             config.disableDate = (current) => {
-                disableDateRange(current, moment(start), moment(end));
-                if(disableDate){
-                    disableDate(current);
+                let { start, end } = this.state;
+                let flag = disableDateRange(current, start ? moment(start) : null, end ? moment(end) : null);
+                if(!flag && disableDate){
+                    flag = disableDate(current);
                 }
+                return flag;
             }
         }
         return config;
     }
     clear = (e) => {
-        e.stopPropagation();
+        e && e.stopPropagation();
         this.setState({
             start: null,
             end: null
@@ -149,7 +153,11 @@ class DateRangepicker extends Component{
         if(start && end && valid){
             valid = start.getValid(startDate) && end.getValid(endDate);
         }
-        return { startDate , endDate , valid }
+        return { startDate: moment(startDate) , endDate: moment(endDate) , valid }
+    }
+
+    getFormType = () => {
+        return 'dateRangepicker';
     }
 
     getFormatValue = () => {
@@ -221,7 +229,9 @@ class DateRangepicker extends Component{
 DateRangepicker.propTypes = {
     start : PropTypes.object,
     end: PropTypes.object,
-    disableDate: PropTypes.func,//(start,end,current)
+    initStart: PropTypes.object,
+    initEnd: PropTypes.object,
+    disableDate: PropTypes.func,//(current,start,end)
     disabled: PropTypes.bool,
     defaultText: PropTypes.string,
     format: PropTypes.string,//YYYY-MM-DD HH:mm:ss

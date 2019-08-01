@@ -16,7 +16,19 @@ class DateRangepickerShow extends Component{
 
     render(){
         return <div>
-            <DateRangepicker/>
+            <DateRangepicker 
+                initStart={moment()}
+                initEnd={moment()}
+                hasClear={false}
+                format={'YYYY-MM-DD'}
+                startConfig={{
+                    minDate: moment(),
+                    timerConfig: false
+                }}
+                endConfig={{
+                    maxDate: moment().add(7,'day'),
+                    timerConfig: false
+                }}/>
         </div>
     }
 }

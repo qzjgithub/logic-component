@@ -26,8 +26,15 @@ class Select extends Component{
                     value = undefined;
             }
         }
+        let children = this.props.children;
+        if(children && !children.length){
+            children = [ children ];
+        }else if(!children){
+            children = [];
+        }
         this.state = {
-            value: value
+            value: value,
+            all: mode === 'multi' && value.length === children.length
         }
     }
 
@@ -43,6 +50,13 @@ class Select extends Component{
     itemClick = (value,text)=>{
         let status = this.state.status;
         let values = this.state.value;
+        let children = this.props.children;
+        if(children && !children.length){
+            children = [ children ];
+        }else if(!children){
+            children = [];
+        }
+        let all = false;
         switch(this.props.mode){
             case 'multi':
                 let ind = values.indexOf(value);
@@ -53,6 +67,7 @@ class Select extends Component{
                     values.push(value);
                     this.text.push(text);
                 }
+                all = values.length === children.length;
                 break;
             case 'single':
             default:
@@ -62,11 +77,13 @@ class Select extends Component{
         }
         this.setState({
             value: values,
-            status: status
+            status: status,
+            all
+        },() => {
+            if(this.props.onSelected){
+                this.props.onSelected(values,this.text);
+            }
         });
-        if(this.props.onSelected){
-            this.props.onSelected(values,this.text);
-        }
     }
 
     getList = (value) => {
@@ -93,8 +110,7 @@ class Select extends Component{
         if(!value){
             value = [];
         }
-        let mode = this.props.mode;
-        let children = this.props.children;
+        let { mode, children, getText } = this.props;
         if(children && !(children instanceof Array)){
             children = [ children ];
         }
@@ -102,7 +118,7 @@ class Select extends Component{
             let checked = false;
             if(value.indexOf(item.props.value) > -1){
                 this.text.push(item.props.children);
-                text.push(
+                !getText && text.push(
                     <span className={'multi-text'}>
                         {item.props.children}
                         <Icon type={'guanbi1'} onClick={(e) => {
@@ -115,6 +131,9 @@ class Select extends Component{
             }
             return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked, mode: mode});
         });
+        if(getText){
+            text = getText(this.state.value, this.text);
+        }
         return { dom, text }
     }
 
@@ -145,8 +164,32 @@ class Select extends Component{
         if(textDom){
             textDom.parentElement.focus();
         }
-        newValue['opened'] = oldValue['opened'];
+        newValue['opened'] = true;
         return newValue;
+    }
+
+    setAll = (ev) => {
+        let all = this.state.all;
+        let value = [];
+        if(!all){
+            let children = this.props.children;
+            if(children && !children.length){
+                children = [ children ];
+            }else if(!children){
+                children = [];
+            }
+            for(let c of children){
+                value.push(c.props.value);
+            }
+        }
+        this.setState({
+            all: !all,
+            value
+        },() => {
+            if(this.props.onSelected){
+                this.props.onSelected(value,this.text);
+            }
+        });
     }
 
     render(){
@@ -174,15 +217,25 @@ class Select extends Component{
         if(displayKey){
             text = this.props[displayKey] || this[displayKey];
         }
-        let { mode, orient } = this.props;
+        let { mode, orient, hasAll } = this.props;
         let cls = mode || 'single ';
         cls += orient ||'';
         return <div className={cls}>
-            <Button styleType={'left'} className={'text'} sign={'text'} style={{height: this.props.height || '',width: this.props.width || ''}}>
+            <Button styleType={'left'} 
+                className={'text'} 
+                sign={'text'} 
+                disabled={this.props.disabled}
+                style={{height: this.props.height || '',width: this.props.width || ''}}>
                 <Icon type={'unfold'}/>
                 <span ref={'text'}>{ text || value}</span>
             </Button>
-            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>{ list.dom }</ul>
+            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>
+                { !!hasAll && <li onClick={this.setAll}>
+                    { hasAll!==true ? hasAll:'选择全部'}
+                    { this.state.all && <Icon type={'xuanze'} className={'mutli-sign'}/>}
+                </li>}
+                { list.dom }
+            </ul>
         </div>;
     }
 }
@@ -191,10 +244,15 @@ Select.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
     mode: PropTypes.string, //multi,single
+    disabled: PropTypes.bool,
     initValue: PropTypes.any,
     value: PropTypes.any,
     onSelected: PropTypes.func,
     orient: PropTypes.string,//up,down
+    defaultText: PropTypes.string,
+    noDataText: PropTypes.string,
+    hasAll: PropTypes.any,//true/'选择全部'
+    getText: PropTypes.func//function(value, data){}
 }
 
 class Option extends Component{

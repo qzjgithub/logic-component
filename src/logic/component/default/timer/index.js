@@ -172,7 +172,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.hourHide){
             dom.push(
-                <Select value={this.state.hour} onSelected={(value) => this.setValue(value,'hour')}>
+                <Select value={this.state.hour} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'hour')}>
                 { this.getOptionDom(this.state.hourArr) }
             </Select>
             );
@@ -185,7 +187,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.minuteHide){
             dom.push(
-                <Select value={this.state.minute} onSelected={(value) => this.setValue(value,'minute')}>
+                <Select value={this.state.minute} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'minute')}>
                 { this.getOptionDom(this.state.minuteArr) }
             </Select>
             );
@@ -200,7 +204,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.secondHide){
             dom.push(
-                <Select value={this.state.second} onSelected={(value) => this.setValue(value,'second')}>
+                <Select value={this.state.second} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'second')}>
                 { this.getOptionDom(this.state.secondArr) }
             </Select>
             );
@@ -257,6 +263,7 @@ Timer.propTypes = {
     hourText: PropTypes.string,
     minuteText: PropTypes.string,
     secondText: PropTypes.string,
+    orient: PropTypes.string,//up,down
     onChange: PropTypes.func
 }
 

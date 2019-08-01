@@ -27,6 +27,9 @@ import DateRangepickerShow from '../../space_modules/dateRangepicker';
 import TreeSelectShow from '../../space_modules/treeSelect';
 import PaginationShow from "../../space_modules/pagination";
 import GridShow from '../../space_modules/gridShow';
+import InputShow from '../../space_modules/input';
+import CheckboxShow from '../../space_modules/checkbox';
+import DraggerShow from '../../space_modules/draager';
 
 const MenuItem = Menu.MenuItem;
 
@@ -44,6 +47,8 @@ class App extends Component{
             <Menu>
                 <MenuItem text={<Link to={'/test2'}>测试</Link>}/>
                 <MenuItem text={<Link to={'/button'}>按钮</Link>}/>
+                <MenuItem text={<Link to={'/input'}>输入框</Link>}/>
+                <MenuItem text={<Link to={'/checkbox'}>复选框</Link>}/>
                 <MenuItem text={<Link to={'/select'}>下拉框</Link>}/>
                 <MenuItem text={<Link to={'/cutover'}>切换</Link>}/>
                 <MenuItem text={<Link to={'/grid'}>列表</Link>}/>
@@ -59,9 +64,12 @@ class App extends Component{
                 <MenuItem text={<Link to={'/dateRangepicker'}>时间选择框</Link>}/>
                 <MenuItem text={<Link to={'/treeSelect'}>树下拉</Link>}/>
                 <MenuItem text={<Link to={'/pagination'}>分页</Link>}/>
+                <MenuItem text={<Link to={'/dragger'}>拖拽</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
+                <Route path={'/input'} component={ InputShow }/>
+                <Route path={'/checkbox'} component={ CheckboxShow }/>
                 <Route path={'/grid'} component={ GridShow }/>
                 <Route path={'/test2'} component={ test2 }/>
                 <Route path={'/select'} component={ SelectShow }/>
@@ -78,7 +86,8 @@ class App extends Component{
                 <Route path={'/dateRangepicker'} component={ DateRangepickerShow }/>
                 <Route path={'/treeSelect'} component={ TreeSelectShow }/>
                 <Route path={'/pagination'} component={ PaginationShow }/>
-                <Redirect from={'/'} to={'/treeSelect'}/>
+                <Route path={'/dragger'} component={ DraggerShow }/>
+                <Redirect from={'/'} to={'/dragger'}/>
             </Switch>
             {/*</Content>*/}
         </div>

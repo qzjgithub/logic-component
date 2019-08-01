@@ -8,6 +8,15 @@ class Form extends Component{
         super(props, context);
     }
 
+    clear = () => {
+        this.names.forEach((name) => {
+            let ele = this.refs[name];
+            if(ele && ele.clear){
+                ele.clear();
+            }
+         });
+    }
+
     validate = () => {
         let result = true;
         let err = {};
@@ -60,7 +69,7 @@ class Form extends Component{
     }
 
     render(){
-        return <section className={'Form'}>
+        return <section className={`Form ${this.props.className||''}`}>
             { this.getChildren() }
         </section>
     }
@@ -78,10 +87,14 @@ class FormItem extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps.name !== this.props.name){
-            let dom = this.refs[this.key];
-            if(dom && dom.clear){
-                dom.clear();
-            }
+            this.clear();
+        }
+    }
+
+    clear = () => {
+        let dom = this.refs[this.key];
+        if(dom && dom.clear){
+            dom.clear();
         }
     }
 
@@ -100,16 +113,33 @@ class FormItem extends Component{
         }else{
             value = this.refs[this.key].getValue();
         }
+        let formType = '';
+        if(ele.getFormType){
+            formType = this.refs[this.key].getFormType();
+        }
         let rules = this.props.rules || [];
 
         let hasRequire = false;
         let isNull = false;
 
-        if(!value){
-            isNull = true;
-        }else if(value && value instanceof Array && !value.length){
-            isNull = true;
+        switch(formType){
+            case 'multiSelect':
+            case 'multiTreeSelect':
+                isNull = !value || !(value instanceof Array)|| !value.length;
+                break;
+            case 'datepicker':
+                isNull = !value.value;
+                break;
+            case 'dateRangepicker':
+                isNull = !value.startDate &&　!value.endDate;
+                break;
+            case 'input':
+            case 'select':
+            case 'treeSelect':
+            default: 
+                isNull = !value;
         }
+
         for(let rule of rules){
             if(rule.require){
                 hasRequire = true;
@@ -123,11 +153,18 @@ class FormItem extends Component{
             if(isNull && !hasRequire){
                 continue;
             }
-            result = rule.reg.test(value);
+            if(rule.reg){
+                result = rule.reg.test(value);
+            }else if(rule.validate){
+                result = rule.validate(value);
+            }
             if(!result){
                 err = rule.message || 'error';
                 break;
             }
+        }
+        if(result && !isNull && value.valid !== undefined){
+            result = value.valid && result;
         }
         return { result, err, value }
     }
@@ -165,10 +202,11 @@ class FormItem extends Component{
 }
 
 FormItem.propTypes = {
-    label: PropTypes.any,
-    name: PropTypes.string,
-    rules: PropTypes.array,
-    noLabel: PropTypes.bool
+    label: PropTypes.any,//标签
+    name: PropTypes.string,//表单属性key,
+    rules: PropTypes.array,//[{ require: true, message: ''},{reg:/\d+/,message:''},{validate:function(value){},message: ''}]
+    noLabel: PropTypes.bool,//是否不展示标签
+    formSign: PropTypes.bool
 }
 
 Form.FormItem = FormItem;
