@@ -4,6 +4,7 @@ import Input from '../input';
 import Icon from '../icon';
 import Pagination from '../pagination';
 import Select from '../select';
+import moment from 'moment';
 import './index.styl';
 import { isKVObject,isArray,isNumber,isRealOrZero } from '../../../common/Util';
 
@@ -174,11 +175,40 @@ class Grid extends Component{
             let columnInd = this.columnsMap[sort];
             let column = isRealOrZero(columnInd) ? (columns[columnInd]||{}) : {};
             let sorter = column['sorter'];
-            if(sorter){
+            if(sorter && typeof sorter === 'function'){
                 data.sort(sorter);
             }else{
                 data.sort((a,b) => {
-                    return (a[sort]||'').toString().localeCompare(b[sort]||'').toString();
+                    a = a[sort];
+                    b = b[sort];
+                    if(a === '' || a === null || a === undefined){
+                        return 1;
+                    }else if(b === '' || b === null || b === undefined){
+                        return -1;
+                    }
+                    let reg = /^\d{4}-\d{2}-\d{2}([ ]\d{2}:\d{2}:\d{2}){0,1}$/;
+                    if(reg.test((a||'').toString()) || reg.test((b||'').toString())){
+                        a = moment(a);
+                        b = moment(b);
+                        if(moment.isMoment(a) && !moment.isMoment(b)){
+                            return -1;
+                        }else if(!moment.isMoment(a) && moment.isMoment(b)){
+                            return 1;
+                        }else if(moment.isMoment(a) && moment.isMoment(b)){
+                            return a.diff(b);
+                        }
+                    }
+                    let an = Number(a);
+                    let bn = Number(b);
+                    if(isNaN(an) && !isNaN(bn)){
+                        return 1;
+                    }else if(!isNaN(an) && isNaN(bn)){
+                        return -1;
+                    }else if(isNaN(an) && isNaN(bn)){
+                        return (a||'').toString().localeCompare(b||'').toString();
+                    }else{
+                        return an - bn;
+                    }
                 });
             }
             if(order === 'desc'){

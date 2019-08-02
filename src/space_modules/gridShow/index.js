@@ -8,7 +8,7 @@ const COLUMNS = [
         fixed: true,
         searcher: true,
         width: '100px',
-        sorter: false,
+        sorter: true,
         editable: true,
         colspan: (value, record) => {
             if(value === 'bbb'){
@@ -37,7 +37,7 @@ const COLUMNS = [
         validate: (value,record,key,index) => {
             return !!value;
         },
-        sorter: (a,b) => {
+        /* sorter: (a,b) => {
             if(a.age > b.age){
                 return 1;
             }else if(a.age < b.age){
@@ -45,7 +45,12 @@ const COLUMNS = [
             }else{
                 return 0;
             }
-        }
+        } */
+    },
+    {
+        name: "生日",
+        key: "birthday",
+        width: "100px",
     },
     {
         name: "成绩",
@@ -82,19 +87,19 @@ const COLUMNS = [
 ]
 
 const DATA = [
-    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80,mathor:'mathor1',fathor:'fathor1'},
-    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80},
+    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80,mathor:'mathor1',fathor:'fathor1',birthday: '2019-09-08'},
+    { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80,birthday: '2019-09-07'},
+    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80,birthday: '2019-09-08'},
+    { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80,birthday: '2019-05-01'},
     { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3,lang: 80, math: 80,birthday: '2019-09-08 12:00:30'},
     { name: "ccc",sex: 1,age:43 ,id : 7, parentId: 3,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: '',lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80},
+    { name: "ccc",sex: 1,age:5 ,id : 8, parentId: 2,lang: 80, math: 80,birthday: '2019-09-08'},
+    { name: "ccc",sex: 1,age:43 ,id : 9, parentId: '',lang: 80, math: 80,birthday: '2019-09-08 23:31:23'},
+    { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9,lang: 80, math: 80,birthday: '2019-09-30'},
+    { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9,lang: 80, math: 80,birthday: '2019-09-18'},
+    { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11,lang: 80, math: 80,birthday: '2019-08-01'},
+    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80,birthday: '2019-08-02'},
     { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80},
     { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80},
