@@ -636,8 +636,8 @@ class Grid extends Component{
                 hasFixed = hasFixed || !!fixed;
 
                 let getMultiLi = (cls) => {
-                    return <li className={`with-child ${cls}`}>
-                        <p title={name}>
+                    return <li className={`with-child ${cls}`} style={style}>
+                        <p title={name} >
                             {name}
                         </p>
                         <ul>{children.map((c)=>{
