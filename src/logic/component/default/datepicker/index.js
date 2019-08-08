@@ -61,8 +61,11 @@ class Datepicker extends Component{
     }
 
     toNow = () => {
+        let now = moment();
         this.setState({
-            value: moment()
+            value: now
+        },() => {
+            this.refs['calendar'].setTime(now);
         });
     }
 

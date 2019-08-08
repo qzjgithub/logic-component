@@ -141,6 +141,16 @@ class Calendar extends Component{
         }
     }
 
+    setTime = (datetime) => {
+        this.setState({
+            hour: datetime.hour(),
+            minute: datetime.minute(),
+            second: datetime.second()
+        },() => {
+            this.setTimer();
+        });
+    }
+
     genYearArr = (year, datetime) => {
         let arr = [];
         for(let i = 0;i >= -10;i--){
@@ -477,7 +487,7 @@ class Calendar extends Component{
                 { this.genDateDom() }
             </div>
             {showTimer && <footer>
-                <Timer {...timerConfig} ref={'timer'}/>
+                <Timer {...timerConfig} ref={'timer'} lang={this.props.lang}/>
             </footer>}
         </section>
     }
