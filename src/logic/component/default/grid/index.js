@@ -47,9 +47,20 @@ class Grid extends Component{
         if(!isArray(columns)){
             columns = [];
         }
-        columns.forEach((column,index) => {
-            this.columnsMap[column['key']] = index;
-        });
+        const setIndex = (cols, indarr) => {
+            if(!(indarr instanceof Array)){
+                indarr = [];
+            }
+            cols.forEach((col,ind) => {
+                let { children, key } = col;
+                this.columnsMap[key] = [...indarr,ind];
+                if((children instanceof Array) && children.length){
+                    setIndex(children,[...indarr,ind]);
+                }
+            });
+        }
+        
+        setIndex(columns);
     }
 
     initParam = (props) => {
@@ -92,6 +103,19 @@ class Grid extends Component{
             sort: sort===undefined ? state.sort : sort, 
             order: order===undefined ? state.order : order
         }
+    }
+
+    getColumnByKey = (key) => {
+        let { columns } = this.props;
+        let indarr = this.columnsMap[key];
+        if(!indarr || indarr.length) {
+            return {};
+        }
+        let col = { children : columns||{} };
+        indarr.forEach((ind)=>{
+            col = col['children'][ind]||{};
+        });
+        return col;
     }
 
     getDisplayData = () => {
@@ -166,14 +190,13 @@ class Grid extends Component{
     }
 
     sortData = (data) => {
-        let { columns, customSort } = this.props;
+        let { customSort } = this.props;
         if(customSort){
             return data;
         }
         let { sort, order } = this.state;
         if(sort){
-            let columnInd = this.columnsMap[sort];
-            let column = isRealOrZero(columnInd) ? (columns[columnInd]||{}) : {};
+            let column = this.getColumnByKey(sort);
             let sorter = column['sorter'];
             if(sorter && typeof sorter === 'function'){
                 data.sort(sorter);
@@ -229,8 +252,7 @@ class Grid extends Component{
             return;
         }
         Object.keys(searchKeys).forEach((ck)=>{
-            let colInd = this.columnsMap[ck];
-            let col = isRealOrZero(colInd) ? (columns[colInd]||{}) : {};
+            let col = this.getColumnByKey(ck);
             if(typeof col['searcher'] === 'function'){
                 searcher[ck] = col['searcher'];
             }
@@ -364,9 +386,8 @@ class Grid extends Component{
     }
 
     setSort = (key) => {
-        let { columns } = this.props;
         let { sort, order} = this.state;
-        let column = columns[this.columnsMap[key]];
+        let column = this.getColumnByKey(key);
         if(column && column['sorter'] === false){
             return;
         }
@@ -390,7 +411,6 @@ class Grid extends Component{
     }
     
     pageInputConfirm = (e) => {
-        console.log(e);
         if(e === 13){
             let { pagination } = this.state;
             pagination.curPage = e.target.value;
@@ -407,6 +427,18 @@ class Grid extends Component{
         let rewidthDom = this.refs['rewidth'];
         rewidthDom.style.cssText = `;left:${old-(scrollLeft||0)-10}px;z-index:3;opacity:1`;
         this.key = key;
+        let indarr = this.columnsMap[key];
+        let curDom = e.target.parentElement;
+        let pd = null;
+        if(indarr.length > 1){
+            this.pdKey = (this.props['columns'][indarr[0]]||{})['key'];
+            let i = indarr.length;
+            while(i > 1){
+                pd = curDom.parentElement;
+                i--;
+            }
+            this.pOldW = pd.clientWidth;
+        }
         this.oldW = e.target.parentElement.clientWidth;
         this.oldL = old - 10;
         this.oldX = e.pageX;
@@ -441,6 +473,11 @@ class Grid extends Component{
         this.oldL = null;
         let widthRecord = this.state.widthRecord;
         widthRecord[this.key] = newW + 'px';
+        if(this.pdKey && this.pOldW){
+            widthRecord[this.pdKey] = (this.pOldW + gap - 1) + 'px';
+        }
+        this.pdKey = null;
+        this.pOldW = null;
         this.setState({
             widthRecord
         },() => {
@@ -974,10 +1011,13 @@ class Grid extends Component{
                     let widthArr = [];
                     while(colspan > 0){
                         let col = columns[i];
-                        widthArr.push(widthRecord[col['key']] || col['width']);
+                        if(!col.hidden){
+                            widthArr.push(widthRecord[col['key']] || col['width']);
+                        }
                         i++;
                         colspan--;
                     }
+                    console.log(widthArr);
                     width = `calc(${widthArr.join(' + ')})`;
                 }else{
                     i++;

@@ -53,8 +53,9 @@ const COLUMNS = [
         width: "100px",
     },
     {
-        name: "成绩",
+        name: "成绩adfadfadfasdfsdfsdfsadfdadfasdfdfdsfasd",
         key: "grade",
+        width: '200px',
         children: [
             {
                 name: "语文",
