@@ -993,7 +993,8 @@ class Grid extends Component{
             let i = 0;
             for(; i < cols.length; ){
                 let column = cols[i];
-                let { hidden, width, render, key, editable, validate, fixed, colspan, children } = column;
+                let { hidden, width, render, key, editable, validate, 
+                    fixed, colspan, children, hoverTips } = column;
                 if(hidden){
                     i++;
                     continue;
@@ -1051,7 +1052,7 @@ class Grid extends Component{
                             clz += ' fixed';
                         }
                         return <div className={clz} 
-                            title={value}
+                            title={ hoverTips === false ? '' : value}
                             style={style} 
                             contentEditable={editable} 
                             onClick={(e)=> this.editClick(e,editable)}
@@ -1211,6 +1212,7 @@ Grid.propTypes = {
      * validte:func(value,record,key,index)
      * searcher: true/function(inputValue,record,key){},//某一列可搜索时设置
      * fixed: true,
+     * hoverTips: true,//默认是true，是false表示不展示鼠标放上去的提示信息
      * colspan: 1/function(value,record,key,index),//数字或者方法返回的数字，默认是1
      * children: []//数组内为对象，每个对象参数和columns一级参数一致。当一次参数存在children时，值对一级的name,key,fixed,hidden生效。children的fixed无效
      * }]
