@@ -24,8 +24,7 @@ normalActive = rgba(sc,sc,sc,0.2);
   .scroll-y{
     flex: auto;
     overflow: hidden;
-    display: flex;
-    flex-direction: row;
+    z-index: 1;
   }
   /* .scroll-y:hover{
     overflow: auto;
@@ -51,15 +50,15 @@ normalActive = rgba(sc,sc,sc,0.2);
   overflow : hidden;
   overflow-y: hidden;
   flex: none;
+  z-index: 2;
   &>ul{
     display: flex;
     flex-direction: row;
     width: fit-content;
-    margin-right: 8px;
   }
   .gfixed-panel{
     position: absolute;
-    height: 26px;
+    // height: 26px;
     left: 0;
     display: flex;
     flex-direction: row;
@@ -70,8 +69,10 @@ normalActive = rgba(sc,sc,sc,0.2);
     height: 34px;
   }
   .search-head{
-    border-top: 1px solid #3d718f;
     height: 34px;
+    .th{
+      border-top: 1px solid #3d718f;
+    }
   }
   .search-head .th{
     height: 34px;
@@ -80,13 +81,16 @@ normalActive = rgba(sc,sc,sc,0.2);
     background: rgba(0,0,0,0.4);
     flex: auto;
     text-align: center;
-    line-height: 26px;
     border-right: 1px solid #3d718f;
     cursor: pointer;
-    box-sizing: border-box;
-    height: 26px;
+    box-sizing: content-box;
+    line-height: 26px;
     word-break: keep-all;
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    box-sizing: border-box;
     &>svg.sort{
       width: 10px;
       fill: #32878a;
@@ -113,6 +117,14 @@ normalActive = rgba(sc,sc,sc,0.2);
     &>a.rewidth:focus{
       background-color: #ffffff;
     }
+    &>span{
+      display: inline-flex;
+      height: 100%;
+      align-items: center;
+    }
+  }
+  ul>.th:last-child{
+    margin-right: 8px;  
   }
   .th.fixed{
     // position: absolute;
@@ -126,7 +138,7 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
   .th.select{
     flex: none;
-    width: 30px;
+    width: 40px;
     &>svg{
       fill: #85c0d0;
       cursor: pointer;
@@ -136,7 +148,7 @@ normalActive = rgba(sc,sc,sc,0.2);
   }
   .th.serial,.th.topsign{
     flex: none;
-    width: 30px;
+    width: 40px;
     cursor: default;
   }
   .th.gsearch{
@@ -149,32 +161,63 @@ normalActive = rgba(sc,sc,sc,0.2);
   .th.select,.th.serial,.th.gsearch:hover{
     background: rgba(0,0,0,0.4);
   }
+  .th.with-child{
+    border-right: 0;
+    &>p{
+      margin: 0;
+      border-right: 1px solid #3d718f;
+      word-break: keep-all;
+      overflow: hidden;
+      white-space: nowrap;
+      box-sizing: border-box;
+    }
+    &>ul{
+      display: flex;
+      flex-direction: row;
+      &>li{
+        flex: auto;
+        background: none;
+      }
+    }
+    &>ul>.th:last-child{
+      margin-right: 0;
+    }
+  }
 }
 .Grid-body{
   // overflow: auto;
   // flex: auto;
   width: fit-content;
-  &>.tr{
+  &>.tr,&>.tr>.gfixed-panel{
     display: flex;
     flex-direction: row;
-    line-height: 34px;
     cursor: pointer;
-    height: 34px;
-    width: fit-content;
-    .td{
+    // line-height: 34px;
+    // height: 34px;
+    &>.td{
       flex: auto;
       text-align: center;
       border-right: 1px solid #3d718f;
+      box-sizing: content-box;
+      // word-break: keep-all;
+      // overflow: hidden;
+      // white-space: nowrap;
+      // text-overflow: ellipsis;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 6px 0;
+      word-break: break-word;
       box-sizing: border-box;
     }
-    .td.fixed{
+    &>.td.fixed{
     }
-    .td.fixed-hide{
+    &>.td.fixed-hide{
       opacity: 0;
       pointer-events: none;
       // display: none;
     }
-    .td.treesign{
+    &>.td.treesign{
       &>svg{
         height: 10px;
         width: 10px;
@@ -183,26 +226,26 @@ normalActive = rgba(sc,sc,sc,0.2);
         cursor: pointer;
       }
     }
-    .td.treesign.treehide{
+    &>.td.treesign.treehide{
       &>svg{
         transform: rotate(-90deg);  
       }
     }
-    .td.select{
+    &>.td.select{
       flex: none;
-      width: 30px;
+      width: 40px;
       &>svg{
         fill: #85c0d0;
         position: relative;
         vertical-align: sub;
       }
     }
-    .td.serial,.td.topsign{
+    &>.td.serial,&>.td.topsign{
       flex: none;
-      width: 30px;
+      width: 40px;
       cursor: default;
     }
-    .td.topsign{
+    &>.td.topsign{
       &>svg{
         vertical-align: sub;
         fill: #85c0d0;
@@ -211,22 +254,21 @@ normalActive = rgba(sc,sc,sc,0.2);
         cursor: pointer;
       }
     }
-    .td.editable{
+    &>.td.editable{
       cursor: text; 
     }
-    .td.editable:focus{
+    &>.td.editable:focus{
       outline: none;
       color: #666666;
       background-color: #ffffff;
     }
   }
-  .gfixed-panel{
+  &>.tr>.gfixed-panel{
     position: absolute;
-    height: 26px;
+    height: fit-content;
     left: 0;
     display: flex;
     flex-direction: row;
-    height: 34px;
     background-color: #023750;
     z-index: 2;
     // display: none;
@@ -234,44 +276,73 @@ normalActive = rgba(sc,sc,sc,0.2);
   &>.tr:last-child{
     border-bottom: 1px solid #3d718f;
   }
-  &>.tr:nth-child(2n){
-    .td{
+  &>.tr:nth-child(2n),&>.tr:nth-child(2n)>.gfixed-panel{
+    &>.td{
       background-color: nth2;
     }
-  }
-  &>.tr:nth-child(2n):hover{
-    .td{
-      background-color: nth2Active;
+    &>.td.editable:focus{
+      background-color: #ffffff;
     }
   }
-  &>.tr:nth-child(2n).selected{
-    .td{
+  &>.tr:nth-child(2n):hover,&>.tr:nth-child(2n):hover>.gfixed-panel{
+    &>.td{
       background-color: nth2Active;
     }
+    &>.td.editable:focus{
+      background-color: #ffffff;
+    }
   }
-  &>.tr:nth-child(2n).topped{
-    .td{
+  &>.tr:nth-child(2n).selected,&>.tr:nth-child(2n).selected>.gfixed-panel{
+    &>.td{
+      background-color: nth2Active;
+    }
+    &>.td.editable:focus{
+      background-color: #ffffff;
+    }
+  }
+  &>.tr:nth-child(2n).topped,&>.tr:nth-child(2n).topped>.gfixed-panel{
+    &>.td{
       background-color: rgba(53, 211, 234, 0.5);
     }
   }
-  &>.tr:hover{
-    .td{
+  &>.tr:hover,&>.tr:hover>.gfixed-panel{
+    &>.td{
       background-color: normalActive;
     }
   }
-  &>.tr.selected{
-    .td{
+  &>.tr.selected,&>.tr.selected>.gfixed-panel{
+    &>.td{
       background-color: normalActive;
     }
   }
-  &>.tr.topped{
-    .td{
+  &>.tr.topped,&>.tr.topped>.gfixed-panel{
+    &>.td{
       background-color: rgba(53, 211, 234, 0.5);
     }
-    .td.topsign{
+    &>.td.topsign{
       &>svg{
         fill: #ffffff;
       }
+    }
+  }
+  &>.tr:nth-child(2n).sel-forbid.selected,&>.tr:nth-child(2n).sel-forbid.selected>.gfixed-panel{
+    &>.td{
+      background-color: nth2;
+    }
+  }
+  &>.tr:nth-child(2n).sel-forbid:hover,&>.tr:nth-child(2n).sel-forbid:hover>.gfixed-panel{
+    &>.td{
+      background-color: nth2;
+    }
+  }
+  &>.tr.sel-forbid.selected,&>.tr.sel-forbid.selected>.gfixed-panel{
+    &>.td{
+      background-color: transparent;
+    }
+  }
+  &>.tr.sel-forbid:hover,&>.tr.sel-forbid:hover>.gfixed-panel{
+    &>.td{
+      background-color: transparent;
     }
   }
 }
@@ -279,28 +350,28 @@ normalActive = rgba(sc,sc,sc,0.2);
   &>.tr{
     border-top: 1px solid #3d718f;
   }
-  &>.tr:nth-child(2n){
-    .td{
+  &>.tr:nth-child(2n),&>.tr:nth-child(2n)>.gfixed-panel{
+    &>.td{
       background: none;
     }
   }
-  &>.tr:nth-child(2n):hover{
-    .td{
+  &>.tr:nth-child(2n):hover,&>.tr:nth-child(2n):hover>.gfixed-panel{
+    &>.td{
       background-color: normalActive;
     }
   }
-  &>.tr:nth-child(2n).selected{
-    .td{
+  &>.tr:nth-child(2n).selected,&>.tr:nth-child(2n).selected>.gfixed-panel{
+    &>.td{
       background-color: normalActive;
     }
   }
-  &>.tr:nth-child(2n).topped{
-    .td{
+  &>.tr:nth-child(2n).topped,&>.tr:nth-child(2n).topped>.gfixed-panel{
+    &>.td{
       background-color: rgba(53, 211, 234, 0.5);
     }
   }
-  &>.tr.topped{
-    .td{
+  &>.tr.topped,&>.tr.topped>.gfixed-panel{
+    &>.td{
       background-color: rgba(53, 211, 234, 0.5);
     }
   }
@@ -311,6 +382,8 @@ normalActive = rgba(sc,sc,sc,0.2);
 }
 .Grid-footer{
   flex: none;
+  z-index: 2;
+  background: #023750;
   &>div{
     line-height: 26px;
     margin: 5px auto;
@@ -322,7 +395,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     &>p{
       margin: 0;
       flex: auto;
-      min-width: 30px;
+      min-width: 40px;
       position: relative;
       height: 26px;
       &>span{
@@ -331,7 +404,7 @@ normalActive = rgba(sc,sc,sc,0.2);
       }
     }
     &>input{
-      width: 30px;
+      width: 40px;
       height: 26px;
       line-height: 18px;
       text-align: center;
@@ -360,7 +433,6 @@ normalActive = rgba(sc,sc,sc,0.2);
       }
     }
     &>span{
-      letter-spacing: 4px;
       flex: none;
     }
     &>.Select{

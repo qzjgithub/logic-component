@@ -6,11 +6,16 @@ lineColor = #116d75;
   background-color: rgba(0,0,0,0.3);
   height: 100%;
   width: 100%;
-  display: table;
+  display: flex;
+  flex-direction: column;
   box-sizing : border-box;
+  z-index: 10;
   &>div{
-    display: table-cell;
-    vertical-align: middle;
+    flex: auto;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   &>div>article{
     text-align: left;
@@ -27,11 +32,13 @@ lineColor = #116d75;
   }
   div.content{
     overflow: auto;
+    padding-bottom: 50px;
+    flex: auto;
+    position: relative;
     &>p{
       margin: 0;
       padding: 5px 10px 10px 10px;
     }
-    flex: auto;
   }
   header.title{
     border-bottom: 1px solid lineColor;
@@ -44,6 +51,21 @@ lineColor = #116d75;
   }
   .cross-close:hover{
     opacity: 0.6;
+  }
+}
+.Dialog.penetrate{
+  pointer-events: none;
+  background-color: transparent;
+  &>div>article{
+    pointer-events: all;
+  }
+}
+.Dialog.draggable{
+  header.title{
+    cursor: all-scroll;
+  }
+  &>div>article{
+    position: relative;
   }
 }
 .Dialog.hide{

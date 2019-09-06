@@ -69,7 +69,7 @@ class Form extends Component{
     }
 
     render(){
-        return <section className={'Form'}>
+        return <section className={`Form ${this.props.className||''}`}>
             { this.getChildren() }
         </section>
     }
@@ -202,10 +202,11 @@ class FormItem extends Component{
 }
 
 FormItem.propTypes = {
-    label: PropTypes.any,
-    name: PropTypes.string,
-    rules: PropTypes.array,
-    noLabel: PropTypes.bool
+    label: PropTypes.any,//标签
+    name: PropTypes.string,//表单属性key,
+    rules: PropTypes.array,//[{ require: true, message: ''},{reg:/\d+/,message:''},{validate:function(value){},message: ''}]
+    noLabel: PropTypes.bool,//是否不展示标签
+    formSign: PropTypes.bool
 }
 
 Form.FormItem = FormItem;

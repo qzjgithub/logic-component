@@ -61,8 +61,11 @@ class Datepicker extends Component{
     }
 
     toNow = () => {
+        let now = moment();
         this.setState({
-            value: moment()
+            value: now
+        },() => {
+            this.refs['calendar'].setTime(now);
         });
     }
 
@@ -93,7 +96,8 @@ class Datepicker extends Component{
         return 'datepicker';
     }
 
-    clear = () => {
+    clear = (e) => {
+        e && e.stopPropagation();
         this.setState({
             value: null
         });
@@ -116,10 +120,11 @@ class Datepicker extends Component{
         }else{
             text = this.props.defaultText || '请选择时间';
         }
+        let hasClear = this.props.hasClear;
         return <div>
             <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`}>
                 <span ref={'text'}>{ text }</span>
-                { this.props.hasClear !== false && value && 
+                { hasClear !== false && value && 
                     <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
                 }
                 <Icon type={'unfold'} />
@@ -127,9 +132,9 @@ class Datepicker extends Component{
             <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
                 <Calendar {...this.getCalendarConfig()} ref={'calendar'}/>
                 <p className={'control'}>
-                    {this.props.hasClear !== false &&
+                    {hasClear !== false &&
                         <a onClick={this.clear} className={'clear'}>
-                            {this.props.hasClear || '清除'}
+                            {hasClear === true ? '清除' : hasClear }
                         </a>
                     }
                     {this.props.hasNow !== false &&

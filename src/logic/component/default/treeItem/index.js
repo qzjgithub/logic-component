@@ -116,6 +116,10 @@ class TreeItem extends Component{
 
     getSelectOperate = () => {
         let { selectMode } = this.props;
+        let selable = this.getSelectable();
+        if(!selable){
+            return '';
+        }
         let checked = this.getChecked();
         let type = '';
         switch(selectMode){
@@ -123,7 +127,7 @@ class TreeItem extends Component{
                 type = checked ? 'fangxingxuanzhong' : 'fangxingweixuanzhong';
                 break;
             case 'single':
-                type = checked ? 'yuanxingxuanzhong': 'yuanxingweixuanzhong';
+                type = checked ? 'xuanzhong': 'yuanxingweixuanzhong';
                 break;
             case 'auto':
             default:
@@ -198,15 +202,16 @@ class TreeItem extends Component{
         if(children.length){
             treeItemClass += ' nonLeaf';
         }
+        let { selectMode, first, last, cable, customDom } = this.props;
         if(data['root']){
             treeItemClass += ' rootNode';
-        }else if(this.props.first){
+        }else if(first){
             treeItemClass += ' firstNode';
         }
-        if(this.props.last){
+        if(last){
             treeItemClass += ' lastNode';
         }
-        if(this.props.cable === false){
+        if(cable === false){
             treeItemClass += ' noCable'
         }
         let status = this.state.status || {};
@@ -241,6 +246,7 @@ class TreeItem extends Component{
                 <span className={`text ${checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
                     { data[this.props.textKey||this.textKey] }
                 </span>
+                { customDom && typeof customDom === 'function' ? customDom(data) : customDom }
             </p>
             <div className={'list'} ref={"list"} style={style}>{ this.props.children }</div>
         </section>
@@ -258,8 +264,9 @@ TreeItem.propTypes = {
     selectMode: PropTypes.string,//multi,single,auto
     selectable: PropTypes.func,
     valueKey: PropTypes.string,
+    customDom: PropTypes.string,
     value: PropTypes.any,
-    cable: PropTypes.bool
+    cable: PropTypes.bool//是否无连接
 }
 
 

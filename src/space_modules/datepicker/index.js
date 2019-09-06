@@ -16,7 +16,7 @@ class DatepickerShow extends Component{
 
     render(){
         return <div>
-            <Datepicker calendarConfig={{lang: 'en'}}/>
+            <Datepicker calendarConfig={{minDate:moment(),lang: 'en'}}/>
             </div>
     }
 }

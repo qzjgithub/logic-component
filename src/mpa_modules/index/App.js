@@ -29,6 +29,7 @@ import PaginationShow from "../../space_modules/pagination";
 import GridShow from '../../space_modules/gridShow';
 import InputShow from '../../space_modules/input';
 import CheckboxShow from '../../space_modules/checkbox';
+import DraggerShow from '../../space_modules/draager';
 
 const MenuItem = Menu.MenuItem;
 
@@ -63,6 +64,7 @@ class App extends Component{
                 <MenuItem text={<Link to={'/dateRangepicker'}>时间选择框</Link>}/>
                 <MenuItem text={<Link to={'/treeSelect'}>树下拉</Link>}/>
                 <MenuItem text={<Link to={'/pagination'}>分页</Link>}/>
+                <MenuItem text={<Link to={'/dragger'}>拖拽</Link>}/>
             </Menu>
             <Switch>
                 <Route path={'/button'} component={ ButtonShow } />
@@ -84,7 +86,8 @@ class App extends Component{
                 <Route path={'/dateRangepicker'} component={ DateRangepickerShow }/>
                 <Route path={'/treeSelect'} component={ TreeSelectShow }/>
                 <Route path={'/pagination'} component={ PaginationShow }/>
-                <Redirect from={'/'} to={'/treeSelect'}/>
+                <Route path={'/dragger'} component={ DraggerShow }/>
+                <Redirect from={'/'} to={'/dragger'}/>
             </Switch>
             {/*</Content>*/}
         </div>
