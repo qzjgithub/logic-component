@@ -13,18 +13,8 @@ import Tree from '../tree';
 class TreeSelect extends Component{
     constructor(props, context) {
         super(props, context);
-        let {value , initValue, mode } = this.props;
+        let {value , initValue } = this.props;
         value = isRealOrZero(value) ? value : initValue;
-        if(!isRealOrZero(value)){
-            switch(mode){
-                case 'multi':
-                    value = [];
-                    break;
-                case 'single':
-                default:
-                    value = undefined;
-            }
-        }
         this.state = {
             value: value,
             text: props.text
@@ -44,6 +34,27 @@ class TreeSelect extends Component{
         return this.state.value;
     }
 
+    /**
+     * keys可以不传
+     * keys代表value的值
+     * 如果keys是数组，就数组内对应值的对象
+     * 如果keys是值，则直接返回对象
+     * keys不存在，返回整个对象
+     */
+    getValueObj = (keys) => {
+        if(keys instanceof Array){
+            let obj = {};
+            keys.map((key)=>{
+                obj[key] = this.dataObj[key];
+            });
+            return obj;
+        }else if(keys){
+            return this.dataObj[keys];
+        }else{
+            return this.dataObj;
+        }
+    }
+
     getFormType = () => {
         return this.props.mode === 'multi' ? 'multiTreeSelect': 'treeSelect';
     }
@@ -58,6 +69,13 @@ class TreeSelect extends Component{
             default:
                 value = '';
         }
+        this.setState({
+            value: value
+        });
+    }
+
+    treeDidMount = (value, dataObj) => {
+        this.dataObj = dataObj;
         this.setState({
             value: value
         });
@@ -83,9 +101,9 @@ class TreeSelect extends Component{
     }
 
     getText = () => {
-        let { getText ,treeConfig, mode } = this.props;
+        let { getText , mode } = this.props;
         if(getText){
-            return text(this.state.value, (treeConfig||{}).data||[]);
+            return getText(this.state.value, this.dataObj);
         }else{
             switch(mode){
                 case 'multi':
@@ -93,7 +111,7 @@ class TreeSelect extends Component{
                 case 'single':
                 case 'auto':
                 default:
-                    return this.state.text;
+                    return this.state.text || this.props.text;
             }
 
         }
@@ -127,7 +145,7 @@ class TreeSelect extends Component{
                 <span ref={'text'}>{ text || value}</span>
             </Button>
             <div className={'treeList'} sign={'treeList'} onMouseLeave={this.keepFocus}>
-                <Tree {...this.getTreeConfig()}/>
+                <Tree {...this.getTreeConfig()} onDidMount={this.treeDidMount}/>
             </div>
         </div>;
     }
@@ -137,13 +155,15 @@ TreeSelect.propTypes = {
     height: PropTypes.any,
     width: PropTypes.any,
     mode: PropTypes.string, //multi,single
-    initValue: PropTypes.any,
     value: PropTypes.any,
+    initValue: PropTypes.any,
+    disabled: PropTypes.bool,
+    initAll: PropTypes.any,//true/false
     treeConfig: PropTypes.object,
     defaultText: PropTypes.string,
     noDataText: PropTypes.string,
     text: PropTypes.string,
-    getText: PropTypes.func
+    getText: PropTypes.func//function(value, data){}
 }
 
 

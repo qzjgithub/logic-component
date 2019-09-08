@@ -14,9 +14,30 @@ class DateRangepickerShow extends Component{
         return current > moment().add(10,'d');
     }
 
+    valid = () => {
+        let result = this.refs['date'].getValue();
+        console.log(result);
+    }
+
     render(){
         return <div>
-            <DateRangepicker/>
+            <DateRangepicker 
+                ref={'date'}
+                initStart={moment()}
+                initEnd={moment()}
+                hasClear={true}
+                format={'YYYY-MM-DD'}
+                disableDate={(c,s,e)=>{
+                    let flag = c.isSameOrBefore(moment(s).add(31,'day'),'day') && c.isSameOrAfter(moment(e).subtract(31,'day'),'day');
+                    return !flag;
+                }}
+                startConfig={{
+                    timerConfig: false
+                }}
+                endConfig={{
+                    timerConfig: false
+                }}/>
+                <span onClick={this.valid}>验证</span>
         </div>
     }
 }

@@ -141,6 +141,16 @@ class Calendar extends Component{
         }
     }
 
+    setTime = (datetime) => {
+        this.setState({
+            hour: datetime.hour(),
+            minute: datetime.minute(),
+            second: datetime.second()
+        },() => {
+            this.setTimer();
+        });
+    }
+
     genYearArr = (year, datetime) => {
         let arr = [];
         for(let i = 0;i >= -10;i--){
@@ -447,7 +457,7 @@ class Calendar extends Component{
             timerConfig = this.genTimerConfig(moment(this.state.date));
         }
         let { hour, minute, second } = this.state;
-        timerConfig = Object.assign(timerConfig || {},{ hour, minute, second });
+        timerConfig = Object.assign({ orient: 'up' },timerConfig || {},{ hour, minute, second });
         let leftDisabled = false;
         let cur = moment().year(this.state.year).month(this.state.month);
         if(this.minDate && this.minDate.isSameOrAfter(cur,'month')){
@@ -477,7 +487,7 @@ class Calendar extends Component{
                 { this.genDateDom() }
             </div>
             {showTimer && <footer>
-                <Timer {...timerConfig} ref={'timer'}/>
+                <Timer {...timerConfig} ref={'timer'} lang={this.props.lang}/>
             </footer>}
         </section>
     }
@@ -485,7 +495,7 @@ class Calendar extends Component{
 
 Calendar.propTypes = {
     format: PropTypes.string,//YYYY-MM-DD HH:mm:ss
-    disableDate: PropTypes.func,
+    disableDate: PropTypes.func,//(current) => { return true;}
     initDate: PropTypes.object,//没有默认当前时间
     timerConfig: PropTypes.any,//false表示不展示，配置则读取
     lang: PropTypes.string,

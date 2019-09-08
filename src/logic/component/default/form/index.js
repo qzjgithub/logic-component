@@ -8,6 +8,15 @@ class Form extends Component{
         super(props, context);
     }
 
+    clear = () => {
+        this.names.forEach((name) => {
+            let ele = this.refs[name];
+            if(ele && ele.clear){
+                ele.clear();
+            }
+         });
+    }
+
     validate = () => {
         let result = true;
         let err = {};
@@ -60,7 +69,7 @@ class Form extends Component{
     }
 
     render(){
-        return <section className={'Form'}>
+        return <section className={`Form ${this.props.className||''}`}>
             { this.getChildren() }
         </section>
     }
@@ -78,10 +87,14 @@ class FormItem extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps.name !== this.props.name){
-            let dom = this.refs[this.key];
-            if(dom && dom.clear){
-                dom.clear();
-            }
+            this.clear();
+        }
+    }
+
+    clear = () => {
+        let dom = this.refs[this.key];
+        if(dom && dom.clear){
+            dom.clear();
         }
     }
 
@@ -92,7 +105,11 @@ class FormItem extends Component{
         let ele = this.refs[this.key];
         let value;
         if(!ele || !ele.getValue){
-            return {err: 'has no getValue method.',result: false, value: null}
+            if(ele.picker){
+                value = ele.picker.state.value;
+            }else{
+                return {err: 'has no getValue method.',result: false, value: null}
+            }
         }else{
             value = this.refs[this.key].getValue();
         }
@@ -185,10 +202,11 @@ class FormItem extends Component{
 }
 
 FormItem.propTypes = {
-    label: PropTypes.any,
-    name: PropTypes.string,
-    rules: PropTypes.array,
-    noLabel: PropTypes.bool
+    label: PropTypes.any,//标签
+    name: PropTypes.string,//表单属性key,
+    rules: PropTypes.array,//[{ require: true, message: ''},{reg:/\d+/,message:''},{validate:function(value){},message: ''}]
+    noLabel: PropTypes.bool,//是否不展示标签
+    formSign: PropTypes.bool
 }
 
 Form.FormItem = FormItem;

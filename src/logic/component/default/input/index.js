@@ -16,6 +16,11 @@ class Input extends Component{
         return 'input';
     }
 
+    clear = () => {
+        let input = this.refs['input'];
+        input.value = '';
+    }
+
     render(){
         let styleType = this.props.styleType || '';
         return <input {...this.props} 

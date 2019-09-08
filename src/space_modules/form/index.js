@@ -22,6 +22,10 @@ class FormShow extends Component{
         return current > moment();
     }
 
+    clear = () => {
+        this.refs['form'].clear();
+    }
+
     render(){
         return <div className={"Show"}>
             <Form ref={'form'}>
@@ -43,6 +47,7 @@ class FormShow extends Component{
                 </FormItem>
                 <FormItem noLabel={true}>
                     <Button onClick={this.saveData}>确定</Button>
+                    <Button onClick={this.clear}>清空</Button>
                 </FormItem>
             </Form>
         </div>

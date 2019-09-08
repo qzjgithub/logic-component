@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Select from '../select';
 import { isInteger, patchZero, isRealOrZero } from '../../../common/Util';
 import './index.styl';
+import moment from 'moment';
 
 const Option = Select.Option;
 
@@ -33,10 +34,11 @@ class Timer extends Component{
 
     componentWillReceiveProps(nextProps){
         if(nextProps){
-            this.setState(Object.assign(
-                this.state,this.getValueAndArray(
-                    Object.assign({},this.props,nextProps),
-                    this.state)));
+            this.setState(
+                this.getValueAndArray(
+                    nextProps,//Object.assign({},this.props,nextProps),
+                    this.state)
+                );
         }
     }
 
@@ -172,11 +174,13 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.hourHide){
             dom.push(
-                <Select value={this.state.hour} onSelected={(value) => this.setValue(value,'hour')}>
+                <Select value={this.state.hour} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'hour')}>
                 { this.getOptionDom(this.state.hourArr) }
             </Select>
             );
-            dom.push(<span>{ this.props.hourText || '时'}</span>);
+            dom.push(<span>{ this.props.hourText || ( this.props.lang === 'zh' ? '时':'h')}</span>);
         }
         return dom;
     }
@@ -185,12 +189,14 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.minuteHide){
             dom.push(
-                <Select value={this.state.minute} onSelected={(value) => this.setValue(value,'minute')}>
+                <Select value={this.state.minute} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'minute')}>
                 { this.getOptionDom(this.state.minuteArr) }
             </Select>
             );
             dom.push(
-                <span>{ this.props.minuteText || '分'}</span>
+                <span>{ this.props.minuteText || ( this.props.lang === 'zh' ? '分':'m')}</span>
             );
         }
         return dom;
@@ -200,12 +206,14 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.secondHide){
             dom.push(
-                <Select value={this.state.second} onSelected={(value) => this.setValue(value,'second')}>
+                <Select value={this.state.second} 
+                    orient={this.props.orient||'down'}
+                    onSelected={(value) => this.setValue(value,'second')}>
                 { this.getOptionDom(this.state.secondArr) }
             </Select>
             );
             dom.push(
-                <span>{ this.props.secondText || '秒'}</span>
+                <span>{ this.props.secondText || ( this.props.lang === 'zh' ? '秒':'s')}</span>
             );
         }
         return dom;
@@ -257,6 +265,8 @@ Timer.propTypes = {
     hourText: PropTypes.string,
     minuteText: PropTypes.string,
     secondText: PropTypes.string,
+    orient: PropTypes.string,//up,down
+    lang: PropTypes.string,
     onChange: PropTypes.func
 }
 
