@@ -135,6 +135,11 @@ class DateRangepicker extends Component{
         if(start && end){
             let startDate  = start.getValue().value;
             let endDate = end.getValue().value;
+            let disableDate = this.props.disableDate;
+            if(disableDate(moment(startDate),moment(startDate),moment(endDate))||
+                disableDate(moment(endDate), moment(startDate), moment(endDate))){
+                return;
+            }
             status['opened'] = false;
             this.setState({
                 start: startDate,

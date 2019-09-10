@@ -28,7 +28,13 @@ class DateRangepickerShow extends Component{
                 hasClear={true}
                 format={'YYYY-MM-DD'}
                 disableDate={(c,s,e)=>{
-                    let flag = c.isSameOrBefore(moment(s).add(31,'day'),'day') && c.isSameOrAfter(moment(e).subtract(31,'day'),'day');
+                    let flag = true;
+                    if(moment.isMoment(s)){
+                        flag = c.isSameOrBefore(s.add(31,'day'),'day');
+                    }
+                    if(flag && moment.isMoment(e)){
+                        flag = c.isSameOrAfter(e.subtract(31,'day'),'day');
+                    }
                     return !flag;
                 }}
                 startConfig={{
