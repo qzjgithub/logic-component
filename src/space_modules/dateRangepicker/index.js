@@ -19,6 +19,14 @@ class DateRangepickerShow extends Component{
         console.log(result);
     }
 
+    opened = (o, n, e, s) => {
+        if(n['opened']){
+            console.log("opened");
+        }else{
+            console.log("closed");
+        }
+    }
+
     render(){
         return <div>
             <DateRangepicker 
@@ -27,6 +35,8 @@ class DateRangepickerShow extends Component{
                 initEnd={moment()}
                 hasClear={true}
                 format={'YYYY-MM-DD'}
+                onTextClick={this.opened}
+                onTextBlur={this.opened}
                 disableDate={(c,s,e)=>{
                     let flag = true;
                     if(moment.isMoment(s)){
