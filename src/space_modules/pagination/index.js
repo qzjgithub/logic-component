@@ -30,10 +30,10 @@ class PaginationShow extends Component{
         let { total, pageSize, curPage } = this.state.pagination;
         return <div>
             <Pagination total={total} pageSize={pageSize} curPage={curPage} onChange={this.pageChange}>
-                <PageElement type={'prev'} event={'onClick'}><Icon type={'zuo'}/></PageElement>
-                <PageElement type={'text'} text={this.getText}/>
-                <PageElement type={'next'} event={'onClick'}><Icon type={'gengduo'}/></PageElement>
-                <PageElement type={'page'} event={'onSelected'} param={(value) => value}>
+                <PageElement type={'prev'} event={'onClick'} key='prev'><Icon type={'zuo'}/></PageElement>
+                <PageElement type={'text'} text={this.getText} key='text'/>
+                <PageElement type={'next'} event={'onClick'} key='next'><Icon type={'gengduo'}/></PageElement>
+                <PageElement type={'page'} event={'onSelected'} param={(value) => value} key='page'>
                     <Select value={curPage}>
                         <Option value={1}>1</Option>
                         <Option value={2}>2</Option>

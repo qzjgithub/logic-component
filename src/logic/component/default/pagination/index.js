@@ -85,7 +85,7 @@ class Pagination extends Component{
             if(!isArray(children)){
                 children = [ children ];
             }
-            return children.map((child) => {
+            return children.map((child, index) => {
                 if(child && child.props){
                     let { type , text} = child.props;
                     let bridge;
@@ -123,11 +123,11 @@ class Pagination extends Component{
                         case 'text':
                             if(text){
                                 return React.cloneElement(child,{
-                                    children: text(Object.assign({},this.state))
+                                    children: text(Object.assign({}, this.state, {key: child.key || 'text'}))
                                 });
                             }
                     }
-                    return React.cloneElement(child,{ bridge });
+                    return React.cloneElement(child,{ bridge, key: index });
                 }else{
                     return child;
                 }

@@ -646,14 +646,13 @@ class Grid extends Component{
     }
 
     getHeaderDom = () => {
-        let initKey = moment().valueOf();
         let { columns, selectMode, serial, topable } = this.props;
         let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
             let comFixed = true;
             let hasFixed = false;
             let fixedDom = [];
-            let getCol = (col, isChild) => {
+            let getCol = (col, isChild, theInd) => {
                 let { name, key, hidden ,width, fixed, children } = col;
                 if(hidden) return '';
 
@@ -669,12 +668,12 @@ class Grid extends Component{
                 hasFixed = hasFixed || !!fixed;
 
                 let getMultiLi = (cls) => {
-                    return <li className={`with-child ${cls}`} style={style}>
+                    return <li className={`with-child ${cls}`} style={style} key={theInd}>
                         <p title={name} >
                             {name}
                         </p>
-                        <ul>{children.map((c)=>{
-                            return getCol(c,true);
+                        <ul>{children.map((c, cind)=>{
+                            return getCol(c,true, cind);
                         })}</ul>
                     </li>
                 }
@@ -689,7 +688,9 @@ class Grid extends Component{
                     return <li className={cls} 
                         style={ style } 
                         onClick={() => this.setSort(key)} 
-                        title={name}>
+                        title={name}
+                        key={theInd}
+                    >
                         <a className={'rewidth'} 
                             onMouseDown={(e) => this.startRewidth(e,key)}> </a>
                         <span>{name}</span>
@@ -701,13 +702,13 @@ class Grid extends Component{
                 }
                 return getNormalLi(`th${comFixed?' fixed-hide':''}`);
             }
-            let dom = columns.map((column) => {
-                return getCol(column);
+            let dom = columns.map((column, colind) => {
+                return getCol(column, false, colind);
             });
             if(topable){
-                dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}> </li>);
+                dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`} key='top'> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li className={'th topsign fixed'} key={initKey++}> </li>);
+                    fixedDom.unshift(<li className={'th topsign fixed'} key='top'> </li>);
                 }
             }
             if(selectMode === 'multi'){
@@ -719,11 +720,11 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<li className={`th select${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}>
+                dom.unshift(<li className={`th select${ hasFixed ? ' fixed-hide': ''}`} key='multi'>
                     <Icon type={type} onClick={this.selectAll}/>
                 </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li className={'th select fixed'} key={initKey++}>
+                    fixedDom.unshift(<li className={'th select fixed'} key='multi'>
                     <Icon type={type} onClick={this.selectAll}/>
                 </li>);
                 }
@@ -735,12 +736,12 @@ class Grid extends Component{
                         style['width'] = serial.width + 'px';
                     }
                 }
-                dom.unshift(<li style={style} className={`th serial${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}> </li>);
+                dom.unshift(<li style={style} className={`th serial${ hasFixed ? ' fixed-hide': ''}`} key='serial'> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li style={style} className={'th serial fixed'} key={initKey++}> </li>);
+                    fixedDom.unshift(<li style={style} className={'th serial fixed'} key='serial'> </li>);
                 }
             }
-            return [<li className={'gfixed-panel'} key={initKey++}><ul>{fixedDom}</ul></li>, ...dom];
+            return [<li className={'gfixed-panel'} key='fixed'><ul>{fixedDom}</ul></li>, ...dom];
         }else{
             return '';
         }
@@ -765,7 +766,7 @@ class Grid extends Component{
             let comFixed = true;
             let hasFixed = false;
             let fixedDom = [];
-            let getCol = (column,pfixed) => {
+            let getCol = (column, pfixed, theInd) => {
                 let { key, hidden ,width,searcher, fixed, children } = column;
                 if(hidden) return '';
                 width = widthRecord[key] || width;
@@ -782,38 +783,38 @@ class Grid extends Component{
                 comFixed = comFixed && !!fixed;
                 hasFixed = hasFixed || !!fixed;
                 if(children && children.length){
-                    return <React.Fragment>
-                        {children.map((c)=>{
-                            return getCol(c,fixed);
+                    return <React.Fragment key={theInd}>
+                        {children.map((c, cind)=>{
+                            return getCol(c, fixed, cind);
                         })}
                     </React.Fragment>;
                 }
-                let getNormalDom = (cls) => {
-                    return <div className={cls} style={ style }>
+                let getNormalDom = (cls, isFixed) => {
+                    return <div className={cls} style={ style } key={`${theInd}-${isFixed ? 'fixed' : ''}`}>
                         {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
                     </div>
                 }
                 if(comFixed){
-                    fixedDom.push(getNormalDom('th gsearch fixed'));
+                    fixedDom.push(getNormalDom('th gsearch fixed', true));
                 }
                 return getNormalDom(`th gsearch${comFixed ? ' fixed-hide':''}`);
             }
-            let dom = columns.map((column) => {
-                return getCol(column);
+            let dom = columns.map((column, colind) => {
+                return getCol(column, false, colind);
             });
             if(!hasSearch){
                 return '';
             }
             if(topable){
-                dom.unshift(<div className={`th gsearch topsign${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                dom.unshift(<div className={`th gsearch topsign${ hasFixed ? ' fixed-hide':''}`} key='top'> </div>);
                 if(hasFixed){
-                    fixedDom.unshift(<div className={`th gsearch topsign fixed`}> </div>);
+                    fixedDom.unshift(<div className={`th gsearch topsign fixed`} key='top-fixed'> </div>);
                 }
             }
             if(selectMode === 'multi'){
-                dom.unshift(<div className={`th gsearch select${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                dom.unshift(<div className={`th gsearch select${ hasFixed ? ' fixed-hide':''}`} key='multi'> </div>);
                 if(hasFixed){
-                    fixedDom.unshift(<div className={`th gsearch select fixed`}> </div>);
+                    fixedDom.unshift(<div className={`th gsearch select fixed`} key='multi-fixed'> </div>);
                 }
             }
             if(serial){
@@ -823,12 +824,12 @@ class Grid extends Component{
                         style['width'] = serial.width + 'px';
                     }
                 }
-                dom.unshift(<div style={style} className={`th gsearch serial${ hasFixed ? ' fixed-hide':''}`}> </div>);
+                dom.unshift(<div style={style} className={`th gsearch serial${ hasFixed ? ' fixed-hide':''}`} key='serial'> </div>);
                 if(hasFixed){
-                    fixedDom.unshift(<div style={style} className={`th gsearch serial fixed`}> </div>);
+                    fixedDom.unshift(<div style={style} className={`th gsearch serial fixed`} key='serial-fixed'> </div>);
                 }
             }
-            return <ul className={'search-head'}>{[<div className={'gfixed-panel'}>{fixedDom}</div>, ...dom]}</ul>;
+            return <ul className={'search-head'} key='search'>{[<div className={'gfixed-panel'} key='fixed'>{fixedDom}</div>, ...dom]}</ul>;
         }else{
             return '';
         }
@@ -984,6 +985,7 @@ class Grid extends Component{
         let hasFixed = false;
         let fixedDom = [];
         let dom = [];
+        let initKey = moment().valueOf();
         let getColTr = (cols, pfixed) => {
             let i = 0;
             while(i < cols.length){
@@ -1052,11 +1054,11 @@ class Grid extends Component{
                             onClick={(e)=> this.editClick(e,editable)}
                             onFocus={(e)=> this.editFocus(e,d,key)}
                             onBlur={(e) => this.editBlur(e,d,key,validate)}
-                            key={i}
+                            key={initKey++}
                         >
                                 { treeColumn && treeColumn === key && 
-                                    (d['Grid_leaf'] ? <Icon type={'item'}/> : 
-                                    <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
+                                    (d['Grid_leaf'] ? <Icon type={'item'} /> : 
+                                    <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}} />) }
                                 {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
                         </div>
                     }
@@ -1079,7 +1081,7 @@ class Grid extends Component{
                     clz += ' fixed';
                 }
                 let icon = <Icon type={'circle'} onClick={(e) => this.setTop(e, gInd)}/>;
-                return <div className={clz} key='top'>{ 
+                return <div className={clz} key={`top ${isHide ? '' : 'fixed'}`}>{ 
                     (typeof topable === 'function') ? (topable(d) ? icon : '') : icon}</div>
             }
             dom.unshift(getDiv(hasFixed, true, cls));
@@ -1096,7 +1098,7 @@ class Grid extends Component{
                 <Icon type={type}/>
             </div>);
             if(hasFixed){
-                fixedDom.unshift(<div className={'td select fixed'}>
+                fixedDom.unshift(<div className={'td select fixed'} key='multi-fixed'>
                     <Icon type={type}/>
                 </div>);
             }
@@ -1114,11 +1116,11 @@ class Grid extends Component{
             }
             dom.unshift(<div className={`td serial${hasFixed ? ' fixed-hide' : ''}`} style={style} key='serial'>{sortIndDom}</div>);
             if(hasFixed){
-                fixedDom.unshift(<div className={`td serial fixed`} style={style}>{sortIndDom}</div>);
+                fixedDom.unshift(<div className={`td serial fixed`} style={style} key='serial-fixed'>{sortIndDom}</div>);
             }
         }
         if(fixedDom.length){
-            return [ <div className={'gfixed-panel'} style={{'marginTop': - this.state.scrollTop}}>{fixedDom}</div>, ...dom];
+            return [ <div className={'gfixed-panel'} style={{'marginTop': - this.state.scrollTop}} key='fixed'>{fixedDom}</div>, ...dom];
         }else{
             return dom;
         }
@@ -1148,7 +1150,7 @@ class Grid extends Component{
                 className={'Grid-rewidth'} 
                 ref={'rewidth'}> </div>
                 <header className={'Grid-header'}>
-                    <ul>{ this.getHeaderDom() }</ul>
+                    <ul key='header'>{ this.getHeaderDom() }</ul>
                     { this.getSearchDom() }
                 </header>
                 {!this.state.hideBody && <div className={'scroll-y'} onScroll={this.bodyScroll}>
@@ -1157,30 +1159,30 @@ class Grid extends Component{
                     </ul>
                 </div>}
             {pageMode !== 'tree' && pageMode !== 'none' && <footer className={'Grid-footer'}>
-                <Pagination {...this.state.pagination} onChange={this.pageChange}>
-                    <p> </p>
-                    <PageElement type={'first'} event={'onClick'}>
+                <Pagination {...this.state.pagination} onChange={this.pageChange} key='pagination'>
+                    <p key='none'> </p>
+                    <PageElement type={'first'} event={'onClick'} key='first'>
                         <Icon type={'step-backward'} className={prevDisabled}/>
                     </PageElement>
-                    <PageElement type={'prev'} event={'onClick'}>
+                    <PageElement type={'prev'} event={'onClick'} key='prev'>
                         <Icon type={'fast-backward'} className={prevDisabled}/>
                     </PageElement>
-                    <PageElement type={'page'} event={'onKeyUp'} param={(e) => e.target.value}>
+                    <PageElement type={'page'} event={'onKeyUp'} param={(e) => e.target.value} key='page'>
                         <input onKeyUp={(e) => e.keyCode === 13 } onInput={this.pageInputChange} value={this.state.pageInput}/>
                     </PageElement>
-                    <PageElement type={'text'} text={this.getPageText1}/>
-                    <PageElement type={'next'} event={'onClick'}>
+                    <PageElement type={'text'} text={this.getPageText1} key='text'/>
+                    <PageElement type={'next'} event={'onClick'} key='next'>
                         <Icon type={'fast-forward'} className={nextDisabled}/>
                     </PageElement>
-                    <PageElement type={'last'} event={'onClick'}>
+                    <PageElement type={'last'} event={'onClick'} key='last'>
                         <Icon type={'step-forward'} className={nextDisabled}/>
                     </PageElement>
-                    <PageElement type={'pageSize'} event={'onSelected'} param={(value) => value}>
+                    <PageElement type={'pageSize'} event={'onSelected'} param={(value) => value} key='pageSize'>
                         <Select value={this.state.pagination.pageSize} orient={'up'}>
                             { this.getPageSizeOptionsDom() }
                         </Select>
                     </PageElement>
-                    <PageElement type={'text'} text={this.getPageText2}/>
+                    <PageElement type={'text'} text={this.getPageText2} key='total'/>
                 </Pagination>
             </footer>}
         </section>
