@@ -24,9 +24,9 @@ class test2 extends Component{
 
     render(){
         return <section>
-            <div sign={"div1"} style={{backgroundColor: '#977876',color: 'white'}}>this is test</div>
-            <div sign={"div2"} onClick={(e,o,n) => {this.divClick(e.target,"param1",o,n)}}>第二个div</div>
-            <p><a>内容:</a>一段文字</p>
+            <div sign={"div1"} style={{backgroundColor: '#977876',color: 'white'}} key={0}>this is test</div>
+            <div sign={"div2"} onClick={(e,o,n) => {this.divClick(e.target,"param1",o,n)}} key={1}>第二个div</div>
+            <p key={2}><a key='a'>内容:</a>一段文字</p>
             { ["sdf",21143,"w4r0"].map((v) => {
                 return <b key={v}>{v}</b>
             }) }

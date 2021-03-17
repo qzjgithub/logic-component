@@ -27,7 +27,8 @@ class Button extends Component{
 Button.propTypes = {
     styleType : PropTypes.string,//with-icon
     loading: PropTypes.bool,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    onChanged: PropTypes.func
 }
 
 

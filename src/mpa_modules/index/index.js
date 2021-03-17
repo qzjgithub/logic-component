@@ -6,7 +6,7 @@ import { Router, Route, browserHistory, hashHistory} from 'react-router';
 // import 'antd/lib/date-picker/style/index.css';
 // import 'antd/lib/input/style/index.css';
 // import './component/default/ASSETS/font/iconfont.css';
-import createHashHistory from 'history/createHashHistory';
+import {createHashHistory} from 'history';
 
 import configureStore from '../../redux/store/configureStore';
 import App from './App';

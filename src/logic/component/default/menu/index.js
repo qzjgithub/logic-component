@@ -12,15 +12,15 @@ class Menu extends Component{
         let c = this.props.children;
         if(c){
             if(typeof c === 'object' && c.length){
-                return this.props.children.map((item)=>{
+                return this.props.children.map((item, index)=>{
                     if(item.type){
-                        return React.cloneElement(item,{ checkSign: this.props.checkSign});
+                        return React.cloneElement(item, {checkSign: this.props.checkSign, key: item.key || index});
                     }else{
                         return item;
                     }
                 });
             }else if(c.type && c.length !== 0){
-                return React.cloneElement(this.props.children,{ checkSign: this.props.checkSign});
+                return React.cloneElement(this.props.children,{checkSign: this.props.checkSign});
             }else{
                 return c;
             }
@@ -80,8 +80,8 @@ class MenuItem extends Component{
     getChildren(){
         if(this.props.children){
             if(this.props.children.length){
-                return <ul className={'Menu'}>{ this.props.children.map((item)=>{
-                    return React.cloneElement(item,{ checkSign: this.props.checkSign});
+                return <ul className={'Menu'}>{ this.props.children.map((item, index)=>{
+                    return React.cloneElement(item,{ checkSign: this.props.checkSign, key: item.key || index});
                 }) }</ul>;
             }else{
                 return <ul className={'Menu'}>{ React.cloneElement(this.props.children,{ checkSign: this.props.checkSign}) }</ul>;

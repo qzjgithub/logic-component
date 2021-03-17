@@ -92,14 +92,14 @@ class Select extends Component{
         if(children && !(children instanceof Array)){
             children = [ children ];
         }
-        let dom = (children||[]).map((item) => {
+        let dom = (children||[]).map((item, index) => {
             let checked = false;
             if(value === item.props.value){
                 this.text = item.props.children;
                 text = item.props.children;
                 checked = true;
             }
-            return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked})
+            return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked, key: item.key || index})
         });
         return { dom, text }
     }
@@ -114,7 +114,7 @@ class Select extends Component{
         if(children && !(children instanceof Array)){
             children = [ children ];
         }
-        let dom = (children||[]).map((item) => {
+        let dom = (children||[]).map((item, index) => {
             let checked = false;
             if(value.indexOf(item.props.value) > -1){
                 this.text.push(item.props.children);
@@ -124,12 +124,12 @@ class Select extends Component{
                         <Icon type={'guanbi1'} onClick={(e) => {
                             e.stopPropagation();
                             this.itemClick(item.props.value,item.props.children)
-                        }}/>
+                        }} />
                     </span>
                 );
                 checked = true;
             }
-            return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked, mode: mode});
+            return React.cloneElement(item,{selectBridge: this.itemClick,checked: checked, mode: mode, key: item.key || index});
         });
         if(getText){
             text = getText(this.state.value, this.text);
@@ -225,14 +225,16 @@ class Select extends Component{
                 className={'text'} 
                 sign={'text'} 
                 disabled={this.props.disabled}
-                style={{height: this.props.height || '',width: this.props.width || ''}}>
-                <Icon type={'unfold'}/>
-                <span ref={'text'}>{ text || value}</span>
+                style={{height: this.props.height || '',width: this.props.width || ''}}
+                key='btn'
+            >
+                <Icon type={'unfold'} key='icon' />
+                <span ref={'text'} key='text'>{ text || value}</span>
             </Button>
-            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus}>
-                { !!hasAll && <li onClick={this.setAll}>
+            <ul className={'list'} sign={'list'} onMouseLeave={this.keepFocus} key='ul'>
+                { !!hasAll && <li onClick={this.setAll} key='selectMultiAll'>
                     { hasAll!==true ? hasAll:'选择全部'}
-                    { this.state.all && <Icon type={'xuanze'} className={'mutli-sign'}/>}
+                    { this.state.all && <Icon type={'xuanze'} className={'mutli-sign'} key='icon' />}
                 </li>}
                 { list.dom }
             </ul>
@@ -277,7 +279,7 @@ class Option extends Component{
 }
 
 Option.propTypes = {
-    value : PropTypes.string,
+    value : PropTypes.any,
     checked: PropTypes.bool,
     selectBridge: PropTypes.func
 }

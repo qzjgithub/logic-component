@@ -227,6 +227,10 @@ class Timer extends Component{
         }
     }
 
+    getFormType = () => {
+        return 'timer';
+    }
+
     getFormatValue = () => {
         let format = this.props.format;
         if(!isRealOrZero(format)){

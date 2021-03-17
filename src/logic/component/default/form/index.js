@@ -133,6 +133,9 @@ class FormItem extends Component{
             case 'dateRangepicker':
                 isNull = !value.startDate &&　!value.endDate;
                 break;
+            case 'timer':
+                isNull = !value.hour && !value.minute && !value.second;
+                break;
             case 'input':
             case 'select':
             case 'treeSelect':
@@ -194,7 +197,8 @@ class FormItem extends Component{
     }
 
     render(){
-        return <div className={`FormItem ${this.props.noLabel ? 'noLabel':''}`}>
+        const {className = ''} = this.props;
+        return <div className={`FormItem ${this.props.noLabel ? 'noLabel':''} ${className}`}>
             <label>{ this.props.label||'' }</label>
             { this.getChildren() }
         </div>
@@ -206,7 +210,8 @@ FormItem.propTypes = {
     name: PropTypes.string,//表单属性key,
     rules: PropTypes.array,//[{ require: true, message: ''},{reg:/\d+/,message:''},{validate:function(value){},message: ''}]
     noLabel: PropTypes.bool,//是否不展示标签
-    formSign: PropTypes.bool
+    formSign: PropTypes.bool,
+    className: PropTypes.string
 }
 
 Form.FormItem = FormItem;

@@ -614,18 +614,16 @@ class Grid extends Component{
 
     getPageText1 = (param) => {
         let { pages } = param;
-        let { pageText1 } = this.props;
-        if(pageText1){
-            pageText1 = pageText1.replace('${pages}',pages);
-        }else{
-            pageText1 = `共${pages}页`;
-        }
-        return <span>{ pageText1 }</span>
+        let { pageText1, i18n = {} } = this.props;
+        let str = i18n.pages || pageText1 || `共${pages}页`;
+        str = str.replace('${pages}',pages);
+        return <span>{ str }</span>
     }
 
     getPageText2 = (param) => {
+        const {noDataText, i18n = {}} = this.props;
         if(!this.props.data || !this.props.data.length){
-            return <p><span>{this.props.noDataText || '无数据'}</span></p>;
+            return <p><span>{i18n.noDataText || noDataText || '无数据'}</span></p>;
         }
         let { curPage, pageSize, total } = param;
         let start = ((curPage||1) - 1) * pageSize + 1;
@@ -633,15 +631,12 @@ class Grid extends Component{
         if(end > total){
             end = total;
         }
-        let { pageText2 } = this.props;
-        if(pageText2){
-            pageText2 = pageText2.replace('${start}',start)
-                .replace('${end}',end)
-                .replace('${total}',total);
-        }else{
-            pageText2 = `${start} - ${end} 共${total}条`
-        }
-        return <p><span>{ pageText2 }</span></p>
+        let { pageText2} = this.props;
+        let str = i18n.total || pageText2 || `${start} - ${end} 共${total}条`;
+        str = str.replace('${start}',start)
+            .replace('${end}',end)
+            .replace('${total}', total);
+        return <p><span>{ str }</span></p>
     }
 
     getPageSizeOptionsDom = () => {
@@ -651,6 +646,7 @@ class Grid extends Component{
     }
 
     getHeaderDom = () => {
+        let initKey = moment().valueOf();
         let { columns, selectMode, serial, topable } = this.props;
         let { sort, order, widthRecord } = this.state;
         if(isArray(columns)){
@@ -709,9 +705,9 @@ class Grid extends Component{
                 return getCol(column);
             });
             if(topable){
-                dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`}> </li>);
+                dom.unshift(<li className={`th topsign${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li className={'th topsign fixed'}> </li>);
+                    fixedDom.unshift(<li className={'th topsign fixed'} key={initKey++}> </li>);
                 }
             }
             if(selectMode === 'multi'){
@@ -723,11 +719,11 @@ class Grid extends Component{
                     }
                 }
                 let type = selectAll ?'fangxingxuanzhong':'fangxingweixuanzhong';
-                dom.unshift(<li className={`th select${ hasFixed ? ' fixed-hide': ''}`}>
+                dom.unshift(<li className={`th select${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}>
                     <Icon type={type} onClick={this.selectAll}/>
                 </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li className={'th select fixed'}>
+                    fixedDom.unshift(<li className={'th select fixed'} key={initKey++}>
                     <Icon type={type} onClick={this.selectAll}/>
                 </li>);
                 }
@@ -739,12 +735,12 @@ class Grid extends Component{
                         style['width'] = serial.width + 'px';
                     }
                 }
-                dom.unshift(<li style={style} className={`th serial${ hasFixed ? ' fixed-hide': ''}`}> </li>);
+                dom.unshift(<li style={style} className={`th serial${ hasFixed ? ' fixed-hide': ''}`} key={initKey++}> </li>);
                 if(hasFixed){
-                    fixedDom.unshift(<li style={style} className={'th serial fixed'}> </li>);
+                    fixedDom.unshift(<li style={style} className={'th serial fixed'} key={initKey++}> </li>);
                 }
             }
-            return [<li className={'gfixed-panel'}>{fixedDom}</li>, ...dom];
+            return [<li className={'gfixed-panel'} key={initKey++}><ul>{fixedDom}</ul></li>, ...dom];
         }else{
             return '';
         }
@@ -753,8 +749,8 @@ class Grid extends Component{
     getSortIcon = (key,sort,order) => {
         if(key === sort){
             let dom = [];
-            dom.push(<Icon type={'triangleupfill'} className={`sort ${order!=='desc'?'active':''}`}/>);
-            dom.push(<Icon type={'triangledownfill'} className={`sort desc ${order==='desc'?'active':''}`}/>);
+            dom.push(<Icon type={'triangleupfill'} className={`sort ${order!=='desc'?'active':''}`} key='asc'/>);
+            dom.push(<Icon type={'triangledownfill'} className={`sort desc ${order==='desc'?'active':''}`} key='desc' />);
             return dom;
         }else{
             return '';
@@ -983,15 +979,14 @@ class Grid extends Component{
             treeColumn = (treeConfig || {})['column'] || columns[0]['key'];
             treeKey = (treeConfig||{})['key'] || 'id';
         }
-        let { widthRecord, editor, treeState } = this.state;
-        let trEditor = editor[gInd];
+        let { widthRecord, treeState } = this.state;
         let comFixed = true;
         let hasFixed = false;
         let fixedDom = [];
         let dom = [];
         let getColTr = (cols, pfixed) => {
             let i = 0;
-            for(; i < cols.length; ){
+            while(i < cols.length){
                 let column = cols[i];
                 let { hidden, width, render, key, editable, validate, 
                     fixed, colspan, children, hoverTips } = column;
@@ -1011,14 +1006,13 @@ class Grid extends Component{
                 if(colspan > 1){
                     let widthArr = [];
                     while(colspan > 0){
-                        let col = columns[i];
+                        let col = cols[i];
                         if(!col.hidden){
                             widthArr.push(widthRecord[col['key']] || col['width']);
+                            colspan--;
                         }
                         i++;
-                        colspan--;
                     }
-                    console.log(widthArr);
                     width = `calc(${widthArr.join(' + ')})`;
                 }else{
                     i++;
@@ -1057,7 +1051,9 @@ class Grid extends Component{
                             contentEditable={editable} 
                             onClick={(e)=> this.editClick(e,editable)}
                             onFocus={(e)=> this.editFocus(e,d,key)}
-                            onBlur={(e) => this.editBlur(e,d,key,validate)}>
+                            onBlur={(e) => this.editBlur(e,d,key,validate)}
+                            key={i}
+                        >
                                 { treeColumn && treeColumn === key && 
                                     (d['Grid_leaf'] ? <Icon type={'item'}/> : 
                                     <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}}/>) }
@@ -1083,7 +1079,7 @@ class Grid extends Component{
                     clz += ' fixed';
                 }
                 let icon = <Icon type={'circle'} onClick={(e) => this.setTop(e, gInd)}/>;
-                return <div className={clz}>{ 
+                return <div className={clz} key='top'>{ 
                     (typeof topable === 'function') ? (topable(d) ? icon : '') : icon}</div>
             }
             dom.unshift(getDiv(hasFixed, true, cls));
@@ -1096,7 +1092,7 @@ class Grid extends Component{
             if(this.state.selected.indexOf(gInd) > -1){
                 type = 'fangxingxuanzhong';
             }
-            dom.unshift(<div className={`td select${hasFixed ? ' fixed-hide':''}`}>
+            dom.unshift(<div className={`td select${hasFixed ? ' fixed-hide':''}`} key='multi'>
                 <Icon type={type}/>
             </div>);
             if(hasFixed){
@@ -1116,7 +1112,7 @@ class Grid extends Component{
                     style['width'] = serial.width + 'px';
                 }
             }
-            dom.unshift(<div className={`td serial${hasFixed ? ' fixed-hide' : ''}`} style={style}>{sortIndDom}</div>);
+            dom.unshift(<div className={`td serial${hasFixed ? ' fixed-hide' : ''}`} style={style} key='serial'>{sortIndDom}</div>);
             if(hasFixed){
                 fixedDom.unshift(<div className={`td serial fixed`} style={style}>{sortIndDom}</div>);
             }
@@ -1135,8 +1131,11 @@ class Grid extends Component{
         let prevDisabled = curPage <= 1 ? 'disabled':'';
         let nextDisabled = curPage >= pages ? 'disabled':'';
 
-        let { pageMode, className } = this.props;
+        let { pageMode, className, headerStrategy } = this.props;
         className = className || '';
+        if (headerStrategy) {
+            className += ' ' + headerStrategy;
+        }
 
         return <section className={`Grid ${className}`} onDragOver={this.allCursor}>
             {/* <div className={'scroll-x'}>
@@ -1239,7 +1238,9 @@ Grid.propTypes = {
     onTopped: PropTypes.func,//function(toppedData){}
     onRewidth: PropTypes.func,
     treeConfig: PropTypes.any,//true/{ column: ''//默认第一个,parentKey: 'parentId', key: 'id'}
-    customSort: true
+    customSort: PropTypes.bool,
+    headerStrategy: PropTypes.string, // strech
+    i18n: PropTypes.object, // {noDataText, pages, total} 所有需要国际化的内容集合
 }
 
 export default Grid;

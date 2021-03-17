@@ -185,7 +185,7 @@ class PageElement extends Component{
 PageElement.propTypes = {
     type: PropTypes.string,//prev,next,first,last,page,pageSize,text
     event: PropTypes.string,
-    param: PropTypes.string,
+    param: PropTypes.any,
     bridge: PropTypes.func,
     text: PropTypes.func
 }

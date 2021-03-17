@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import GenLogic from './GenLogic';
 import Status from './Status';
 import SequenceEvent from "./SequenceEvent";
@@ -176,7 +177,7 @@ class Basic extends Component {
                 seq.execute(ev);
             }
         });
-        newProps = Object.assign(newProps,data['prop']);
+        newProps = Object.assign(newProps, {key: moment().valueOf()}, data['prop']);
         return newProps;
     }
 

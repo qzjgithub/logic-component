@@ -59,7 +59,7 @@ class Cutover extends Component{
             }else{
                 return false;
             }
-        }).map((item)=>React.cloneElement(item,{ showWidth })));
+        }).map((item, innerIndex)=>React.cloneElement(item,{ showWidth, key: item.key || innerIndex })));
         this.index = index;
 
         let prevInd = index - 1;
@@ -87,8 +87,8 @@ class Cutover extends Component{
         if(this.state.status!==0){
             style['transition'] = 'margin-left 300ms linear';
         }
-        dom.unshift(React.cloneElement(children[prevInd],{showWidth: this.showWidth,style}));
-        dom.push(React.cloneElement(children[nextInd],{showWidth: this.showWidth}));
+        dom.unshift(React.cloneElement(children[prevInd],{showWidth: this.showWidth,style, key: children[prevInd].key || 'prev'}));
+        dom.push(React.cloneElement(children[nextInd],{showWidth: this.showWidth, key: children[nextInd].key || 'next'}));
         return dom;
     }
 
@@ -135,13 +135,13 @@ class Cutover extends Component{
             disabled = true;
         }
         return <ul className={`Cutover ${disabled?'disabled':''}`}>
-            <li className={'arrow prev'}>
+            <li className={'arrow prev'} key='left'>
                 <Icon type={'zuo'} onClick={()=>this.svgClick(1)}/>
             </li>
-            <li className={'show'} style={{width: this.showWidth}}>
+            <li className={'show'} style={{width: this.showWidth}} key='center'>
                 { this.getChildren() }
                 </li>
-            <li className={'arrow next'}>
+            <li className={'arrow next'} key='right'>
                 <Icon type={'gengduo'} onClick={()=>this.svgClick(2)}/>
             </li>
         </ul>

@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Route , Redirect, Switch} from "react-router";
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 import 'mpa-bridge-dom';
 
 import test2 from '../../test/testComponent2';
@@ -14,7 +13,6 @@ import TopSlipShow from '../../space_modules/topSlip';
 import TreeShow from '../../space_modules/tree';
 import './App.styl';
 
-import Header from '../../space_modules/header';
 import CutoverShow from "../../space_modules/cutover";
 import DialogShow from '../../space_modules/dialog';
 import LoadingShow from '../../space_modules/loading';
@@ -45,7 +43,7 @@ class App extends Component{
     render(){
         return <div className={'logic-demo'}>
             <Menu>
-                <MenuItem text={<Link to={'/test2'}>测试</Link>}/>
+                <MenuItem text={<Link to={'/test2'}>测试</Link>} />
                 <MenuItem text={<Link to={'/button'}>按钮</Link>}/>
                 <MenuItem text={<Link to={'/input'}>输入框</Link>}/>
                 <MenuItem text={<Link to={'/checkbox'}>复选框</Link>}/>
@@ -67,27 +65,27 @@ class App extends Component{
                 <MenuItem text={<Link to={'/dragger'}>拖拽</Link>}/>
             </Menu>
             <Switch>
-                <Route path={'/button'} component={ ButtonShow } />
-                <Route path={'/input'} component={ InputShow }/>
-                <Route path={'/checkbox'} component={ CheckboxShow }/>
-                <Route path={'/grid'} component={ GridShow }/>
-                <Route path={'/test2'} component={ test2 }/>
-                <Route path={'/select'} component={ SelectShow }/>
-                <Route path={'/cutover'} component={ CutoverShow }/>
-                <Route path={'/topSlip'} component={ TopSlipShow }/>
-                <Route path={'/tree'} component={ TreeShow }/>
-                <Route path={'/dialog'} component={ DialogShow }/>
-                <Route path={'/loading'} component={ LoadingShow }/>
-                <Route path={'/menu'} component={ MenuShow }/>
-                <Route path={'/form'} component={ FormShow }/>
-                <Route path={'/timer'} component={ TimerShow }/>
-                <Route path={'/calendar'} component={ CalendarShow }/>
-                <Route path={'/datepicker'} component={ DatepickerShow }/>
-                <Route path={'/dateRangepicker'} component={ DateRangepickerShow }/>
-                <Route path={'/treeSelect'} component={ TreeSelectShow }/>
-                <Route path={'/pagination'} component={ PaginationShow }/>
-                <Route path={'/dragger'} component={ DraggerShow }/>
-                <Redirect from={'/'} to={'/dragger'}/>
+                <Route path={'/button'} component={ ButtonShow } key='button' />
+                <Route path={'/input'} component={ InputShow } key='input' />
+                <Route path={'/checkbox'} component={ CheckboxShow } key='checkbox' />
+                <Route path={'/grid'} component={ GridShow } key='grid' />
+                <Route path={'/test2'} component={ test2 } key='test2' />
+                <Route path={'/select'} component={ SelectShow } key='select' />
+                <Route path={'/cutover'} component={ CutoverShow } key='cutover' />
+                <Route path={'/topSlip'} component={ TopSlipShow } key='topSlip' />
+                <Route path={'/tree'} component={ TreeShow } key='tree' />
+                <Route path={'/dialog'} component={ DialogShow } key='dialog' />
+                <Route path={'/loading'} component={ LoadingShow } key='loading' />
+                <Route path={'/menu'} component={ MenuShow } key='menu' />
+                <Route path={'/form'} component={ FormShow } key='form' />
+                <Route path={'/timer'} component={ TimerShow } key='timer' />
+                <Route path={'/calendar'} component={ CalendarShow } key='calendar' />
+                <Route path={'/datepicker'} component={ DatepickerShow } key='datepicker' />
+                <Route path={'/dateRangepicker'} component={ DateRangepickerShow } key='dateRangepicker' />
+                <Route path={'/treeSelect'} component={ TreeSelectShow } key='treeSelect' />
+                <Route path={'/pagination'} component={ PaginationShow } key='pagination' />
+                <Route path={'/dragger'} component={ DraggerShow } key='dragger' />
+                <Redirect from={'/'} to={'/button'} key='direct'/>
             </Switch>
             {/*</Content>*/}
         </div>

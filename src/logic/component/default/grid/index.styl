@@ -64,6 +64,12 @@ normalActive = rgba(sc,sc,sc,0.2);
     flex-direction: row;
     background-color: #012130;
     z-index: 2;
+    & > ul {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      background-color: #012130;
+    }
   }
   .search-head .gfixed-panel{
     height: 34px;
@@ -78,7 +84,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     height: 34px;
   }
   .th{
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.1);
     flex: auto;
     text-align: center;
     border-right: 1px solid #3d718f;
@@ -123,7 +129,7 @@ normalActive = rgba(sc,sc,sc,0.2);
       align-items: center;
     }
   }
-  ul>.th:last-child{
+  &>ul>.th:last-child{
     margin-right: 8px;  
   }
   .th.fixed{
@@ -134,7 +140,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     pointer-events: none;
   }
   .th:hover{
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0,0,0,0.3);
   }
   .th.select{
     flex: none;
@@ -159,7 +165,7 @@ normalActive = rgba(sc,sc,sc,0.2);
     }
   }
   .th.select,.th.serial,.th.gsearch:hover{
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.1);
   }
   .th.with-child{
     border-right: 0;
@@ -455,6 +461,20 @@ normalActive = rgba(sc,sc,sc,0.2);
         bottom: 26px;
         border-color: #3d718f;
       }
+    }
+  }
+}
+
+.Grid.strech {
+  .Grid-header{
+    &>ul{
+      width: 100%;
+    }
+  }
+  .Grid-body{
+    width: 100%;
+    &>.tr>.td:last-child{
+      margin-right: 8px;
     }
   }
 }

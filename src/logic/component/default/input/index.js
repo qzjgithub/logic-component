@@ -5,6 +5,9 @@ import './index.styl';
 class Input extends Component{
     constructor(props, context) {
         super(props, context);
+        this.state = {
+            value: undefined
+        }
     }
 
     getValue = () => {
@@ -21,17 +24,38 @@ class Input extends Component{
         input.value = '';
     }
 
+    onInput = (e) => {
+        this.setState({
+            value: e.target.value
+        }, () => {
+            if (this.props.onInput) {
+                this.props.onInput(e);
+            }
+        });
+    }
+
     render(){
-        let styleType = this.props.styleType || '';
+        const {styleType = '', initValue, value} = this.props;
+        let v = value;
+        if (v === undefined) {
+            v = this.state.value;
+        }
+        if (v === undefined) {
+            v = initValue;
+        }
         return <input {...this.props} 
             ref={'input'}
-            className={`Input ${styleType} ${(this.props.disabled) ? 'disabled': ''}` }/>
+            className={`Input ${styleType} ${(this.props.disabled) ? 'disabled': ''}` }
+            value={v}
+            onInput={this.onInput}
+        />
     }
 }
 
 Input.propTypes = {
     styleType : PropTypes.string,//with-icon
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    input: PropTypes.string
 }
 
 export default Input

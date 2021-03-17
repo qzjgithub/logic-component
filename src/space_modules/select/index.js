@@ -24,14 +24,14 @@ class SelectShow extends Component{
     }
 
     render(){
-        return <div className={"Show"}>
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'}>
+        return <div className={"Show"} key='div'>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} key={0}>
                 <Option value={'1'}>apple</Option>
                 <Option value={'2'}>orange</Option>
                 <Option value={'3'}>potato</Option>
             </Select>
 
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'}>
+            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'} key={1}>
                 <Option value={'1'}>apple</Option>
                 <Option value={'2'}>orange</Option>
                 <Option value={'3'}>banana</Option>

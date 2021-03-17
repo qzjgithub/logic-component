@@ -3,8 +3,8 @@ const path = require('path');
 
 console.log(__dirname,__filename,process.cwd());
 const jsReg = /^.+\.js$/;
-const sourcePath = path.resolve(__dirname,'src/logic');
-const libPath = path.resolve(__dirname,'build');
+const sourcePath = path.resolve(__dirname,'../logic-component/src/logic');
+const libPath = path.resolve(__dirname,'../logic-component/build');
 const targetPath = path.resolve(process.cwd(),'node_modules/logic-component/build');
 
 function copy(){
@@ -59,7 +59,7 @@ function writeFile(file,joins,data){
 }
 
 function copyIndex(){
-    let data = fs.readFileSync(path.resolve(__dirname,'index.js'));
+    let data = fs.readFileSync(path.resolve(__dirname,'../logic-component/index.js'));
     fs.writeFileSync(path.resolve(path.resolve(process.cwd(),'node_modules/logic-component'),'index.js'),data);
 }
 copy();
