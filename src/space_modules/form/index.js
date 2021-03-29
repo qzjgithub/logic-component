@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form,Select,Button , Input,Datepicker,DateRangepicker} from '../../logic';
+import { Form,Select, Button , Input,Datepicker,DateRangepicker} from '../../logic';
 import moment from 'moment';
 
 const FormItem = Form.FormItem;
@@ -46,8 +46,8 @@ class FormShow extends Component{
                     <DateRangepicker/>
                 </FormItem>
                 <FormItem noLabel={true}>
-                    <Button onClick={this.saveData}>确定</Button>
-                    <Button onClick={this.clear}>清空</Button>
+                    <Button onClick={this.saveData} key='confirm'>确定</Button>
+                    <Button onClick={this.clear} key='cancel'>清空</Button>
                 </FormItem>
             </Form>
         </div>

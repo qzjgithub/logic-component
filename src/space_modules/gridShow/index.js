@@ -22,8 +22,11 @@ const COLUMNS = [
         name: "性别",
         key: "sex",
         width: "400px",
-        hidden: true,
-        searcher: true,
+        hidden: false,
+        editable: 'select',
+        searcher: (v, d, k) => {
+            return (v === '男' && d[k] === 1) || (v === '女' && d[k] === 0);
+        },
         render: (value,record,key,index) => {
             return value === 0 ? '女':'男';
         }
@@ -88,9 +91,9 @@ const COLUMNS = [
 ]
 
 const DATA = [
-    // { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80,mathor:'mathor1',fathor:'fathor1',birthday: '2019-09-08'},
+    { name: "aaa",sex: 0,age:36 ,id : 1, parentId: '',lang: 80, math: 80,mathor:'mathor1',fathor:'fathor1',birthday: '2019-09-08'},
     { name: "bbb",sex: 1,age:12 ,id : 2, parentId: 1,lang: 80, math: 80,birthday: '2019-09-07'},
-    /* { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80,birthday: '2019-09-08'},
+    { name: "ccc",sex: 1,age:43 ,id : 3, parentId: 2,lang: 80, math: 80,birthday: '2019-09-08'},
     { name: "ccc",sex: 1,age:43 ,id : 4, parentId: 2,lang: 80, math: 80,birthday: '2019-05-01'},
     { name: "ccc",sex: 1,age:33 ,id : 5, parentId: 3,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:2 ,id : 6, parentId: 3,lang: 80, math: 80,birthday: '2019-09-08 12:00:30'},
@@ -113,7 +116,7 @@ const DATA = [
     { name: "ccc",sex: 1,age:56 ,id : 10, parentId: 9,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:23 ,id : 11, parentId: 9,lang: 80, math: 80},
     { name: "ccc",sex: 1,age:32 ,id : 12, parentId: 11,lang: 80, math: 80},
-    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80}, */
+    { name: "ccc",sex: 1,age:54 ,id : 13, parentId: 11,lang: 80, math: 80},
 ]
 
 class GridShow extends Component{
@@ -155,9 +158,15 @@ class GridShow extends Component{
         grid.clearEditor();
     }
 
+    clearSearch = () => {
+        let grid = this.refs['grid'];
+        grid.clearSearch();
+    }
+
     render(){
         return <div className={'Show'}>
             <Button onClick={this.clearEditor}>清空修改</Button>
+            <Button onClick={this.clearSearch}>清空搜索</Button>
             <Grid columns={COLUMNS}
                     ref="grid"
                     topable={(record) => { return record.age > 40 }}
@@ -179,6 +188,7 @@ class GridShow extends Component{
                   onChange={this.onChange}
                   data={DATA}
                   headerStrategy='strech'
+                  editableSelection={{sex: [{value: 0, text: '女'},{value: 1, text: '男'}]}}
                 />
             </div>
     }

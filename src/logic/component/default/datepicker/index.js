@@ -122,27 +122,27 @@ class Datepicker extends Component{
         }
         let hasClear = this.props.hasClear;
         return <div>
-            <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`}>
-                <span ref={'text'}>{ text }</span>
+            <Button sign={'text'} className={`text ${this.props.disabled ? 'disabled': ''}`} key='btn'>
+                <span ref={'text'} key='text'>{ text }</span>
                 { hasClear !== false && value && 
-                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
+                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'} key='clear' />
                 }
-                <Icon type={'unfold'} />
+                <Icon type={'unfold'} key='close' />
             </Button>
-            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
-                <Calendar {...this.getCalendarConfig()} ref={'calendar'}/>
-                <p className={'control'}>
+            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus} key='list'>
+                <Calendar {...this.getCalendarConfig()} ref={'calendar'} key='calendar' />
+                <p className={'control'} key='contrl'>
                     {hasClear !== false &&
-                        <a onClick={this.clear} className={'clear'}>
+                        <a onClick={this.clear} className={'clear'} key='clear'>
                             {hasClear === true ? '清除' : hasClear }
                         </a>
                     }
                     {this.props.hasNow !== false &&
-                        <a onClick={this.toNow}>
+                        <a onClick={this.toNow} key='now'>
                             {this.props.hasNow || '此刻'}
                         </a>
                     }
-                    <Button onClick={this.setValue}>
+                    <Button onClick={this.setValue} key='confirm'>
                         {this.props.confirmText || '确定'}
                     </Button>
                 </p>

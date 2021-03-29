@@ -53,7 +53,7 @@ class DateRangepickerShow extends Component{
                 endConfig={{
                     timerConfig: false
                 }}/>
-                <span onClick={this.valid}>验证</span>
+                <span onClick={this.valid} key='valid'>验证</span>
         </div>
     }
 }

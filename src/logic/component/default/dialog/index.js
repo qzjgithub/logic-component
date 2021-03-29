@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import {render} from 'react-dom';
 import PropTypes from 'prop-types';
 import logical from '../../../common/logical';
+import Button from '../button';
 import config from './config.json';
 import logic from './logic.js';
 import './index.styl';
@@ -41,6 +43,14 @@ class Dialog extends Component{
         });
     }
 
+    hide = () => {
+        let status = this.state.status;
+        status['closed'] = true;
+        this.setState({
+            status: status
+        });
+    }
+
     dragStart = (e) => {
         this.startPosition = {x: e.pageX, y: e.pageY };
     }
@@ -70,11 +80,11 @@ class Dialog extends Component{
                     onDragStart={this.dragStart}
                     onDragEnd={this.dragEnd}
                 >
-                    <header className={'title'}>
-                        <span>{this.props.title}</span>
-                        <span className={"cross-close"} sign="close"><Icon type={'guanbi1'}/></span>
+                    <header className={'title'} key='header'>
+                        <span key='title'>{this.props.title}</span>
+                        <span className={"cross-close"} sign="close" key='close'><Icon type={'guanbi1'}/></span>
                     </header>
-                    <div className={'content'}> { this.props.children } </div>
+                    <div className={'content'} key='content'> { this.props.children } </div>
                 </article>
             </div>
         </section>;
@@ -94,7 +104,69 @@ Dialog.propTypes = {
     confirmText: PropTypes.string,
     penetrate: PropTypes.bool,//是否允许弹框下的元素事件响应
     draggable: PropTypes.bool,//弹框是否可拖拽
+    i18n: PropTypes.object,
+    lang: PropTypes.string
 }
 
+const FinalDialog = logical(Dialog,logic,config);
+export default FinalDialog;
 
-export default logical(Dialog,logic,config);
+export function confirm(text, {
+    title, 
+    i18n = {title: '提示', confirm: '确认', cancel: '取消'},
+    lang = 'zh',
+    height = 210,
+    width = 360,
+    onCancel,
+    onConfirm,
+    ...option
+} = {}, target = null) {
+    const tt = title || i18n.title || (lang === 'zh' ? '提示' : 'Tips');
+    const cf = i18n.confirm || (lang === 'zh' ? '确认' : 'Confirm');
+    const cc = i18n.cancel || (lang === 'zh' ? '取消' : 'Cancel');
+    let theTg = target;
+    if (!target) {
+        theTg = document.createElement('div');
+        document.getElementsByTagName('body')[0].appendChild(theTg);
+    }
+    const confirmAction = () => {
+        if (!onConfirm || onConfirm()) {
+            removeTarget();
+        }
+    }
+
+    const removeTarget = () => {
+        if (!target) {
+            document.getElementsByTagName('body')[0].removeChild(theTg);
+        }
+    }
+    render((
+    <FinalDialog
+        title={tt}
+        width={width}
+        height={height}
+        lang={lang}
+        i18n={i18n}
+        show
+        className='Dialog-confirm'
+        onChanged={() => {
+            onCancel && onCancel();
+            removeTarget();
+        }}
+        {...option}
+    >
+        <div key='content' className='Dialog-confirm-content'>{text}</div>
+        <footer key='footer' className='Dialog-confirm-footer'>
+            <Button styleType='with-icon' sign='close' key='close'>
+                <Icon type='minus-circle' />
+                {cc}
+            </Button>
+            <Button styleType='with-icon' onClick={confirmAction} key='confirm'>
+                <Icon type='xuanze' />
+                {cf}
+            </Button>
+        </footer>
+    </FinalDialog>
+    ), theTg);
+    return removeTarget;
+}

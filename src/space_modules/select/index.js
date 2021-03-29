@@ -37,6 +37,11 @@ class SelectShow extends Component{
                 <Option value={'3'}>banana</Option>
                 <Option value={'4'}>tomato</Option>
             </Select>
+            <Select initValue={['1']} mode={'multi'} defaultText={'请选择任务'} noDataText={'没有任务'} key={3}>
+                <Option value={'1'}>test1</Option>
+                <Option value={'2'}>test2</Option>
+                <Option value={'3'}>test3</Option>
+            </Select>
         </div>
     }
 }

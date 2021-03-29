@@ -208,23 +208,23 @@ class DateRangepicker extends Component{
         }
         let hasClear = this.props.hasClear;
         return <div>
-            <Button sign={'text'} className={'text'} disabled={this.props.disabled}>
-                <span ref={'text'}>{ text }</span>
+            <Button sign={'text'} className={'text'} disabled={this.props.disabled} key='btn'>
+                <span ref={'text'} key='text'>{ text }</span>
                 { this.props.hasClear !== false &&  ( start || end ) && 
-                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'}/>
+                    <Icon type={'guanbi1'} onClick={this.clear} className={'date-clear'} key='clear' />
                 }
-                <Icon type={'unfold'} />
+                <Icon type={'unfold'} key='close' />
             </Button>
-            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus}>
-                <Calendar {...this.getStartConfig()} ref={'start'}/>
-                <Calendar {...this.getEndConfig()} ref={'end'}/>
-                <p className={'control'}>
+            <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus} key='list'>
+                <Calendar {...this.getStartConfig()} ref={'start'} key='start' />
+                <Calendar {...this.getEndConfig()} ref={'end'} key='end' />
+                <p className={'control'} key='control'>
                     {hasClear !== false && ( !!start || !!end ) && 
-                        <a onClick={this.clear} className={'cleard'}>
+                        <a onClick={this.clear} className={'cleard'} key='clear'>
                             {hasClear === true ? '清除' : hasClear}
                         </a>
                     }
-                    <Button onClick={this.setValue}>
+                    <Button onClick={this.setValue} key='confirm'>
                         {this.props.confirmText || '确定'}
                     </Button>
                 </p>

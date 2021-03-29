@@ -34,28 +34,29 @@ class Form extends Component{
            err[name] = data.err;
            values[name] = data.value;
         });
-        return { err : result ? null: err, values }
+        return { err : result ? null : err, values }
     }
 
     getChildren = () => {
         let c = this.props.children;
+        const {lang} = this.props;
         this.names = [];
         let name;
         if(c && typeof c === 'object'){
             if(!c.length && c.length !== 0 && c.type && c.props.name){
                 name = c.props.name;
                 this.names.push(name);
-                return React.cloneElement(c,{ref: name});
+                return React.cloneElement(c,{ref: name, key: c.key || 'formItem', lang});
             }else if(c.length === 1 && c[0].type && c[0].props.name){
                 name = c[0].props.name;
                 this.names.push(name);
-                return React.cloneElement(c[0],{ref: name});
+                return React.cloneElement(c[0],{ref: name, key: c[0].key || 'formItem', lang});
             }else if(c.length){
-                return c.map((item) => {
+                return c.map((item, index) => {
                     if(item && item.type && item.props.name){
                         name = item.props.name;
                         this.names.push(name);
-                        return React.cloneElement(item,{ref: name});
+                        return React.cloneElement(item,{ref: name, key: item.key || index, lang});
                     } else{
                         return item;
                     }
@@ -76,7 +77,8 @@ class Form extends Component{
 }
 
 Form.propTypes = {
-    type: PropTypes.string
+    type: PropTypes.string,
+    lang: PropTypes.string
 }
 
 class FormItem extends Component{
@@ -99,6 +101,7 @@ class FormItem extends Component{
     }
 
     validate = () => {
+        const {lang} = this.props;
         let result = true;
         let err = null;
 
@@ -125,7 +128,7 @@ class FormItem extends Component{
         switch(formType){
             case 'multiSelect':
             case 'multiTreeSelect':
-                isNull = !value || !(value instanceof Array)|| !value.length;
+                isNull = !value || !(value instanceof Array) || !value.length;
                 break;
             case 'datepicker':
                 isNull = !value.value;
@@ -137,10 +140,12 @@ class FormItem extends Component{
                 isNull = !value.hour && !value.minute && !value.second;
                 break;
             case 'input':
+                isNull = value === undefined || value === null || value === '';
+                break;
             case 'select':
             case 'treeSelect':
-            default: 
-                isNull = !value;
+            default:
+                isNull = value === undefined || value === null;
         }
 
         for(let rule of rules){
@@ -148,7 +153,7 @@ class FormItem extends Component{
                 hasRequire = true;
                 if(isNull){
                     result = false;
-                    err = rule.message || `${this.props.label||''}不能为空`;
+                    err = rule.message || `${this.props.label||''}${lang === 'zh' ? '不能为空' : ' cannot be empty'}`;
                     break;
                 }
                 continue;
@@ -199,7 +204,7 @@ class FormItem extends Component{
     render(){
         const {className = ''} = this.props;
         return <div className={`FormItem ${this.props.noLabel ? 'noLabel':''} ${className}`}>
-            <label>{ this.props.label||'' }</label>
+            <label key='label'>{ this.props.label||'' }</label>
             { this.getChildren() }
         </div>
     }

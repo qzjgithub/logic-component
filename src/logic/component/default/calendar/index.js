@@ -328,7 +328,7 @@ class Calendar extends Component{
         let date = this.state.date;
         return this.state.dateArr.map((v,index) => {
             if(v === null){
-                return <span className={'empty'}> </span>;
+                return <span className={'empty'} key={`empty-${index}`}> </span>;
             }else{
                 day++;
                 cur.date(day);
@@ -342,7 +342,7 @@ class Calendar extends Component{
                 if(this.props.signToday !== false && moment().isSame(cur,'date')){
                     cls += 'today ';
                 }
-                return <span className={cls} onClick={() => this.setDate(index)}>{ day }</span>
+                return <span className={cls} onClick={() => this.setDate(index)} key={day}>{ day }</span>
             }
         });
     }
@@ -468,25 +468,25 @@ class Calendar extends Component{
             rightDisabled = true;
         }
         return <section className={'Calendar'}>
-            <header>
+            <header key='header'>
                 <Icon type={'zuo'} onClick={this.subtractMonth}
-                      className={ leftDisabled ? 'disabled': ''}/>
-                <Select value={this.state.year} onSelected={this.setYear}>
+                      className={ leftDisabled ? 'disabled': ''} key='prev' />
+                <Select value={this.state.year} onSelected={this.setYear} key='year'>
                     { this.genYearDom() }
                 </Select>
-                <Select value={this.state.month} onSelected={this.setMonth}>
+                <Select value={this.state.month} onSelected={this.setMonth} key='minute'>
                     { this.genMonthDom() }
                 </Select>
                 <Icon type={'gengduo'} onClick={this.addMonth}
-                      className={ rightDisabled ? 'disabled': ''}/>
+                      className={ rightDisabled ? 'disabled': ''} key='next'/>
             </header>
-            <ul>
+            <ul key='week'>
                 { this.genWeekDom() }
             </ul>
-            <div>
+            <div key='date'>
                 { this.genDateDom() }
             </div>
-            {showTimer && <footer>
+            {showTimer && <footer key='footer'>
                 <Timer {...timerConfig} ref={'timer'} lang={this.props.lang}/>
             </footer>}
         </section>

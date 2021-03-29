@@ -48,12 +48,12 @@ class TreeItem extends Component{
     getIconDom = (data) => {
         let {iconType , icon, iconStyle } = data;
         if(iconType === 'url'){
-            return <span className={'icon'} style={{'backgroundUrl':icon}}> </span>
+            return <span className={'icon'} style={{'backgroundUrl':icon}} key='url'> </span>
         }else if(iconType === 'image'){
-            return <span className={`icon ${icon}`}> </span>
+            return <span className={`icon ${icon}`} key='image'> </span>
         }else{
-            return <span>
-                <Icon type={data['icon'] || 'file-unknown'} style={iconStyle}/>
+            return <span key='def'>
+                <Icon type={data['icon'] || 'file-unknown'} style={iconStyle} />
             </span>
         }
     }
@@ -134,7 +134,7 @@ class TreeItem extends Component{
             return '';
         }
         let { value, id, text, data } = this.getEventParam();
-        return <Icon type={type} className={'operate'} onClick={() => this.onTextClick(value,id,text,data)}/>;
+        return <Icon type={type} className={'operate'} onClick={() => this.onTextClick(value,id,text,data)} key='operate' />;
     }
 
     getChecked = () => {
@@ -233,22 +233,30 @@ class TreeItem extends Component{
                 overflow: 'hidden'
             }
         }
-        return <section className={ treeItemClass } key={data[this.props.idKey||this.idKey]}>
-            <p>
-                <span sign="flexIcon"
-                      onClick={this.onFlexIconClick}
-                      className={'flexIcon'}>{ children.length ?
-                    <Icon type={ opened ? 'minus-circle': 'plus-circle'}/> :
+        return <section className={ treeItemClass } key={data[this.props.idKey || this.idKey]}>
+            <p key='tree-text'>
+                <span
+                    sign="flexIcon"
+                    onClick={this.onFlexIconClick}
+                    className={'flexIcon'}
+                    key='prev-icon'
+                >{ children.length ?
+                    <Icon type={ opened ? 'minus-circle': 'plus-circle'} key='open-close' /> :
                     '' }</span>
-                <i> </i>
+                <i key='prev-line'> </i>
                 { this.getSelectOperate() }
                 { (this.props.iconEnable||this.iconEnable) && this.getIconDom(data)}
-                <span className={`text ${checked?'checked':''} ${searched?'searched':''}`} onClick={() => this.onTextClick(value,id,text,data)}>
+                <span
+                    className={`text ${checked?'checked':''}
+                    ${searched?'searched':''}`}
+                    onClick={() => this.onTextClick(value,id,text,data)}
+                    key='tree-check'
+                >
                     { data[this.props.textKey||this.textKey] }
                 </span>
                 { customDom && typeof customDom === 'function' ? customDom(data) : customDom }
             </p>
-            <div className={'list'} ref={"list"} style={style}>{ this.props.children }</div>
+            <div className={'list'} ref={"list"} style={style} key='chidlren'>{ this.props.children }</div>
         </section>
     }
 }

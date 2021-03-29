@@ -22,6 +22,7 @@ class Grid extends Component{
     tree = {};
     showIndex = 0;//tree模式下用到
     scrollLeft = 0;
+    clearSearchKey = 0; // 清空搜索时用到，强制清空搜索的input框
     constructor(props, context) {
         super(props, context);
         this.initColumnsMap(props.columns);
@@ -108,7 +109,7 @@ class Grid extends Component{
     getColumnByKey = (key) => {
         let { columns } = this.props;
         let indarr = this.columnsMap[key];
-        if(!indarr || indarr.length) {
+        if(!indarr || !indarr.length) {
             return {};
         }
         let col = { children : columns||{} };
@@ -243,7 +244,6 @@ class Grid extends Component{
     }
 
     searchData = (data,search) => {
-        let { columns } = this.props;
         let searcher = {};
         let searchedIndex = [];
         let searchKeys = Object.keys(search);
@@ -251,7 +251,7 @@ class Grid extends Component{
             this.searchedIndex = null;
             return;
         }
-        Object.keys(searchKeys).forEach((ck)=>{
+        searchKeys.forEach((ck)=>{
             let col = this.getColumnByKey(ck);
             if(typeof col['searcher'] === 'function'){
                 searcher[ck] = col['searcher'];
@@ -276,7 +276,7 @@ class Grid extends Component{
     }
 
     searchChange = (key, value) => {
-        let { pageMode, onSearch, data, onChange } = this.props;
+        let { pageMode, onSearch, data } = this.props;
         let { search ,pagination, pageInput } = this.state;
         search[key] = value;
         if(value === '' || value === undefined){
@@ -303,11 +303,36 @@ class Grid extends Component{
         }
     }
 
-    onSearch = (e,key) => {
+    onClickSearch = (e, key) => {
+        this.searchChange(key, e.target.nextElementSibling.value);
+    }
+
+    onSearch = (e, key) => {
         if(e.keyCode !== 13){
             return;
         }
         this.searchChange(key,e.target.value);
+    }
+
+    clearSearch = () => {
+        const {data, pageMode} = this.props;
+        this.searchedIndex = null;
+        this.clearSearchKey = this.clearSearchKey === 0 ? 1 : 0;
+        if (pageMode === 'back') {
+            this.setState({
+                search: {}
+            });
+        } else {
+            this.setState((prev) => {
+                const {pagination} = prev;
+                pagination.total = data.length;
+                return {
+                    pagination,
+                    search: {},
+                    pageInput: 1
+                }
+            });
+        }
     }
 
     pageChange = (param) => {
@@ -501,12 +526,15 @@ class Grid extends Component{
         }
     }
 
-    editFocus = (e,record,key) => {
-        e.target.innerHTML = record[key];
+    editFocus = (e, record, key) => {
+        let content = record[key];
+        if (content === undefined || content === null) {
+            content = '';
+        }
+        e.target.innerHTML = content;
     }
 
-    editBlur = (e,record,key,validate) => {
-        let value = e.target.innerHTML;
+    getEditorValue = (e, value, record, key, validate) => {
         let index = record['Grid_index'];
         let editor = this.state.editor;
         if(!validate || (validate && validate(value,record,key,index))) {
@@ -518,8 +546,27 @@ class Grid extends Component{
             if(editor[index] && editor[index][key] !== undefined){
                 editor[index][key] = undefined;
             }
-            e.target.innerHTML = record[key];
+            if (e) {
+                e.target.innerHTML = record[key];
+            }
         }
+        return editor;
+    }
+
+    editSelect = (value, record, key, validate) => {
+        const editor = this.getEditorValue(null, value, record, key, validate);
+        this.setState({
+            editor
+        },() => {
+            if(this.props.onEditor){
+                this.props.onEditor(this.state.editor,this.props.data);
+            }
+        });
+    }
+
+    editBlur = (e,record,key,validate) => {
+        const value = e.target.innerHTML;
+        const editor = this.getEditorValue(e, value, record, key, validate);
         this.setState({
             editor
         },() => {
@@ -554,8 +601,8 @@ class Grid extends Component{
         });
     }
 
-    editClick = (e,editable) => {
-        if(editable){
+    editClick = (e, editable) => {
+        if (editable) {
             e.stopPropagation();
         }
     }
@@ -790,8 +837,9 @@ class Grid extends Component{
                     </React.Fragment>;
                 }
                 let getNormalDom = (cls, isFixed) => {
-                    return <div className={cls} style={ style } key={`${theInd}-${isFixed ? 'fixed' : ''}`}>
-                        {searcher && <Input onKeyUp={(e) => this.onSearch(e,key)}/>}
+                    return <div className={cls} style={ style } key={`${theInd}-${isFixed ? 'fixed' : ''}${this.clearSearchKey}`}>
+                        {searcher && <Icon type='guolv' onClick={(e) => this.onClickSearch(e, key)} />}
+                        {searcher && <Input onKeyUp={(e) => this.onSearch(e, key)}/>}
                     </div>
                 }
                 if(comFixed){
@@ -973,7 +1021,7 @@ class Grid extends Component{
     }
 
     getTrDom = (d,gInd) => {
-        let { columns, selectMode, serial, topable, pageMode, treeConfig } = this.props;
+        let {columns, selectMode, serial, topable, pageMode, treeConfig, editableSelection = {}} = this.props;
         let treeColumn = '';
         let treeKey = '';
         if(pageMode === 'tree'){
@@ -997,7 +1045,9 @@ class Grid extends Component{
                     continue;
                 }
                 let value = d[key];
-                let style = {};
+                let style = {
+                    position: !!editable ? 'relative' : 'unset'
+                };
                 width = widthRecord[key] || width;
                 if(typeof colspan === 'function'){
                     colspan = colspan(value,d,key,gInd);
@@ -1022,7 +1072,8 @@ class Grid extends Component{
                 if(width){
                     style = {
                         width,
-                        flex: 'none'
+                        flex: 'none',
+                        ...style
                     }
                 }
                 if(treeColumn && treeColumn === key){
@@ -1050,7 +1101,8 @@ class Grid extends Component{
                         return <div className={clz} 
                             title={ hoverTips === false ? '' : value}
                             style={style} 
-                            contentEditable={editable} 
+                            suppressContentEditableWarning
+                            contentEditable={editable === true} 
                             onClick={(e)=> this.editClick(e,editable)}
                             onFocus={(e)=> this.editFocus(e,d,key)}
                             onBlur={(e) => this.editBlur(e,d,key,validate)}
@@ -1060,6 +1112,17 @@ class Grid extends Component{
                                     (d['Grid_leaf'] ? <Icon type={'item'} /> : 
                                     <Icon type={'triangledownfill'} onClick={(e)=>{this.setTreeState(e,d[treeKey])}} />) }
                                 {( render ? render(value,d,key,gInd) : (isRealOrZero(value) ? value : ''))}
+                                {editable === 'select' && (
+                                    <Select
+                                        initValue={value}
+                                        onSelected={(v) => this.editSelect(v, d, key, validate)}
+                                        className='Grid-editable-select'
+                                    >
+                                        {(editableSelection[key] || []).map((selOp) => (
+                                            <Option value={selOp.value}>{selOp.text}</Option>
+                                        ))}
+                                    </Select>
+                                )}
                         </div>
                     }
         
@@ -1209,7 +1272,7 @@ Grid.propTypes = {
      * sorter:func(a,b),
      * width: '',
      * hidden:false,
-     * editable: false,
+     * editable: false, // 'select', false, true,默认是false，如果是true，则是可输入的常规元素，如果是select，则是下拉框
      * validte:func(value,record,key,index)
      * searcher: true/function(inputValue,record,key){},//某一列可搜索时设置
      * fixed: true,
@@ -1219,6 +1282,7 @@ Grid.propTypes = {
      * }]
      *  */
     columns: PropTypes.array,
+    editableSelection: PropTypes.object, // 可编辑香是下拉选项时的可选项,key-value形式，key是某条column的key，value是数组形式的可选项[{text: '', value: ''}]
     selectMode: PropTypes.string,//'multi'
     selectable: PropTypes.func,//function(record){}
     selected: PropTypes.array,//被选中的数据编号

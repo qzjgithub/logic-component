@@ -73,3 +73,28 @@ lineColor = #116d75;
 .Dialog.hide{
   display: none;
 }
+
+.Dialog-confirm {
+  div.content {
+    padding: 0;
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+  }
+}
+
+.Dialog-confirm-content {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+}
+.Dialog-confirm-footer {
+  text-align: right;
+  line-height: 50px;
+  border-top: 1px solid #116d75;
+  & > button {
+    margin-right: 10px;
+  }
+}

@@ -176,11 +176,13 @@ class Timer extends Component{
             dom.push(
                 <Select value={this.state.hour} 
                     orient={this.props.orient||'down'}
-                    onSelected={(value) => this.setValue(value,'hour')}>
+                    onSelected={(value) => this.setValue(value,'hour')}
+                    key='hour'
+                >
                 { this.getOptionDom(this.state.hourArr) }
             </Select>
             );
-            dom.push(<span>{ this.props.hourText || ( this.props.lang === 'zh' ? '时':'h')}</span>);
+            dom.push(<span key='hour-span'>{ this.props.hourText || ( this.props.lang === 'zh' ? '时':'h')}</span>);
         }
         return dom;
     }
@@ -191,12 +193,14 @@ class Timer extends Component{
             dom.push(
                 <Select value={this.state.minute} 
                     orient={this.props.orient||'down'}
-                    onSelected={(value) => this.setValue(value,'minute')}>
+                    onSelected={(value) => this.setValue(value,'minute')}
+                    key='minute'
+                >
                 { this.getOptionDom(this.state.minuteArr) }
             </Select>
             );
             dom.push(
-                <span>{ this.props.minuteText || ( this.props.lang === 'zh' ? '分':'m')}</span>
+                <span key='minute-span'>{ this.props.minuteText || ( this.props.lang === 'zh' ? '分':'m')}</span>
             );
         }
         return dom;
@@ -208,12 +212,14 @@ class Timer extends Component{
             dom.push(
                 <Select value={this.state.second} 
                     orient={this.props.orient||'down'}
-                    onSelected={(value) => this.setValue(value,'second')}>
+                    onSelected={(value) => this.setValue(value,'second')}
+                    key='second'
+                >
                 { this.getOptionDom(this.state.secondArr) }
             </Select>
             );
             dom.push(
-                <span>{ this.props.secondText || ( this.props.lang === 'zh' ? '秒':'s')}</span>
+                <span key='second-span'>{ this.props.secondText || ( this.props.lang === 'zh' ? '秒':'s')}</span>
             );
         }
         return dom;

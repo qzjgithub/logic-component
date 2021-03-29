@@ -140,11 +140,13 @@ class TreeSelect extends Component{
                 className={'text'} 
                 sign={'text'} 
                 disabled={this.props.disabled}
-                style={{height: this.props.height || '',width: this.props.width || ''}}>
-                <Icon type={'unfold'}/>
-                <span ref={'text'}>{ text || value}</span>
+                style={{height: this.props.height || '',width: this.props.width || ''}}
+                key='btn'
+            >
+                <Icon type={'unfold'} key='close' />
+                <span ref={'text'} key='text'>{ text || value}</span>
             </Button>
-            <div className={'treeList'} sign={'treeList'} onMouseLeave={this.keepFocus}>
+            <div className={'treeList'} sign={'treeList'} onMouseLeave={this.keepFocus} key='list'>
                 <Tree {...this.getTreeConfig()} onDidMount={this.treeDidMount}/>
             </div>
         </div>;

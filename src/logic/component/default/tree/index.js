@@ -226,8 +226,8 @@ class Tree extends Component{
         let cls = this.props.className || '';
         return <div className={cls}>
             {this.props.search && <div className={'search'}>
-                <input onChange={this.searchChange} value={this.state.searchValue} onKeyPress={this.searchEvent}/>
-                <Icon type={'sousuo'} onClick={this.searchEvent}/>
+                <input onChange={this.searchChange} value={this.state.searchValue} onKeyPress={this.searchEvent} key='input'/>
+                <Icon type={'sousuo'} onClick={this.searchEvent} key='icon' />
             </div>}
             { data.map((item,index) => { return this.getTreeItem(item,index===0,index===(data.length - 1),[index]) })}
         </div>

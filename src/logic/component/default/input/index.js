@@ -43,6 +43,9 @@ class Input extends Component{
         if (v === undefined) {
             v = initValue;
         }
+        if (v === undefined) {
+            v = '';
+        }
         return <input {...this.props} 
             ref={'input'}
             className={`Input ${styleType} ${(this.props.disabled) ? 'disabled': ''}` }

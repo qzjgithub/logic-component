@@ -73,7 +73,8 @@ class Dragger extends Component{
                 index: index,
                 oncDragStart : this.childDragStart,
                 oncDrop: this.childDrop,
-                oncDragEnd: this.childDragEnd
+                oncDragEnd: this.childDragEnd,
+                key: children[index].key || index
             });
         });
     }

@@ -119,12 +119,12 @@ class Select extends Component{
             if(value.indexOf(item.props.value) > -1){
                 this.text.push(item.props.children);
                 !getText && text.push(
-                    <span className={'multi-text'}>
+                    <span className={'multi-text'} key={index}>
                         {item.props.children}
                         <Icon type={'guanbi1'} onClick={(e) => {
                             e.stopPropagation();
                             this.itemClick(item.props.value,item.props.children)
-                        }} />
+                        }} key='guanbi' />
                     </span>
                 );
                 checked = true;
@@ -138,7 +138,7 @@ class Select extends Component{
     }
 
     getValue = () => {
-        return this.state.value;
+        return this.state.value === undefined ? this.props.initValue : this.state.value;
     }
 
     clear = () => {
@@ -149,7 +149,7 @@ class Select extends Component{
                 break;
             case 'single':
             default:
-                value = '';
+                value = undefined;
         }
         this.setState({
             value: value
