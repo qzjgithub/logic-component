@@ -31,10 +31,17 @@ class SelectShow extends Component{
                 <Option value={'3'}>potato</Option>
             </Select>
 
-            <Select defaultText={'请选择数据'} noDataText={'没有数据'} mode={'multi'} hasAll={'Select all'} key={1}>
+            <Select
+                defaultText={'请选择数据'}
+                noDataText={'没有数据'}
+                mode={'multi'}
+                hasAll={'Select all'}
+                key={1}
+                initValue={['1', '2']}
+            >
                 <Option value={'1'}>apple</Option>
-                <Option value={'2'}>orange</Option>
-                <Option value={'3'}>banana</Option>
+                <Option value={'2'} disabled>orange</Option>
+                <Option value={'3'} disabled>banana</Option>
                 <Option value={'4'}>tomato</Option>
             </Select>
             <Select initValue={['1']} mode={'multi'} defaultText={'请选择任务'} noDataText={'没有任务'} key={3}>

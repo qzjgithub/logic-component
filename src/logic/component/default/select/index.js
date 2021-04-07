@@ -121,10 +121,10 @@ class Select extends Component{
                 !getText && text.push(
                     <span className={'multi-text'} key={index}>
                         {item.props.children}
-                        <Icon type={'guanbi1'} onClick={(e) => {
+                        {!item.props.disabled && <Icon type={'guanbi1'} onClick={(e) => {
                             e.stopPropagation();
                             this.itemClick(item.props.value,item.props.children)
-                        }} key='guanbi' />
+                        }} key='guanbi' />}
                     </span>
                 );
                 checked = true;
@@ -171,15 +171,24 @@ class Select extends Component{
     setAll = (ev) => {
         let all = this.state.all;
         let value = [];
+        const originValues = this.props.value || this.props.initValue || [];
+        let children = this.props.children;
+        if(children && !children.length){
+            children = [ children ];
+        }else if(!children){
+            children = [];
+        }
         if(!all){
-            let children = this.props.children;
-            if(children && !children.length){
-                children = [ children ];
-            }else if(!children){
-                children = [];
-            }
             for(let c of children){
-                value.push(c.props.value);
+                if (!c.props.disabled || originValues.indexOf(c.props.value) > -1) {
+                    value.push(c.props.value);
+                }
+            }
+        } else {
+            for(let c of children){
+                if (c.props.disabled && originValues.indexOf(c.props.value) > -1) {
+                    value.push(c.props.value);
+                }
             }
         }
         this.setState({
@@ -263,14 +272,26 @@ class Option extends Component{
     }
 
     onClick = (value,text) => {
+        if (this.props.disabled) {
+            return;
+        }
         if(this.props.selectBridge){
            this.props.selectBridge(value,text);
         }
     }
 
     render(){
+        const {checked, disabled, className} = this.props;
+        let clz = className || '';
+        if (checked) {
+            clz += ' checked';
+        }
+        if (disabled) {
+            clz += ' disabled';
+        }
+
         return <li sign={'item'}
-                   className={this.props.checked?'checked':''}
+                   className={clz}
                    onClick={() => this.onClick(this.props.value,this.props.children)}>
             { this.props.children }
             { this.props.mode === 'multi' && this.props.checked && <Icon type={'xuanze'} className={'mutli-sign'}/>}
@@ -279,9 +300,11 @@ class Option extends Component{
 }
 
 Option.propTypes = {
+    className: PropTypes.string,
     value : PropTypes.any,
     checked: PropTypes.bool,
-    selectBridge: PropTypes.func
+    selectBridge: PropTypes.func,
+    disabled: PropTypes.bool
 }
 
 Select.Option = Option;
