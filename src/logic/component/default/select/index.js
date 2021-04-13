@@ -142,17 +142,8 @@ class Select extends Component{
     }
 
     clear = () => {
-        let value;
-        switch(this.props.mode){
-            case 'multi':
-                value = [];
-                break;
-            case 'single':
-            default:
-                value = undefined;
-        }
         this.setState({
-            value: value
+            value: undefined
         });
     }
 

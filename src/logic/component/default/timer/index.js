@@ -29,7 +29,7 @@ const SECOND_RANGE = {
 class Timer extends Component{
     constructor(props, context) {
         super(props, context);
-        this.state = this.getValueAndArray(props,{});
+        this.state = this.getValueAndArray({...props},{});
     }
 
     componentWillReceiveProps(nextProps){
@@ -174,7 +174,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.hourHide){
             dom.push(
-                <Select value={this.state.hour} 
+                <Select
+                    ref='hour'
+                    value={this.state.hour} 
                     orient={this.props.orient||'down'}
                     onSelected={(value) => this.setValue(value,'hour')}
                     key='hour'
@@ -191,7 +193,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.minuteHide){
             dom.push(
-                <Select value={this.state.minute} 
+                <Select
+                    ref='minute'
+                    value={this.state.minute} 
                     orient={this.props.orient||'down'}
                     onSelected={(value) => this.setValue(value,'minute')}
                     key='minute'
@@ -210,7 +214,9 @@ class Timer extends Component{
         let dom = [];
         if(!this.props.secondHide){
             dom.push(
-                <Select value={this.state.second} 
+                <Select
+                    ref='second'
+                    value={this.state.second} 
                     orient={this.props.orient||'down'}
                     onSelected={(value) => this.setValue(value,'second')}
                     key='second'
@@ -223,6 +229,10 @@ class Timer extends Component{
             );
         }
         return dom;
+    }
+
+    clear = () => {
+        this.setState(this.getValueAndArray({...this.props},{}));
     }
 
     getValue = () => {

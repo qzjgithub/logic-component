@@ -25,9 +25,11 @@ class Input extends Component{
     }
 
     onInput = (e) => {
+        e.persist();
         this.setState({
             value: e.target.value
         }, () => {
+            e.target.value = this.state.value;
             if (this.props.onInput) {
                 this.props.onInput(e);
             }
