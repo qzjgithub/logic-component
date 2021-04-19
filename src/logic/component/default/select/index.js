@@ -49,7 +49,7 @@ class Select extends Component{
 
     itemClick = (value,text)=>{
         let status = this.state.status;
-        let values = this.state.value;
+        let values = this.state.value || this.props.initValue;
         let children = this.props.children;
         if(children && !children.length){
             children = [ children ];
@@ -59,6 +59,9 @@ class Select extends Component{
         let all = false;
         switch(this.props.mode){
             case 'multi':
+                if (!values) {
+                    values = [];
+                }
                 let ind = values.indexOf(value);
                 if(ind > -1){
                     values.splice(ind,1);
