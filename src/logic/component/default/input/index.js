@@ -20,8 +20,9 @@ class Input extends Component{
     }
 
     clear = () => {
-        let input = this.refs['input'];
-        input.value = '';
+        this.setState({
+            value: undefined
+        });
     }
 
     onInput = (e) => {
