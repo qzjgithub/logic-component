@@ -1033,7 +1033,6 @@ class Grid extends Component{
         let hasFixed = false;
         let fixedDom = [];
         let dom = [];
-        let initKey = moment().valueOf();
         let getColTr = (cols, pfixed) => {
             let i = 0;
             while(i < cols.length){
@@ -1106,7 +1105,6 @@ class Grid extends Component{
                             onClick={(e)=> this.editClick(e,editable)}
                             onFocus={(e)=> this.editFocus(e,d,key)}
                             onBlur={(e) => this.editBlur(e,d,key,validate)}
-                            key={initKey++}
                         >
                                 { treeColumn && treeColumn === key && 
                                     (d['Grid_leaf'] ? <Icon type={'item'} /> : 

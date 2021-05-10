@@ -174,7 +174,6 @@ class Tree extends Component{
     }
 
     searchEvent = (e) => {
-        console.log(e);
         if(!this.state.searchValue) {
             this.setState({
                 searcheds : {}
