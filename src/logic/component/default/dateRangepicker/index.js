@@ -190,7 +190,60 @@ class DateRangepicker extends Component{
         return newValue;
     }
 
-    render(){
+    getQuickSwitchDom = (isNext) => {
+        const {quickSwitch} = this.props;
+        const {start, end} = this.state;
+        if (!start || !end) {
+            return '';
+        }
+        if (quickSwitch === 'single' && !start.isSame(end, 'day')) {
+            return '';
+        }
+        if (quickSwitch) {
+            return (
+                <span className='quick-switch'>
+                    <Icon
+                        type={isNext ? 'gengduo' : 'zuo'}
+                        onClick={() => this.onQuickSwitch(isNext)}
+                    />
+                </span>
+            );
+        }
+        return '';
+    }
+
+    onQuickSwitch = (isNext) => {
+        const {disabled} = this.props;
+        if (disabled) {
+            return;
+        }
+        const {start, end} = this.state;
+        if (!start || !end) {
+            return;
+        }
+        const count = isNext ? 1 : -1;
+        const nstart = moment(start).add(count, 'day');
+        const nend = moment(end).add(count, 'day');
+        const disableDate = this.props.disableDate;
+        if(typeof disableDate === 'function' && 
+            (disableDate(moment(nstart),moment(nstart),moment(nend))||
+            disableDate(moment(nend), moment(nstart), moment(nend)))){
+            return;
+        }
+        this.setState({
+            start: nstart,
+            end: nend
+        }, () => {
+            if(this.props.onQuickSwitch){
+                let dateValue = this.getValue();
+                let dateFormat = this.getFormatValue();
+                this.props.onQuickSwitch(dateValue, dateFormat);
+            }
+            this.triggerChange();
+        });
+    }
+
+    render() {
         let { start, end } = this.state;
         let text = '';
         if(start && moment.isMoment(start)){
@@ -206,8 +259,9 @@ class DateRangepicker extends Component{
         if(!text){
             text = this.props.defaultText || '请选择时间段';
         }
-        let hasClear = this.props.hasClear;
+        const {hasClear} = this.props;
         return <div>
+            {this.getQuickSwitchDom(false)}
             <Button sign={'text'} className={'text'} disabled={this.props.disabled} key='btn'>
                 <span ref={'text'} key='text'>{ text }</span>
                 { this.props.hasClear !== false &&  ( start || end ) && 
@@ -215,6 +269,7 @@ class DateRangepicker extends Component{
                 }
                 <Icon type={'unfold'} key='close' />
             </Button>
+            {this.getQuickSwitchDom(true)}
             <div sign={'list'} className={'list'} onMouseLeave={this.keepFocus} key='list'>
                 <Calendar {...this.getStartConfig()} ref={'start'} key='start' />
                 <Calendar {...this.getEndConfig()} ref={'end'} key='end' />
@@ -247,7 +302,8 @@ DateRangepicker.propTypes = {
     startConfig: PropTypes.object,
     endConfig: PropTypes.object,
     confirmText: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    quickSwitch: PropTypes.string
 }
 
 export default logical(DateRangepicker,logic,config);

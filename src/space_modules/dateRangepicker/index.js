@@ -37,7 +37,7 @@ class DateRangepickerShow extends Component{
                 format={'YYYY-MM-DD'}
                 onTextClick={this.opened}
                 onTextBlur={this.opened}
-                disableDate={(c,s,e)=>{
+                /* disableDate={(c,s,e)=>{
                     let flag = true;
                     if(moment.isMoment(s)){
                         flag = c.isSameOrBefore(s.add(31,'day'),'day');
@@ -46,14 +46,20 @@ class DateRangepickerShow extends Component{
                         flag = c.isSameOrAfter(e.subtract(31,'day'),'day');
                     }
                     return !flag;
-                }}
+                }} */
+                disableDate={(c) => c.isAfter(moment())}
                 startConfig={{
-                    timerConfig: false
+                    timerConfig: false,
+                    minDate: moment().subtract(5, 'day')
                 }}
                 endConfig={{
-                    timerConfig: false
-                }}/>
-                <span onClick={this.valid} key='valid'>验证</span>
+                    timerConfig: false,
+                    minDate: moment().subtract(5, 'day')
+                }}
+                quickSwitch='single'
+                onQuickSwitch={(v, f) => console.log(v, f)}
+            />
+            <span onClick={this.valid} key='valid'>验证</span>
         </div>
     }
 }
