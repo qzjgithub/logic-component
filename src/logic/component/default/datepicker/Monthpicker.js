@@ -50,7 +50,7 @@ const Monthpicker = ({lang, disabled, placeholder, format, hasClear, defaultNow,
           <Icon type='guanbi1' className='clear' onClick={(e) => {
             e.stopPropagation();
             setValue(undefined);
-            onChange && onChange(undefined);
+            onChange && onChange(undefined);nan
           }} />
         )}
         <Icon type='unfold' />
