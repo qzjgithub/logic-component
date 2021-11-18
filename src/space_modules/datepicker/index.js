@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Datepicker } from '../../logic';
 import moment from 'moment';
 
+const Monthpicker = Datepicker.Monthpicker;
+
 class DatepickerShow extends Component{
     constructor(props, context) {
         super(props, context);
@@ -16,7 +18,8 @@ class DatepickerShow extends Component{
 
     render(){
         return <div>
-            <Datepicker calendarConfig={{minDate:moment(),lang: 'en'}}/>
+            <Datepicker calendarConfig={{minDate:moment(),lang: 'en'}} />
+            <Monthpicker hasClear />
             </div>
     }
 }

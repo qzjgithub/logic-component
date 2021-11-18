@@ -55,3 +55,116 @@
     }
   }
 }
+
+.MonthlyCalendar {
+  width: 268px;
+  height: 280px;
+  border: 1px solid #207694;
+  background-color: #001920;
+  box-sizing: border-box;
+}
+
+.MonthlyCalendar-year {
+  box-sizing: border-box;
+  border-bottom: 1px solid #207694;
+  display: flex;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  align-items: center;
+  & > span {
+    flex: 1;
+    color: #c5c5c5;
+    text-align: center;
+  }
+  & > span.active {
+    cursor: pointer;
+  }
+  & > span.active:hover {
+    color: #27bdca;
+  }
+  & > svg {
+    cursor: pointer;
+  }
+  & > svg:hover {
+    fill: #2cdeed;
+  }
+}
+
+.Monthpicker {
+  width: 100%;
+  position: relative;
+  display: block;
+  & > button {
+    background-color: transparent;
+    border:1px solid #207694;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    color: #ffffff;
+    font-size: 14px;
+    min-width: 170px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    & > span {
+      flex: 1;
+    }
+    & > .iconfont.clear {
+      display: none;
+      position: relative;
+      z-index: 1;
+    }
+  }
+  & > button:hover {
+    & > .iconfont.clear {
+      display: block;
+    }
+    & > .iconfont.clear + svg{
+      display: none;
+    }
+  }
+  & > a {
+    position: absolute;
+    text-decoration: unset;
+    top: 29px;
+    left: 0;
+  }
+}
+
+.MonthlyCalendar-panel {
+  height: calc(100% - 40px);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  text-align: center;
+  align-items: center;
+  & > p {
+    cursor: pointer;
+    color: #c5c5c5;
+    & > span {
+      padding: 6px 10px;
+      border-radius: 5px;
+    }
+  }
+  & > p:hover {
+    color: #27bdca;
+  }
+  & > p.control {
+    color: #27878e;
+  }
+  & > p.disabled {
+    color: #565656
+    cursor: default;
+  }
+  & > p.disabled:hover {
+    color: #565656
+  }
+  & > p.active {
+    & > span {
+      background-color: rgba(78,222,233, 0.7);
+    }
+  }
+}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import logical from '../../../common/logical';
 import config from './config.json';
 import logic from './logic.js';
+import Monthpicker from './Monthpicker';
 import './index.styl';
 
 import moment from 'moment';
@@ -163,5 +164,7 @@ Datepicker.propTypes = {
     calendarConfig: PropTypes.object,
     confirmText: PropTypes.string
 }
+
+Datepicker.Monthpicker = Monthpicker;
 
 export default logical(Datepicker,logic,config);
