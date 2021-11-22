@@ -5,7 +5,7 @@ import Icon from '../icon';
 
 const Monthpicker = ({lang, disabled, placeholder, format, hasClear, defaultNow, onChange, open, onOpenChange, ...props}) => {
   const [i18n, setI18n] = useState({});
-  const [value, setValue] = useState((props.value || props.initValue) || (defaultNow ? moment() : undefined));
+  const [value, setValue] = useState(props.value || props.initValue || (defaultNow ? moment() : undefined));
   const [isOpen, setIsOpen] = useState((!disabled && open) || false);
   const [inUse, setInUse] = useState(false);
 
@@ -23,8 +23,10 @@ const Monthpicker = ({lang, disabled, placeholder, format, hasClear, defaultNow,
   }, [lang]);
 
   useEffect(() => {
-    setValue(value);
-  }, [value]);
+    if (props.value !== undefined) {
+      setValue(props.value);
+    }
+  }, [props.value]);
 
   useEffect(() => {
     onOpenChange && onOpenChange(isOpen);
@@ -50,7 +52,7 @@ const Monthpicker = ({lang, disabled, placeholder, format, hasClear, defaultNow,
           <Icon type='guanbi1' className='clear' onClick={(e) => {
             e.stopPropagation();
             setValue(undefined);
-            onChange && onChange(undefined);nan
+            onChange && onChange(undefined);
           }} />
         )}
         <Icon type='unfold' />
@@ -67,9 +69,12 @@ const Monthpicker = ({lang, disabled, placeholder, format, hasClear, defaultNow,
             i18n={i18n}
             onChange={(v) => {
               setValue(v);
+              setIsOpen(false);
               onChange && onChange(v);
             }}
             {...props}
+            value={value}
+            initValue={value}
           />
         </a>
       )}
@@ -106,7 +111,7 @@ const MonthlyCalendar = ({initValue, value, i18n, disableDate, onChange}) => {
   const [year, setYear] = useState(moment(value || initValue).year());
   const [yearRange, setYearRange] = useState([year - year % 10, year - year % 10 + 9]);
   const [date, setDate] = useState(moment(value || initValue));
-  
+
   const panelStart = getPanelStart(mode, yearRange);
   const monthStr = i18n.MONTH || moment.monthsShort();
   return (

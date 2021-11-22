@@ -8,7 +8,8 @@ class DatepickerShow extends Component{
     constructor(props, context) {
         super(props, context);
         this.state = {
-            disabled : true
+            disabled : true,
+            date: [moment(), moment().add(11, 'month')]
         }
     }
 
@@ -17,9 +18,17 @@ class DatepickerShow extends Component{
     }
 
     render(){
+        const {date} = this.state;
+        console.log(date[0].format('YYYY-MM'));
         return <div>
             <Datepicker calendarConfig={{minDate:moment(),lang: 'en'}} />
-            <Monthpicker hasClear />
+            <Monthpicker initValue={date[0]} />
+            {/* <Monthpicker value={date[1]} onChange={(v) => {
+                if (v && v.isBefore(date[0])) {
+                    this.setState({date: [moment(v), v]});
+                    console.log(v);
+                }
+            }} /> */}
             </div>
     }
 }

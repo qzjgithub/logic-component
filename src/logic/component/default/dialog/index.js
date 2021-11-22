@@ -113,7 +113,7 @@ export default FinalDialog;
 
 export function confirm(text, {
     title, 
-    i18n = {title: '提示', confirm: '确认', cancel: '取消'},
+    i18n = {},
     lang = 'zh',
     height = 210,
     width = 360,

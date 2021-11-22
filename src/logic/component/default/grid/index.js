@@ -526,7 +526,10 @@ class Grid extends Component{
         }
     }
 
-    editFocus = (e, record, key) => {
+    editFocus = (e, record, key, editable) => {
+        if (!editable) {
+            return;
+        }
         let content = record[key];
         if (content === undefined || content === null) {
             content = '';
@@ -564,7 +567,10 @@ class Grid extends Component{
         });
     }
 
-    editBlur = (e,record,key,validate) => {
+    editBlur = (e,record,key,validate,editable) => {
+        if (!editable) {
+            return;
+        }
         const value = e.target.innerHTML;
         const editor = this.getEditorValue(e, value, record, key, validate);
         this.setState({
@@ -1103,8 +1109,8 @@ class Grid extends Component{
                             suppressContentEditableWarning
                             contentEditable={editable === true} 
                             onClick={(e)=> this.editClick(e,editable)}
-                            onFocus={(e)=> this.editFocus(e,d,key)}
-                            onBlur={(e) => this.editBlur(e,d,key,validate)}
+                            onFocus={(e)=> this.editFocus(e,d,key,editable)}
+                            onBlur={(e) => this.editBlur(e,d,key,validate,editable)}
                         >
                                 { treeColumn && treeColumn === key && 
                                     (d['Grid_leaf'] ? <Icon type={'item'} /> : 
