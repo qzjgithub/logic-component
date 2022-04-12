@@ -1,6 +1,5 @@
 {
   "_from": "mpa-demo",
-  "_id": "mpa-demo@1.0.0",
   "_inBundle": false,
   "_integrity": "sha512-34EtC7NCBItlrDMzKGv7IyQgrcNRXgCCXs0Ib/lYUnaYp8twkk3IYfESohDq7We+9cT8Wi69tJjvPGoZQVBmDw==",
   "_location": "/mpa-demo",
@@ -84,5 +83,5 @@
     "lib": "babel src/logic -d lib",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "version": "1.2.27"
+  "version": "1.2.28"
 }
