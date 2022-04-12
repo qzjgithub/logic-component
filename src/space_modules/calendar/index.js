@@ -18,9 +18,10 @@ class CalendarShow extends Component{
         return <div>
             <Calendar minDate={moment().subtract(1,'d')}
                       signToday={false}
+                      lang='en'
                       maxDate={moment().add(6,'d')}
                       disableDate={this.disableDate}/>
-            <Calendar/>
+            {/* <Calendar lang='en'/> */}
             </div>
     }
 }

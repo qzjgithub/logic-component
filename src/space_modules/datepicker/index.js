@@ -22,7 +22,7 @@ class DatepickerShow extends Component{
         console.log(date[0].format('YYYY-MM'));
         return <div>
             <Datepicker calendarConfig={{minDate:moment(),lang: 'en'}} />
-            <Monthpicker initValue={date[0]} />
+            {/* <Monthpicker initValue={date[0]} /> */}
             {/* <Monthpicker value={date[1]} onChange={(v) => {
                 if (v && v.isBefore(date[0])) {
                     this.setState({date: [moment(v), v]});

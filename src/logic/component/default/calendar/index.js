@@ -19,9 +19,9 @@ class Calendar extends Component{
     maxDate;
     constructor(props, context) {
         super(props, context);
+        this.setMomentLocal(this.props.lang || 'zh');
         this.initParam(null, this.props);
         let date = this.getDate();
-        this.setMomentLocal(this.props.lang || 'zh');
         this.state = Object.assign(this.initData(),{
             valid: true,
             date: date
@@ -315,8 +315,10 @@ class Calendar extends Component{
 
     genWeekDom = () => {
         let texts = moment.weekdaysMin();
-        let sunday = texts.shift();
-        texts.push(sunday);
+        if (this.props.lang !== 'en') {
+            let sunday = texts.shift();
+            texts.push(sunday);
+        }
         return texts.map((v, ind) => {
             return <li value={ind} key={ind}>{v}</li>
         })
